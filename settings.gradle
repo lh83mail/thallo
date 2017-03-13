@@ -1,0 +1,3 @@
+include 'thallo-core'
+include 'thallo-config-server'
+include 'thallo-server'

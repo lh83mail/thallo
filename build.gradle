@@ -1,0 +1,44 @@
+buildscript {
+	ext {
+		springBootVersion = '1.4.4.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
+	}
+}
+
+version = "1.0.0"
+group = "info.halo.thallo"
+
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'maven'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'idea'
+
+    dependencyManagement {
+      imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.SR6'
+      }
+    }
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    repositories {
+        mavenLocal()
+        maven {
+          url 'http://maven.aliyun.com/nexus/content/groups/public'
+        }
+        mavenCentral()
+        jcenter()
+    }
+
+    bootRepackage {
+        enabled = false
+    }
+}
