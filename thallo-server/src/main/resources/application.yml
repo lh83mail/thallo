@@ -1,2 +1,2 @@
-config:
-    name: 'Vector'
+server:
+  port: 8081

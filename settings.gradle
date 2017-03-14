@@ -1,3 +1,4 @@
 include 'thallo-core'
 include 'thallo-config-server'
+include 'thallo-registry-server'
 include 'thallo-server'
