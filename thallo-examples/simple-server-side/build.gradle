@@ -1,0 +1,4 @@
+dependencies {
+  compile project(':thallo-server')
+  compile project(':thallo-examples:service-api')
+}
