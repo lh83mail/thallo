@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableCircuitBreaker
+//@EnableCircuitBreaker
 @EnableFeignClients
 @Configuration
 @ComponentScan(basePackages = {"com.yourcompany", "com.yourcompany.service"})

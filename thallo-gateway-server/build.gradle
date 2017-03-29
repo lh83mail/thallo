@@ -1,0 +1,5 @@
+dependencies {
+    compile project(':thallo-core')
+    compile project(':thallo-server')
+    compile 'org.springframework.cloud:spring-cloud-starter-zuul'
+}

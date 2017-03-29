@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloTalloServiceClientImpl  {
     private HelloThalloService helloThalloService;
-    @Autowired
-    private EurekaClient discoveryClient;
 
     @RequestMapping("/invoke")
     public Thallo sayHello(String name) {

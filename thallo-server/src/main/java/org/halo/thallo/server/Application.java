@@ -1,4 +1,4 @@
-package info.halo.thallo;
+package org.halo.thallo.server;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;

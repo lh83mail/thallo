@@ -1,4 +1,4 @@
-package info.halo.thallo.registry;
+package org.halo.thallo.registryserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
