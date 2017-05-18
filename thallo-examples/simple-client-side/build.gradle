@@ -4,4 +4,8 @@ dependencies {
   compile 'org.springframework.boot:spring-boot-starter-actuator'
 
   compile project(':thallo-examples:service-api')
+
+  compile 'org.springframework.security.oauth:spring-security-oauth2'
+
+  compile 'org.springframework.boot:spring-boot-starter-freemarker'
 }

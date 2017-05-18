@@ -3,3 +3,17 @@ server:
 feign:
   httpclient:
     enabled: true
+
+security:
+    oauth2:
+        client:
+            clientId: acme
+            clientSecret: acmesecret
+            accessTokenUri: http://localhost:8084/uaa/oauth/access_token
+            userAuthorizationUri: http://localhost:8084/uaa/oauth/authorize
+            clientAuthenticationScheme: form
+        sso:
+          login-path: '/login'
+        resource:
+          user-info-uri:  'http://localhost:8084/uaa/oauth/authorize'
+          token-info-uri: 'http://localhost:8084/uaa/oauth/check_token'

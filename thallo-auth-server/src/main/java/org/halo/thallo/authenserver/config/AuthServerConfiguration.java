@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -28,17 +29,20 @@ import java.security.KeyPair;
  * Created by lihong on 17-3-28.
  */
 @Configuration
-@Controller
-@SessionAttributes("authorizationRequest")
 public class AuthServerConfiguration extends WebMvcConfigurerAdapter {
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/oauth/confirm_access").setViewName("authorize");
     }
 
+    /**
+     * Spring 安全配置： 表单登录
+     */
     @Configuration
     @Order(ManagementServerProperties.ACCESS_OVERRIDE_ORDER)
+    @SessionAttributes("authorizationRequest")
     protected static class LoginConfig extends WebSecurityConfigurerAdapter {
 
         @Autowired
@@ -55,6 +59,8 @@ public class AuthServerConfiguration extends WebMvcConfigurerAdapter {
             auth.parentAuthenticationManager(authenticationManager);
         }
     }
+
+
 
     @Configuration
     @EnableAuthorizationServer
