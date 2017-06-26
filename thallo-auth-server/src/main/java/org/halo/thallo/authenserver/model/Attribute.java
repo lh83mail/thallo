@@ -6,17 +6,17 @@ import java.io.Serializable;
  * 属性定义
  * Created by lihong on 17-4-15.
  */
-public class Attribue implements Serializable {
+public class Attribute implements Serializable {
     private String id;
     private String name;
     private String dataType;
     private Object value;
     private String description;
 
-    public Attribue() {
+    public Attribute() {
     }
 
-    public Attribue(String id, String name, String dataType, Object value, String description) {
+    public Attribute(String id, String name, String dataType, Object value, String description) {
         this.id = id;
         this.name = name;
         this.dataType = dataType;

@@ -12,6 +12,6 @@ dependencies {
 
     //
     testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+   // testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     //testCompile group: "de.flapdoodle.embed", name: "de.flapdoodle.embed.mongo", version: "2.0.0"
 }

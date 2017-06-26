@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Schema implements Serializable {
     private String id;
-    private List<Attribue> attributes;
+    private List<Attribute> attributes;
     private String descreption;
 
     public String getId() {
@@ -19,11 +19,11 @@ public class Schema implements Serializable {
         this.id = id;
     }
 
-    public List<Attribue> getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(List<Attribue> attributes) {
+    public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
     }
 

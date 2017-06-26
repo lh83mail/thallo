@@ -1,7 +1,7 @@
 package org.halo.thallo.authenserver.dao;
 
 import org.halo.thallo.authenserver.entity.SchemaEntity;
-import org.halo.thallo.authenserver.model.Attribue;
+import org.halo.thallo.authenserver.model.Attribute;
 import org.halo.thallo.authenserver.model.Schema;
 import org.halo.thallo.authenserver.service.SchemaService;
 import org.junit.Before;
@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
         "spring.cloud.discovery.enabled=false",
         "spring.profiles.active=test"
 })
-public class RunTest {
+public class SchemaRepositoryTestCase {
     @Autowired
     private SchemaService schemaService;
 
@@ -46,8 +46,8 @@ public class RunTest {
         schema.setId(schemaId);
         schema.setDescreption("用户模型");
         schema.setAttributes(Arrays.asList(
-                new Attribue("name", "姓名", "string", "未定义", "用户姓名"),
-                new Attribue("age", "年龄", "int", 32, "年龄")
+                new Attribute("name", "姓名", "string", "未定义", "用户姓名"),
+                new Attribute("age", "年龄", "int", 32, "年龄")
         ));
 
         schema =  schemaService.saveSchema(schema);
@@ -56,15 +56,15 @@ public class RunTest {
         assertNotNull("属性列表不应该为null", schema.getAttributes());
 
         // 更新
-        List<Attribue> attributes = new ArrayList<>();
-        for (Attribue attribue : schema.getAttributes()) {
+        List<Attribute> attributes = new ArrayList<>();
+        for (Attribute attribue : schema.getAttributes()) {
             attributes.add(attribue);
         }
 
         schema = new Schema();
         schema.setId(schemaId);
         schema.setDescreption("用户模型对象");
-        attributes.add(new Attribue("birthday", "生日", "date", new Date(), "生日"));
+        attributes.add(new Attribute("birthday", "生日", "date", new Date(), "生日"));
         schema.setAttributes(attributes);
 
         schema = schemaService.saveSchema(schema);
@@ -97,11 +97,16 @@ public class RunTest {
             mongoTemplate.save(schema);
         }
 
-        assertFalse("实现查询", true);
+   //     assertFalse("实现查询", true);
 
-//        Page<Schema> page = schemaService.querySchemas(0, 20);
-//        assertNotNull("应该有数据", page.getContent());
-//        assertEquals("记录应该有3条", 3, page.getTotalElements());
+        Page<Schema> page = schemaService.querySchemas(null, 0, 20);
+        assertNotNull("应该有数据", page.getContent());
+        assertEquals("记录应该有3条", 3, page.getTotalElements());
+
+        page = schemaService.querySchemas("测试_1", 0, 20);
+        assertNotNull("应该有数据", page.getContent());
+        assertEquals("记录应该有1条", 1, page.getTotalElements());
+        assertEquals("ID应该不符合预期","schemaid1", page.getContent().get(0).getId());
     }
 
 
@@ -114,8 +119,8 @@ public class RunTest {
         schema.setId(UUID.randomUUID().toString());
         schema.setDescreption("用户模型");
         schema.setAttributes(Arrays.asList(
-                new Attribue("name", "姓名", "string", "未定义", "用户姓名"),
-                new Attribue("age", "年龄", "int", 32, "年龄")
+                new Attribute("name", "姓名", "string", "未定义", "用户姓名"),
+                new Attribute("age", "年龄", "int", 32, "年龄")
         ));
         schema =  schemaService.saveSchema(schema);
         assertNotNull("应该返回Schema对象", schema);
