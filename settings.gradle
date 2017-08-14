@@ -10,3 +10,6 @@ include 'thallo-gateway-server'
 include 'thallo-examples:service-api'
 include 'thallo-examples:simple-server-side'
 include 'thallo-examples:simple-client-side'
+
+
+include 'mmr'
