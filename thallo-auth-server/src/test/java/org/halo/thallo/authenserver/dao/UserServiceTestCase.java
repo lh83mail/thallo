@@ -2,6 +2,7 @@ package org.halo.thallo.authenserver.dao;
 
 import com.netflix.discovery.converters.Auto;
 import org.halo.thallo.authenserver.model.User;
+import org.halo.thallo.authenserver.service.UserException;
 import org.halo.thallo.authenserver.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class UserServiceTestCase {
     private UserService userService;
 
     @Test
-    public void testSaveUser() {
+    public void testSaveUser() throws UserException {
         User user = new User();
         user.setUid(UUID.randomUUID().toString());
         user.put("name", "张三");

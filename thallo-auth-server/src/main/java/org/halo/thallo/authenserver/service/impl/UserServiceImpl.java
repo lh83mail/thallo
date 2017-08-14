@@ -2,6 +2,8 @@ package org.halo.thallo.authenserver.service.impl;
 
 import org.halo.thallo.authenserver.dao.UserRepository;
 import org.halo.thallo.authenserver.entity.UserEntity;
+import org.halo.thallo.authenserver.global.Validator;
+import org.halo.thallo.authenserver.global.ValidtionManager;
 import org.halo.thallo.authenserver.model.Operation;
 import org.halo.thallo.authenserver.model.Schema;
 import org.halo.thallo.authenserver.model.User;
@@ -14,6 +16,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  * Created by lihong on 17-5-24.
  */
@@ -23,9 +28,10 @@ public class UserServiceImpl implements UserService, ApplicationEventPublisherAw
     private UserRepository userRepository;
     private ApplicationEventPublisher applicationEventPublisher;
     private SchemaService schemaService;
+    private ValidtionManager validtionManager;
 
     @Override
-    public User findUser(String uid) {
+    public User getUser(String uid) {
         return null;
     }
 
@@ -35,19 +41,36 @@ public class UserServiceImpl implements UserService, ApplicationEventPublisherAw
 
         Schema schema = schemaService.getSchema(User.schemaId);
         if (schema == null) {
-            throw new UserException("没有定义用户属性。");
+            throw new UserException("没有定义用户属性。请先定义用户属性");
         }
 
-        // TODO 验证用户对象有效性 schema, user
-        
-        UserEntity old = userRepository.findOne(user.getUid());
-        UserEntity entity = null;
-        if (old == null) {
-            entity = userRepository.save(UserEntity.copyFrom(user));
-            applicationEventPublisher.publishEvent(new UserEvent(user, schema, Operation.add));
-        } else {
-            entity = userRepository.save(UserEntity.copyFrom(user));
+        // Process
+        List<Validator> validatorList = validtionManager.getValidators(schema.getId());
+        for (Validator validator : validatorList) {
+            validator.validate(user);
         }
+
+        // save user
+        if (user.getUid() == null) {
+            UserEntity entity = UserEntity.copyFrom(user);
+            entity.setUid(UUID.randomUUID().toString());
+            entity = userRepository.save(entity);
+
+            applicationEventPublisher.publishEvent(new UserEvent(user, schema, Operation.add));
+
+            schema.
+        }
+        else {
+            UserEntity old = userRepository.findOne(user.getUid());
+            if (old == null) { // new user
+                old = UserEntity.copyFrom(user);
+                old = userRepository.save(old);
+            }
+            else { // edit user
+                old = userRepository.save(old);
+            }
+        }
+
        // dispatchEvent(entity);
         return entity;
     }
@@ -61,5 +84,10 @@ public class UserServiceImpl implements UserService, ApplicationEventPublisherAw
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    @Autowired
+    public void setSchemaService(SchemaService schemaService) {
+        this.schemaService = schemaService;
     }
 }

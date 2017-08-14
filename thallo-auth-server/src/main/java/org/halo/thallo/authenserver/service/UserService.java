@@ -11,7 +11,7 @@ public interface UserService {
      * @param uid
      * @return
      */
-    User findUser(String uid);
+    User getUser(String uid);
 
     /**
      * 保存用户信息
