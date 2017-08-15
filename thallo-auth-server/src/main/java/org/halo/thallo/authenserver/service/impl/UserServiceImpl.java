@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService, ApplicationEventPublisherAw
 
             applicationEventPublisher.publishEvent(new UserEvent(user, schema, Operation.add));
 
-            schema.
+//            schema.
         }
         else {
             UserEntity old = userRepository.findOne(user.getUid());
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService, ApplicationEventPublisherAw
         }
 
        // dispatchEvent(entity);
-        return entity;
+        return null;//entity;
     }
 
 

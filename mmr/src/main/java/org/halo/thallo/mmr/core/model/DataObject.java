@@ -1,5 +1,7 @@
 package org.halo.thallo.mmr.core.model;
 
+import org.halo.thallo.mmr.core.Validator;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,6 @@ import java.util.List;
  * Created by dell01 on 2017/8/14.
  */
 public class DataObject extends Model {
-    List<Attribute> attributes;
-
+    private List<Attribute> attributes;
+    private List<Validator<DataObject>> validators;
 }
