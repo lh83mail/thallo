@@ -9,8 +9,8 @@ import java.util.List;
  */
 public interface DataObjectService {
 
-    DataObject createDataObject();
-    DataObject saveDataObject();
+    DataObject createDataObject(String id);
+    DataObject saveDataObject(DataObject dataObject);
     boolean deleteDataObject();
     DataObject getDataObject();
     List<DataObject> queryObject(Object filter, Object orderby, int page, int limit);
