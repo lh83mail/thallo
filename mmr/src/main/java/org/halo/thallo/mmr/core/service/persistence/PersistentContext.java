@@ -5,17 +5,14 @@ import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 /**
  * 持久化服务
  * Created by lihong on 17-8-15.
  */
-public class PersistService {
-    private void test() {
-        EntityManager entityManager = null;
-        Hibernate hibernate;
-        SessionFactory sessionFactory;
-
-//        entityManager.persistable
-    }
+public interface PersistentContext {
+   void persist(List<PersistableObject> persistableObjects);
+   void commit();
+   void close();
 }
