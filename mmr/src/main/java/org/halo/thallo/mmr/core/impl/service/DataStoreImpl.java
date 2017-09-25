@@ -40,7 +40,10 @@ public class DataStoreImpl implements DataStore {
     }
 
 
-
+    @Override
+    public DataObject persist(Map<String, Object> values) {
+        return null;
+    }
 
     public boolean persist() {
 

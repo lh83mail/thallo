@@ -2,6 +2,7 @@ package org.halo.thallo.mmr.core.impl.service;
 
 import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.ValueType;
+import org.halo.thallo.mmr.core.model.op.Operation;
 
 /**
  * Created by dell01 on 2017/9/25.
@@ -13,6 +14,7 @@ public class AttributeImpl implements Attribute {
     private Object value;
     private boolean insertable = true;
     private ValueType valueType;
+
 
     @Override
     public String getId() {
@@ -72,5 +74,10 @@ public class AttributeImpl implements Attribute {
     @Override
     public void setValueType(ValueType valueType) {
         this.valueType = valueType;
+    }
+
+    @Override
+    public Operation getOperation() {
+        return null;
     }
 }
