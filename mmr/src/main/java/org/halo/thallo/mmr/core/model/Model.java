@@ -12,5 +12,5 @@ public interface Model extends Serializable {
     String getName();
     void setName(String name);
     String getDescription();
-    void setDescription();
+    void setDescription(String description);
 }

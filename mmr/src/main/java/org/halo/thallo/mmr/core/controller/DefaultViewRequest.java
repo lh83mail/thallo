@@ -32,7 +32,7 @@ public class DefaultViewRequest implements ViewRequest {
         List<Attribute> attributeList = schema.getAttributes();
         DataObject dataObject = createDataObject(schema);
         attributeList.forEach(attribute -> {
-            ValueSource valueSource = attribute.getValueSource();
+            ValueSource valueSource = null;// attribute.getValueSource();
             valueSource.provideValue(dataObject, requestData);
         });
 

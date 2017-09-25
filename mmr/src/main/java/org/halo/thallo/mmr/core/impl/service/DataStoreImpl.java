@@ -11,6 +11,7 @@ import org.halo.thallo.mmr.core.model.DataStore;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lihong on 17-10-11.
@@ -37,6 +38,9 @@ public class DataStoreImpl implements DataStore {
         dataStoreMapper.execute(buf.toString());
         return true;
     }
+
+
+
 
     public boolean persist() {
 

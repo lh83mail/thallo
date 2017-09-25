@@ -11,4 +11,8 @@ public  interface DataObject extends Model {
     Iterable<Attribute> getAttributes();
 
     List<Attribute> getIdAttributes();
+
+    void addAttributes(Attribute ... attributes);
+
+    void setPrimaryAttributes(Attribute... attributes);
 }

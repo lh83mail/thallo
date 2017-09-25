@@ -1,11 +1,6 @@
 package org.halo.thallo.mmr.core.model;
 
 
-import org.halo.thallo.mmr.core.Validator;
-
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by dell01 on 2017/8/14.
  */
@@ -21,4 +16,9 @@ public interface Attribute extends Model {
 
     boolean isInsertable();
 
+    void setValue(Object val);
+
+    ValueType getValueType();
+
+    void setValueType(ValueType valueType);
 }
