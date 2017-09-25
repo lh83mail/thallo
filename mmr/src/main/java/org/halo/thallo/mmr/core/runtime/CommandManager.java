@@ -1,7 +1,6 @@
 package org.halo.thallo.mmr.core.runtime;
 
 import org.halo.thallo.mmr.core.model.DataObject;
-import org.halo.thallo.mmr.core.model.Schema;
 import org.halo.thallo.mmr.core.model.op.Operation;
 
 /**

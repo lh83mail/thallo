@@ -1,14 +1,8 @@
 package org.halo.thallo.mmr.core.controller;
 
-import org.halo.thallo.mmr.core.SchemaService;
-import org.halo.thallo.mmr.core.model.Attribute;
-import org.halo.thallo.mmr.core.model.DataObject;
-import org.halo.thallo.mmr.core.model.Schema;
 import org.halo.thallo.mmr.core.runtime.Executor;
-import org.halo.thallo.mmr.core.runtime.ValueSource;
 import org.halo.thallo.mmr.core.runtime.ViewRequest;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,7 +25,4 @@ public class TheController {
         return null;
     }
 
-    private DataObject createDataObject(Schema schema) {
-        return null;
-    }
 }
