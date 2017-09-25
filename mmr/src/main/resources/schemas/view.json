@@ -1,0 +1,27 @@
+{
+  "id": "viewId",
+  "vtype": "view-type",
+  "isRoot": "rootView",
+  "parent": "parentViewId",
+  "layout": "layout-id",
+  "items": [
+    {"children-view"}
+  ]
+}
+
+// view-container
+{
+
+  
+}
+// view-item
+{
+
+}
+
+// layout
+{
+  "id": "column-layout",
+  "type": "type",
+  "columns": 2
+}

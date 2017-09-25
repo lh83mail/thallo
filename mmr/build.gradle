@@ -7,4 +7,5 @@ dependencies {
     compile "mysql:mysql-connector-java:6.0.6"
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'com.h2database:h2:1.4.196'
 }

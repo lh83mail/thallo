@@ -11,6 +11,5 @@ public interface View {
     String getTitle();
     String getSubTitle();
     String getDescription();
-    
     List<Action> getActions();
 }
