@@ -1,16 +1,16 @@
 package org.halo.thallo.mmr.core;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * Created by lihong on 17-10-9.
+ * Created by lihong on 17-10-10.
  */
-@TestConfiguration
 @SpringBootApplication
 @EnableTransactionManagement
-@EntityScan
-public class ServiceTestRoot {
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 }
