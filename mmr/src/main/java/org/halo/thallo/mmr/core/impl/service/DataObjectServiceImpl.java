@@ -1,6 +1,5 @@
-package org.halo.thallo.mmr.core.service.impl;
+package org.halo.thallo.mmr.core.impl.service;
 
-import org.halo.thallo.mmr.core.impl.entity.DataObjectEntity;
 import org.halo.thallo.mmr.core.model.DataObject;
 import org.halo.thallo.mmr.core.service.DataObjectService;
 import org.halo.thallo.mmr.core.service.persistence.PersistSession;
@@ -15,8 +14,7 @@ public class DataObjectServiceImpl implements DataObjectService {
 
     @Override
     public DataObject createDataObject(String id) {
-        DataObjectEntity data = (DataObjectEntity) persistSession.get(id);
-        return data;
+        return null;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.halo.thallo.mmr.core.service.impl;
+package org.halo.thallo.mmr.core.impl.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
