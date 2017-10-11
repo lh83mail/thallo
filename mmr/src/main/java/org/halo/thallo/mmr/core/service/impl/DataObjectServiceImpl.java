@@ -30,7 +30,7 @@ public class DataObjectServiceImpl implements DataObjectService {
     }
 
     @Override
-    public DataObject getDataObject() {
+    public DataObject getDataObject(String id) {
         return null;
     }
 

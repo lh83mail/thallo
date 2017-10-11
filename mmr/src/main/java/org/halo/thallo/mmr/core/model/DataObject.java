@@ -8,7 +8,9 @@ import java.util.List;
  * 数据对象
  * Created by dell01 on 2017/8/14.
  */
-public class DataObject extends Model {
-    private List<Attribute> attributes;
-    private List<Validator<DataObject>> validators;
+public  interface DataObject extends Model {
+
+    Iterable<Attribute> getAttributes();
+
+    List<Attribute> getIdAttributes();
 }

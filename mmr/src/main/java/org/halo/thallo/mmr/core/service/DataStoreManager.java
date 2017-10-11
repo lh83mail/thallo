@@ -12,7 +12,7 @@ public interface DataStoreManager {
      * 创建DataObject的数据对象存储空间
      * @param oid
      */
-    DataStore createStore(String oid);
+    DataStore createStore(String oid) throws MMRException;
 
     /**
      * 清空数据对象存储空间
