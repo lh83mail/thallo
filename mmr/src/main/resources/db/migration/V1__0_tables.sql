@@ -6,7 +6,6 @@ create table SYS_ATTRS (
    value_ varchar(200),
    source_ varchar(50),
    options_ text,
-   store_editor_ varchar(200),
    primary key(id_);
 );
 
