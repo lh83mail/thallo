@@ -8,6 +8,6 @@ import org.apache.ibatis.annotations.Update;
  */
 @Mapper
 public interface DataStoreMapper {
-    @Update("${sql}")
+    @Update("#{sql}")
     boolean execute(String sql);
 }

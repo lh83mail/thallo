@@ -6,6 +6,7 @@ import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.DataObject;
 import org.halo.thallo.mmr.core.model.DataStore;
 
+
 import java.util.List;
 
 /**
@@ -46,6 +47,7 @@ public class DataStoreImpl implements DataStore {
 
         dataObject.getAttributes().forEach(a -> {
             buf.append(a.getDBColumnDefinition());
+            buf.append(",");
         });
 
         List<Attribute> attributeList = dataObject.getIdAttributes();
