@@ -16,4 +16,9 @@ public interface Attribute extends Model {
      * @return
      */
     String getDBColumnDefinition();
+
+    Object getValue();
+
+    boolean isInsertable();
+
 }

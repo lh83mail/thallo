@@ -1,7 +1,5 @@
 package org.halo.thallo.mmr.core.model;
 
-import org.halo.thallo.mmr.core.Validator;
-
 import java.util.List;
 
 /**

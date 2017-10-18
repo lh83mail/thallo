@@ -1,12 +1,15 @@
 package org.halo.thallo.mmr.core.impl.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.jdbc.SQL;
+import org.apache.ibatis.session.SqlSession;
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
 import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.DataObject;
 import org.halo.thallo.mmr.core.model.DataStore;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -33,6 +36,21 @@ public class DataStoreImpl implements DataStore {
         StringBuffer buf = generateDropTableSql(dataObject);
         dataStoreMapper.execute(buf.toString());
         return true;
+    }
+
+    public boolean persist() {
+        SQL sql = new SQL(){{
+          INSERT_INTO(dataObject.getName());
+          Iterable<Attribute> attributes = dataObject.getAttributes();
+          attributes.forEach(attr -> {
+              if (attr.isInsertable()) {
+                  VALUES(attr.getName(), "#{" + attr.getName() + "}");
+              }
+          });
+        }};
+        HashMap<String,Object> params = new HashMap<>();
+        SqlSession session = null;
+        return session.insert(sql.toString(), params) > 0;
     }
 
     @Override
