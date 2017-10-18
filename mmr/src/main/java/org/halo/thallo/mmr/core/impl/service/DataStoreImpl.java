@@ -39,6 +39,9 @@ public class DataStoreImpl implements DataStore {
     }
 
     public boolean persist() {
+
+        //TODO 参数由DataObject Id 与 Map 决定， Map 与 Object 数据互相转换能力类
+
         SQL sql = new SQL(){{
           INSERT_INTO(dataObject.getName());
           Iterable<Attribute> attributes = dataObject.getAttributes();
