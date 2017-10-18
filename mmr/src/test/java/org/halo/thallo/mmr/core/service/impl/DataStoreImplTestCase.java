@@ -4,6 +4,7 @@ import org.halo.thallo.mmr.core.impl.service.DataStoreImpl;
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
 import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.DataObject;
+import org.halo.thallo.mmr.core.model.DataStore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -33,8 +34,9 @@ public class DataStoreImplTestCase {
     @Autowired
     private DataStoreMapper dataStoreMapper;
 
+
     @Test
-    public void testDataStoreCreate() {
+    public void testDataStoreCreate()  {
         Attribute idAttr = mock(Attribute.class);
         when(idAttr.getDBColumnDefinition()).thenReturn("id_ bigint");
         when(idAttr.getName()).thenReturn("id_");
@@ -49,10 +51,9 @@ public class DataStoreImplTestCase {
                 .thenReturn(Arrays.asList(idAttr, nameAttr));
         when(dataObject.getIdAttributes()).thenReturn(Arrays.asList(idAttr));
 
-        DataStoreImpl impl = new DataStoreImpl(dataObject, dataStoreMapper);
+        DataStore impl = new DataStoreImpl(dataObject, dataStoreMapper);
         boolean resulst = impl.create();
         assertTrue(resulst);
-
     }
 
 }
