@@ -30,14 +30,25 @@ public class DataStoreImpl implements DataStore {
 
     @Override
     public boolean drop() {
-        return false;
+        StringBuffer buf = generateDropTableSql(dataObject);
+        dataStoreMapper.execute(buf.toString());
+        return true;
     }
 
     @Override
     public boolean empty() {
-        return false;
+        StringBuffer buf = generateEmptyTableSql(dataObject);
+        dataStoreMapper.execute(buf.toString());
+        return true;
     }
 
+    private StringBuffer generateDropTableSql(DataObject dataObject) {
+        return new StringBuffer("drop table ").append(dataObject.getName());
+    }
+
+    private StringBuffer generateEmptyTableSql(DataObject dataObject) {
+        return new StringBuffer("truncate table ").append(dataObject.getName());
+    }
 
     private StringBuffer generateCreateTableSql(DataObject dataObject) {
         StringBuffer buf = new StringBuffer();
