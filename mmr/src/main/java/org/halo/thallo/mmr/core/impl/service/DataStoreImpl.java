@@ -2,6 +2,7 @@ package org.halo.thallo.mmr.core.impl.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.jdbc.SQL;
+import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.SqlSession;
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
 import org.halo.thallo.mmr.core.model.Attribute;
@@ -42,29 +43,15 @@ public class DataStoreImpl implements DataStore {
 
     @Override
     public DataObject persist(Map<String, Object> values) {
+        dataStoreMapper.insert(this.dataObject, values);
         return null;
-    }
-
-    public boolean persist() {
-
-        //TODO 参数由DataObject Id 与 Map 决定， Map 与 Object 数据互相转换能力类
-
-        SQL sql = new SQL(){{
-          INSERT_INTO(dataObject.getName());
-          Iterable<Attribute> attributes = dataObject.getAttributes();
-          attributes.forEach(attr -> {
-              if (attr.isInsertable()) {
-                  VALUES(attr.getName(), "#{" + attr.getName() + "}");
-              }
-          });
-        }};
-        HashMap<String,Object> params = new HashMap<>();
-        SqlSession session = null;
-        return session.insert(sql.toString(), params) > 0;
     }
 
     @Override
     public boolean empty() {
+        SqlSession sqlSession;
+//        SqlMapper sqlMapper;
+        MappedStatement sm;
         StringBuffer buf = generateEmptyTableSql(dataObject);
         dataStoreMapper.execute(buf.toString());
         return true;

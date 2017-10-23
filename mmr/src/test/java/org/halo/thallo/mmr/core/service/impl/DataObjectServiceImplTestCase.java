@@ -33,11 +33,14 @@ public class DataObjectServiceImplTestCase {
     private  SqlSession sqlSession;
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
+//    @Autowired
+//    private SqlMapper sqlMapper;
 
     @Test
     public void test() {
         assertNotNull(sqlSession);
         assertNotNull(sqlSessionTemplate);
+
         // 多表关联的情况
         // 处理级联情况
         // 更新时需要比较每一个字段的操作

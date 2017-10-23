@@ -34,7 +34,6 @@ public class DataStoreImplTestCase {
     @Autowired
     private DataStoreMapper dataStoreMapper;
 
-
     @Test
     public void testDataStoreCreate()  {
         Attribute idAttr = mock(Attribute.class);
@@ -56,4 +55,11 @@ public class DataStoreImplTestCase {
         assertTrue(resulst);
     }
 
+    @Test
+    private void presistData() {
+//        DataStore dataStore = null;
+//        DataObjectReader reader = new DataObjectReaderImpl(dataObject);
+//        DataObject dataObject = reader.read();
+//        dataStore.prisist(dataObject);
+    }
 }
