@@ -1,5 +1,10 @@
 package org.halo.thallo.mmr.core.service.impl;
 
+import org.apache.ibatis.builder.SqlSourceBuilder;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.halo.thallo.mmr.core.model.DataObject;
 import org.halo.thallo.mmr.core.model.DataStore;
@@ -10,12 +15,13 @@ import org.junit.runner.RunWith;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -33,6 +39,45 @@ public class DataObjectServiceImplTestCase {
     private  SqlSession sqlSession;
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Test
+    public void stu() {
+        assertNotNull(sqlSession);
+        assertNotNull(jdbcTemplate);
+        assertNotNull(namedParameterJdbcTemplate);
+//        Configuration configuration = sqlSession.getConfiguration();
+//
+//        SqlSourceBuilder sqlSourceBuilder = new  SqlSourceBuilder(configuration);
+//        SqlSource sqlSource =  sqlSourceBuilder.parse("insert into MyTest(id_, object_, attr_) values (?,?,?)",
+//                Map.class,
+//                null
+//        );
+//        MappedStatement ms = new MappedStatement.Builder(configuration, "myinsert", sqlSource, SqlCommandType.INSERT)
+//                .build();
+//        System.out.println(sqlSource);
+
+//        List<Object> params = new ArrayList<>();
+//        params.addAll();
+        Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("attr", "Lily");
+        paraMap.put("obj", "Lily@sina.com");
+        paraMap.put("key", 1);
+        namedParameterJdbcTemplate.update("insert into MyTest(id_, object_, attr_) values(:key, :obj, :attr)", paraMap);
+        Object result = jdbcTemplate.queryForList("select * from MyTest");
+        System.out.println(result);
+    }
+
+    @Test
+    public void objectMapper() {
+
+
+    }
 
     @Test
     public void test() {

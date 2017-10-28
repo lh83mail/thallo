@@ -7,6 +7,10 @@ import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
 import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.DataObject;
 import org.halo.thallo.mmr.core.model.DataStore;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 
 import java.util.HashMap;
@@ -19,11 +23,18 @@ import java.util.Map;
 public class DataStoreImpl implements DataStore {
     private DataObject dataObject;
     private DataStoreMapper dataStoreMapper;
+    private NamedParameterJdbcTemplate jdbcTemplate;
+
 
     public DataStoreImpl(DataObject dataObject, DataStoreMapper dataStoreMapper) {
         this.dataObject = dataObject;
         this.dataStoreMapper = dataStoreMapper;
     }
+
+    public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
 
     @Override
     public boolean create() {
@@ -42,26 +53,26 @@ public class DataStoreImpl implements DataStore {
 
     @Override
     public DataObject persist(Map<String, Object> values) {
+        assert dataObject != null;
+
+        SQL sql = new SQL(){{
+            INSERT_INTO(dataObject.getName());
+            Iterable<Attribute> attributes = dataObject.getAttributes();
+            attributes.forEach(attr -> {
+                if (attr.isInsertable() && values.containsKey(attr.getName())) {
+                    VALUES(attr.getName(), ":" + attr.getName());
+                }
+            });
+        }};
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        int result = jdbcTemplate.update(sql.toString(), new MapSqlParameterSource(values), keyHolder);
+
+        if (result > 0) {
+
+        }
         return null;
     }
 
-    public boolean persist() {
-
-        //TODO 参数由DataObject Id 与 Map 决定， Map 与 Object 数据互相转换能力类
-
-        SQL sql = new SQL(){{
-          INSERT_INTO(dataObject.getName());
-          Iterable<Attribute> attributes = dataObject.getAttributes();
-          attributes.forEach(attr -> {
-              if (attr.isInsertable()) {
-                  VALUES(attr.getName(), "#{" + attr.getName() + "}");
-              }
-          });
-        }};
-        HashMap<String,Object> params = new HashMap<>();
-        SqlSession session = null;
-        return session.insert(sql.toString(), params) > 0;
-    }
 
     @Override
     public boolean empty() {
@@ -83,9 +94,10 @@ public class DataStoreImpl implements DataStore {
         buf.append("create table ")
                 .append(dataObject.getName())
                 .append("(");
+        DbDefintionMapper mapper = new DbDefintionMapper();
 
         dataObject.getAttributes().forEach(a -> {
-            buf.append(a.getDBColumnDefinition());
+            buf.append(mapper.columnDefintion(a));
             buf.append(",");
         });
 

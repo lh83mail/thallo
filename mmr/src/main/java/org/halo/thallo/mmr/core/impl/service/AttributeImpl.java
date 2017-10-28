@@ -47,11 +47,6 @@ public class AttributeImpl implements Attribute {
     }
 
     @Override
-    public String getDBColumnDefinition() {
-        return null;
-    }
-
-    @Override
     public Object getValue() {
         return value;
     }
