@@ -13,6 +13,7 @@ public class AttributeImpl implements Attribute {
     private String description;
     private Object value;
     private boolean insertable = true;
+    private boolean updateable = true;
     private ValueType valueType;
     private int length;
 
@@ -92,5 +93,14 @@ public class AttributeImpl implements Attribute {
     @Override
     public AttributeImpl clone() throws CloneNotSupportedException {
         return (AttributeImpl) super.clone();
+    }
+
+    @Override
+    public boolean isUpdateable() {
+        return updateable;
+    }
+
+    public void setUpdateable(boolean updateable) {
+        this.updateable = updateable;
     }
 }
