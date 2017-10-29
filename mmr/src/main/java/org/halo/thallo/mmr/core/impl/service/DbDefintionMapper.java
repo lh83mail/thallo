@@ -8,13 +8,13 @@ import org.halo.thallo.mmr.core.model.ValueType;
  */
 public class DbDefintionMapper {
  public String columnDefintion(Attribute attr) {
-     return attr.getName() + " " + defintionType(attr.getValueType());
+     return attr.getName() + " " + defintionType(attr);
  }
 
- public String defintionType(ValueType valueType) {
-     switch (valueType) {
+ public String defintionType(Attribute attr) {
+     switch (attr.getValueType()) {
          case STRING:
-           return "varchar(50)";
+           return "varchar(" + attr.getLength() +")";
          case DATE:
              return "datetime";
          case BOOL:

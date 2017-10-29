@@ -2,7 +2,6 @@ package org.halo.thallo.mmr.core.impl.service;
 
 import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.DataObject;
-import org.halo.thallo.mmr.core.model.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,5 +88,30 @@ public class DataObjectImpl implements DataObject {
         for (Attribute attribute : attributes) {
             this.idAttributes.add(attribute);
         }
+    }
+
+    @Override
+    public DataObjectImpl clone() throws CloneNotSupportedException {
+        DataObjectImpl impl = (DataObjectImpl) super.clone();
+        if (attributes != null) {
+            List<Attribute> templst = new ArrayList<>();
+            for (Attribute a : attributes) {
+                templst.add( (Attribute) a.clone());
+            }
+            impl.setAttributes(templst);
+        }
+        if (idAttributes != null) {
+            List<Attribute> templst = new ArrayList<>();
+            for (Attribute a : idAttributes) {
+                impl.attributes.forEach(attr -> {
+                    if (attr.getName().equals(a.getName())) {
+                        templst.add(attr);
+                    }
+                });
+            }
+            impl.idAttributes = templst;
+        }
+
+        return impl;
     }
 }

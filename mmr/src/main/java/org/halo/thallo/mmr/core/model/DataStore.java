@@ -1,5 +1,7 @@
 package org.halo.thallo.mmr.core.model;
 
+import org.halo.thallo.mmr.core.service.MMRException;
+
 import java.util.Map;
 
 /**
@@ -10,5 +12,5 @@ public interface DataStore {
     boolean drop();
     boolean empty();
 
-    DataObject persist(Map<String, Object> values);
+    DataObject persist(Map<String, Object> values) throws MMRException;
 }

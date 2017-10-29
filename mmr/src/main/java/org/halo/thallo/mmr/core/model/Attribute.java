@@ -23,4 +23,8 @@ public interface Attribute extends Model {
      * @return
      */
     Operation getOperation();
+
+    int getLength();
+
+    boolean isUpdateable();
 }

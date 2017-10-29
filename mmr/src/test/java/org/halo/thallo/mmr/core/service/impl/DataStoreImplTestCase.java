@@ -3,6 +3,7 @@ package org.halo.thallo.mmr.core.service.impl;
 import org.halo.thallo.mmr.core.impl.service.DataStoreImpl;
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
 import org.halo.thallo.mmr.core.model.DataObject;
+import org.halo.thallo.mmr.core.service.MMRException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +55,7 @@ public class DataStoreImplTestCase {
     @Test
     @Sql("DataStoreImplTestCase.testPerisit.sql")
     @Sql(value = "DataStoreImplTestCase.testPerisit-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    public void testPerisit() {
+    public void testPerisit() throws MMRException {
         Map<String, Object> values = new HashMap<>();
       //  values.put("id", 1);
         values.put("name", "TestData1");

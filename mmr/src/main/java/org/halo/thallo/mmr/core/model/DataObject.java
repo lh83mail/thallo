@@ -6,7 +6,7 @@ import java.util.List;
  * 数据对象
  * Created by dell01 on 2017/8/14.
  */
-public  interface DataObject extends Model {
+public  interface DataObject extends Model{
 
     Iterable<Attribute> getAttributes();
 
@@ -15,4 +15,6 @@ public  interface DataObject extends Model {
     void addAttributes(Attribute ... attributes);
 
     void setPrimaryAttributes(Attribute... attributes);
+
+    Model clone() throws CloneNotSupportedException;
 }
