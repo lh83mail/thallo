@@ -13,8 +13,9 @@ public class AttributeImpl implements Attribute {
     private String description;
     private Object value;
     private boolean insertable = true;
+    private boolean updateable = true;
     private ValueType valueType;
-
+    private int length;
 
     @Override
     public String getId() {
@@ -47,11 +48,6 @@ public class AttributeImpl implements Attribute {
     }
 
     @Override
-    public String getDBColumnDefinition() {
-        return null;
-    }
-
-    @Override
     public Object getValue() {
         return value;
     }
@@ -71,6 +67,19 @@ public class AttributeImpl implements Attribute {
         return valueType;
     }
 
+    public void setInsertable(boolean insertable) {
+        this.insertable = insertable;
+    }
+
+    @Override
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
     @Override
     public void setValueType(ValueType valueType) {
         this.valueType = valueType;
@@ -79,5 +88,19 @@ public class AttributeImpl implements Attribute {
     @Override
     public Operation getOperation() {
         return null;
+    }
+
+    @Override
+    public AttributeImpl clone() throws CloneNotSupportedException {
+        return (AttributeImpl) super.clone();
+    }
+
+    @Override
+    public boolean isUpdateable() {
+        return updateable;
+    }
+
+    public void setUpdateable(boolean updateable) {
+        this.updateable = updateable;
     }
 }

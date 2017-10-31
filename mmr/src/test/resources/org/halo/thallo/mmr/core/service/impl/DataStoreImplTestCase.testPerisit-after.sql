@@ -1,0 +1,1 @@
+drop table my_unit_test_tbl;

@@ -1,0 +1,1 @@
+create table my_unit_test_tbl (id bigint auto_increment, name varchar(50), locked bit, primary key(id));

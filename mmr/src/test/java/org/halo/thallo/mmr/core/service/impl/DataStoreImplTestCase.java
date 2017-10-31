@@ -2,26 +2,24 @@ package org.halo.thallo.mmr.core.service.impl;
 
 import org.halo.thallo.mmr.core.impl.service.DataStoreImpl;
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
-import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.DataObject;
-import org.halo.thallo.mmr.core.model.DataStore;
+import org.halo.thallo.mmr.core.service.MMRException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.w3c.dom.Attr;
 
-import javax.validation.constraints.AssertTrue;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import static org.halo.thallo.mmr.core.service.impl.Util.createUnitTestDataObject;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by lihong on 17-10-17.
@@ -33,33 +31,35 @@ import static org.mockito.Mockito.when;
 public class DataStoreImplTestCase {
     @Autowired
     private DataStoreMapper dataStoreMapper;
+    @Autowired
+    private NamedParameterJdbcTemplate jdbcTemplate;
+    private DataStoreImpl dataStore;
 
+    @Before
+    public void setup() {
+        DataObject unitTestDataObject = createUnitTestDataObject();
+        dataStore = new DataStoreImpl(unitTestDataObject, dataStoreMapper);
+        dataStore.setJdbcTemplate(jdbcTemplate);
+    }
+    /**
+     * 创建新表
+     */
     @Test
     public void testDataStoreCreate()  {
-        Attribute idAttr = mock(Attribute.class);
-        when(idAttr.getDBColumnDefinition()).thenReturn("id_ bigint");
-        when(idAttr.getName()).thenReturn("id_");
-
-        Attribute nameAttr = mock(Attribute.class);
-        when(nameAttr.getName()).thenReturn("name_");
-        when(nameAttr.getDBColumnDefinition()).thenReturn("name_ varchar(50)");
-
-        DataObject dataObject = mock(DataObject.class);
-        when(dataObject.getName()).thenReturn("test_tbl");
-        when(dataObject.getAttributes())
-                .thenReturn(Arrays.asList(idAttr, nameAttr));
-        when(dataObject.getIdAttributes()).thenReturn(Arrays.asList(idAttr));
-
-        DataStore impl = new DataStoreImpl(dataObject, dataStoreMapper);
-        boolean resulst = impl.create();
+        boolean resulst = dataStore.create();
         assertTrue(resulst);
     }
 
-    @Test
-    private void presistData() {
-//        DataStore dataStore = null;
-//        DataObjectReader reader = new DataObjectReaderImpl(dataObject);
-//        DataObject dataObject = reader.read();
-//        dataStore.prisist(dataObject);
+    @Sql("DataStoreImplTestCase.testPerisit.sql")
+    @Sql(value = "DataStoreImplTestCase.testPerisit-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void testPerisit() throws MMRException {
+        Map<String, Object> values = new HashMap<>();
+      //  values.put("id", 1);
+        values.put("name", "TestData1");
+        values.put("locked", false);
+
+        DataObject dataObject = dataStore.persist(values);
+        System.out.println(dataObject);
     }
+
 }

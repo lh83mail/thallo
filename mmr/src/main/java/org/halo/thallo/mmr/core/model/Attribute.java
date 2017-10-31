@@ -8,12 +8,6 @@ import org.halo.thallo.mmr.core.model.op.Operation;
  */
 public interface Attribute extends Model {
 
-    /**
-     * 数据库列定义
-     * @return
-     */
-    String getDBColumnDefinition();
-
     Object getValue();
 
     boolean isInsertable();
@@ -29,4 +23,8 @@ public interface Attribute extends Model {
      * @return
      */
     Operation getOperation();
+
+    int getLength();
+
+    boolean isUpdateable();
 }
