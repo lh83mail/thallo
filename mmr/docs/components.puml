@@ -1,0 +1,17 @@
+@startuml
+object "数据对象" as DataObject {
+  id
+  attributes
+}
+object "数据仓库" as DataStore {
+   dataobject
+}
+
+object "对象属性" as Attribute
+
+DataStore *-- DataObject:hold
+DataObject "1" o-- "*" Attribute: attributes
+
+'DataStore -> DataObject:create
+
+@enduml

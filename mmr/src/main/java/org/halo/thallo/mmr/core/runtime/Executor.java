@@ -2,8 +2,8 @@ package org.halo.thallo.mmr.core.runtime;
 
 import org.halo.thallo.mmr.core.model.DataObject;
 import org.halo.thallo.mmr.core.model.op.Operation;
+import org.halo.thallo.mmr.core.model.view.View;
 import org.halo.thallo.mmr.core.service.persistence.PersistentManager;
-import org.halo.thallo.mmr.core.view.View;
 
 /**
  * Created by dell01 on 2017/9/24.
