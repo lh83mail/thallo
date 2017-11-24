@@ -1,8 +1,6 @@
 package org.halo.thallo.authenserver.service;
 
-import org.halo.thallo.authenserver.entity.SchemaEntity;
 import org.halo.thallo.authenserver.model.Schema;
-import org.springframework.data.domain.Page;
 /**
  * Created by lihong on 17-4-14.
  */
@@ -26,12 +24,4 @@ public interface SchemaService {
      */
     void deleteSchema(String id);
 
-    /**
-     * 查询Schema定义
-     * @param filter
-     * @param page
-     * @param limit
-     * @return
-     */
-    Page<Schema> querySchemas(String filter, int page, int limit);
 }
