@@ -11,6 +11,10 @@
         { "id":"aid01", "name":"id", "description":"标识", "valueType":"STRING", "insertable":false, "updateable":false, "primary": true },
         { "id":"aid02", "name":"name", "description":"姓名", "valueType":"STRING", "insertable":true, "updateable":true, "primary": false },
         { "id":"aid03", "name":"age", "description":"年龄", "valueType":"LONG", "insertable":true, "updateable":true, "primary": false }
+      ],
+      "说明":"对于数据集，总是有CURD And Filter基本操作，其他都是基于这些操作的组合",
+      "commands": [
+
       ]
     }
   ],
