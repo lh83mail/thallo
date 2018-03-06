@@ -1,5 +1,7 @@
 package org.halo.thallo.mmr.core.impl.service;
 
+import com.alibaba.fastjson.JSONObject;
+import org.halo.thallo.mmr.core.impl.config.AbstractModel;
 import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.ValueType;
 import org.halo.thallo.mmr.core.model.op.Operation;
@@ -7,44 +9,21 @@ import org.halo.thallo.mmr.core.model.op.Operation;
 /**
  * Created by dell01 on 2017/9/25.
  */
-public class AttributeImpl implements Attribute {
-    private String id;
-    private String name;
-    private String description;
+public class AttributeImpl extends AbstractModel implements Attribute {
     private Object value;
     private boolean insertable = true;
     private boolean updateable = true;
     private ValueType valueType;
     private int length;
 
-    @Override
-    public String getId() {
-        return id;
-    }
+    public AttributeImpl(JSONObject config) {
+        super(config);
 
-    @Override
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
+        this.setInsertable(config.containsKey("insertable")? config.getBooleanValue("insertable") : true);
+        this.setUpdateable(config.containsKey("updateable")? config.getBooleanValue("updateable") : true);
+        this.setValueType(config.containsKey("valueType")? ValueType.valueOf(config.getString("valueType")) : ValueType.STRING);
+        this.setValue(config.get("value"));
+        this.setLength(config.containsKey("length")? config.getIntValue("length") : 50);
     }
 
     @Override

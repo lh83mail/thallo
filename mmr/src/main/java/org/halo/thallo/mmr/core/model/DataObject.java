@@ -1,6 +1,7 @@
 package org.halo.thallo.mmr.core.model;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据对象
@@ -10,11 +11,13 @@ public  interface DataObject extends Model{
 
     Iterable<Attribute> getAttributes();
 
-    List<Attribute> getIdAttributes();
-
     void addAttributes(Attribute ... attributes);
 
-    void setPrimaryAttributes(Attribute... attributes);
-
     Model clone() throws CloneNotSupportedException;
+
+    /**
+     * 转换成 单纯的数据
+     * @return
+     */
+    Object pureData();
 }

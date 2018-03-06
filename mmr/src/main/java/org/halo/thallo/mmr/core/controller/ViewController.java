@@ -24,21 +24,4 @@ public class ViewController {
     public Map<String, Object> loadView(@PathVariable("viewId") String viewId) {
         return new HashMap<String, Object>();
     }
-
-    /**
-     * 加载数据
-     * @return
-     */
-    public Map<String, Object> loadData() {
-        return null;
-    }
-
-    /**
-     * 执行一个命令
-     * @param params
-     * @return
-     */
-    public Map<String, Object> execute(Map<String, Object> params) {
-        return null;
-    }
 }

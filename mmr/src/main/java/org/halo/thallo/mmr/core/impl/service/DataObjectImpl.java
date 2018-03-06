@@ -1,49 +1,32 @@
 package org.halo.thallo.mmr.core.impl.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import org.halo.thallo.mmr.core.impl.config.AbstractModel;
 import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.DataObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dell01 on 2017/9/25.
  */
-public class DataObjectImpl implements DataObject {
-    private String id;
-    private String name;
-    private String description;
+public class DataObjectImpl extends AbstractModel implements DataObject {
+
     private List<Attribute> attributes;
-    private List<Attribute> idAttributes;
 
+    public DataObjectImpl(JSONObject config) {
+        super(config);
 
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        if (config.containsKey("attributes")) {
+            JSONArray array = config.getJSONArray("attributes");
+            array.forEach(arr -> {
+                this.addAttributes(new AttributeImpl((JSONObject) arr));
+            });
+        }
     }
 
     @Override
@@ -53,11 +36,6 @@ public class DataObjectImpl implements DataObject {
 
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
-    }
-
-    @Override
-    public List<Attribute> getIdAttributes() {
-        return idAttributes;
     }
 
     @Override
@@ -76,21 +54,6 @@ public class DataObjectImpl implements DataObject {
     }
 
     @Override
-    public void setPrimaryAttributes(Attribute... attributes) {
-        if (attributes == null) {
-            return;
-        }
-
-        if (this.idAttributes == null) {
-            this.idAttributes = new ArrayList<>();
-        }
-
-        for (Attribute attribute : attributes) {
-            this.idAttributes.add(attribute);
-        }
-    }
-
-    @Override
     public DataObjectImpl clone() throws CloneNotSupportedException {
         DataObjectImpl impl = (DataObjectImpl) super.clone();
         if (attributes != null) {
@@ -100,18 +63,14 @@ public class DataObjectImpl implements DataObject {
             }
             impl.setAttributes(templst);
         }
-        if (idAttributes != null) {
-            List<Attribute> templst = new ArrayList<>();
-            for (Attribute a : idAttributes) {
-                impl.attributes.forEach(attr -> {
-                    if (attr.getName().equals(a.getName())) {
-                        templst.add(attr);
-                    }
-                });
-            }
-            impl.idAttributes = templst;
-        }
-
         return impl;
+    }
+
+    @Override
+    public Object pureData() {
+        Map<String, Object> map = new HashMap<>();
+        List<Attribute> attributes = this.getAttributes();
+        attributes.forEach(attr -> map.put(attr.getName(), attr.getValue()));
+        return map;
     }
 }

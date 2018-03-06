@@ -22,3 +22,10 @@ create table SYS_DATA_OBJECT_ATTRS (
    attr_ varchar(200) not null,
    primary key(id_)
 );
+
+create table SAMPLE_USER_INFO (
+   id_ varchar(50) not null ,
+   name_ varchar(80),
+   age_  int,
+   primary key(id_)
+);
