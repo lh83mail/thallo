@@ -9,6 +9,10 @@ import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
 import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.DataObject;
 import org.halo.thallo.mmr.core.model.DataStore;
+import org.halo.thallo.mmr.core.runtime.Filter;
+import org.halo.thallo.mmr.core.runtime.PageRequest;
+import org.halo.thallo.mmr.core.runtime.PagedData;
+import org.halo.thallo.mmr.core.runtime.Sort;
 import org.halo.thallo.mmr.core.service.MMRException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -16,6 +20,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,78 +44,64 @@ public class DataStoreImpl implements DataStore {
     }
 
 
-    @Override
+
     public boolean create() {
         StringBuffer buf = generateCreateTableSql(dataObject);
         dataStoreMapper.execute(buf.toString());
         return true;
     }
 
-    @Override
+
     public boolean drop() {
         StringBuffer buf = generateDropTableSql(dataObject);
         dataStoreMapper.execute(buf.toString());
         return true;
     }
 
-    public DataObject newData() throws MMRException {
-        assert dataObject != null;
-        try {
-            return (DataObject) dataObject.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new MMRException(e);
-        }
-    }
-
     /**
      * 根据ID删除对象
-     * @param idAttributes
      * @throws MMRException
      */
-    public void delete(Attribute... idAttributes) throws MMRException {
+    public void delete() throws MMRException {
+        List<Attribute>  idList = this.dataObject.getIdAttributes();
+        HashMap<String, Object> params = new HashMap<>();
+
         SQL sql = new SQL(){{
             DELETE_FROM(dataObject.getName());
-            for (Attribute id : idAttributes) {
+            for (Attribute id : idList) {
                 WHERE(id.getName() + " = :" + id.getName());
+                params.put(id.getName(), id.getValue());
             }
         }};
-        HashMap<String, Object> params = new HashMap<>();
-        for (Attribute id : idAttributes) {
-            params.put(id.getName(), id.getValue());
-        }
 
         jdbcTemplate.update(sql.toString(), params);
     }
 
-    public DataObject get(Attribute... idAttributes) throws MMRException {
-        SQL sql = new SQL(){{
-           dataObject.getAttributes().forEach(attribute -> {
-               SELECT(attribute.getName());
-           });
-           for (Attribute id : idAttributes) {
-               WHERE(id.getName() + " = :" + id.getName());
-           }
-        }};
-        HashMap<String, Object> params = new HashMap<>();
-        for (Attribute id : idAttributes) {
-            params.put(id.getName(), id.getValue());
-        }
 
-       Map<String, Object> result = jdbcTemplate.queryForMap(sql.toString(), params);
-        return createDataObject(result);
+    @Override
+    public DataObject load() throws MMRException {
+        List<Attribute>  idList = this.dataObject.getIdAttributes();
+        HashMap<String, Object> params = new HashMap<>();
+
+        SQL sql = new SQL(){{
+            dataObject.getAttributes().forEach(attribute -> {
+                SELECT(attribute.getName());
+            });
+            FROM(dataObject.getName());
+            for (Attribute id : idList) {
+                WHERE(id.getName() + " = :" + id.getName());
+                params.put(id.getName(), id.getValue());
+            }
+        }};
+        Map<String, Object> result = jdbcTemplate.queryForMap(sql.toString(), params);
+        return setData(result);
     }
 
-    private DataObject createDataObject(Map<String, ?> values) throws MMRException {
-        DataObject data = null;
-        try {
-            data = (DataObject) dataObject.clone();
-            for (Attribute a : data.getAttributes()) {
-                a.setValue(values.get(a.getName()));
-            }
-        } catch (CloneNotSupportedException e) {
-            throw new MMRException(e);
+    private DataObject setData(Map<String, ?> values) throws MMRException {
+        for (Attribute a : dataObject.getAttributes()) {
+            a.setValue(values.get(a.getName()));
         }
-        return data;
+        return dataObject;
     }
 
     /**
@@ -133,36 +124,42 @@ public class DataStoreImpl implements DataStore {
         }};
 
         jdbcTemplate.update(sql.toString(), new MapSqlParameterSource(values));
-        return createDataObject(values);
+        return setData(values);
     }
 
     @Override
-    public DataObject persist(Map<String, Object> values) throws MMRException {
+    public DataObject persist() throws MMRException {
         assert dataObject != null;
 
+        Map<String, Object> values = new HashMap<>();
         SQL sql = new SQL(){{
             INSERT_INTO(dataObject.getName());
             Iterable<Attribute> attributes = dataObject.getAttributes();
             attributes.forEach(attr -> {
-                if (attr.isInsertable() && values.containsKey(attr.getName())) {
+                if (attr.isInsertable() || attr.isUpdateable()) {
                     VALUES(attr.getName(), ":" + attr.getName());
+                    values.put(attr.getName(), attr.getValue());
                 }
             });
         }};
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int result = jdbcTemplate.update(sql.toString(), new MapSqlParameterSource(values), keyHolder);
 
-        DataObject  data = createDataObject(values);
         if (result > 0) {
-            List<Attribute> idAttributes = data.getIdAttributes();
-            idAttributes.forEach(a -> a.setValue(keyHolder.getKey()));
+            List<Attribute> idAttributes = dataObject.getIdAttributes();
+            Map<String, Object> keys = keyHolder.getKeys();
+            if (keys != null) {
+                idAttributes.forEach(a -> {
+                    if (keys.containsKey(a.getName())) {
+                        a.setValue(keys.get(a.getName()));
+                    }
+                });
+            }
         }
 
-        return data;
+        return dataObject;
     }
 
-
-    @Override
     public boolean empty() {
         SqlSession sqlSession;
 //        SqlMapper sqlMapper;
@@ -203,5 +200,50 @@ public class DataStoreImpl implements DataStore {
                 .append(")");
         buf.append(")");
         return buf;
+    }
+
+    public PagedData<DataObject> filter(Filter filter, Sort sort, PageRequest pageRequest) throws MMRException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        SQL sql = new SQL(){{
+            dataObject.getAttributes().forEach(attribute -> {
+                SELECT(attribute.getName());
+            });
+            FROM(dataObject.getName());
+            if (filter != null) {
+                filter.apply(this, params);
+            }
+
+            if (sort != null) {
+                sort.apply(this, params);
+            }
+
+        }};
+
+        PagedData<DataObject> pagedData = new PagedData<>();
+
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(sql.toString(), params);
+        ArrayList<DataObject> arrayList = new ArrayList<>();
+        if (result != null) {
+            for (int i = 0, sz = result.size(); i < sz; i++) {
+                arrayList.add(setData(result.get(i)));
+            }
+        }
+        pagedData.setData(result);
+
+        if (pageRequest != null) {
+            HashMap<String, Object> countParams = new HashMap<>();
+            SQL countSql = new SQL() {{
+                SELECT("count(1) as count");
+                FROM(dataObject.getName());
+                if (filter != null) {
+                    filter.apply(this, params);
+                }
+            }};
+            Number number = jdbcTemplate.queryForObject(countSql.toString(), countParams, Number.class);
+            pagedData.setTotalRecords(number.intValue());
+        }
+
+        return pagedData;
     }
 }

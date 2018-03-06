@@ -20,4 +20,6 @@ public  interface DataObject extends Model{
      * @return
      */
     Object pureData();
+
+    List<Attribute> getIdAttributes();
 }

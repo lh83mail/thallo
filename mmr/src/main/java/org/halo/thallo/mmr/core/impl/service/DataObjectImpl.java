@@ -6,10 +6,8 @@ import org.halo.thallo.mmr.core.impl.config.AbstractModel;
 import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.DataObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by dell01 on 2017/9/25.
@@ -17,6 +15,9 @@ import java.util.Map;
 public class DataObjectImpl extends AbstractModel implements DataObject {
 
     private List<Attribute> attributes;
+
+    public DataObjectImpl() {
+    }
 
     public DataObjectImpl(JSONObject config) {
         super(config);
@@ -64,6 +65,18 @@ public class DataObjectImpl extends AbstractModel implements DataObject {
             impl.setAttributes(templst);
         }
         return impl;
+    }
+
+    @Override
+    public List<Attribute> getIdAttributes() {
+        if (attributes == null) {
+            return Collections.emptyList();
+        }
+
+        return attributes
+                .stream()
+                .filter(a -> a.isPrimary())
+                .collect(Collectors.toList());
     }
 
     @Override

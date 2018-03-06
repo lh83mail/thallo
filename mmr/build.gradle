@@ -8,6 +8,7 @@ dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile 'commons-io:commons-io:2.4'
     compile 'com.alibaba:fastjson:1.2.44'
+    compile 'com.alibaba:druid:1.1.5'
 
     compile "mysql:mysql-connector-java:6.0.6"
     compile ('com.h2database:h2')

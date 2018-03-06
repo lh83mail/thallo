@@ -27,4 +27,8 @@ public interface Attribute extends Model {
     int getLength();
 
     boolean isUpdateable();
+
+    void setPrimary(boolean isPrimary);
+
+    boolean isPrimary();
 }

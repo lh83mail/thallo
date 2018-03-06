@@ -8,31 +8,54 @@
       "name": "SAMPLE_USER_INFO",
       "description": "用户表对象",
       "attributes": [
-        { "id":"aid01", "name":"id", "description":"标识", "valueType":"STRING", "insertable":false, "updateable":false, "primary": true },
-        { "id":"aid02", "name":"name", "description":"姓名", "valueType":"STRING", "insertable":true, "updateable":true, "primary": false },
-        { "id":"aid03", "name":"age", "description":"年龄", "valueType":"LONG", "insertable":true, "updateable":true, "primary": false }
+        { "id":"aid01", "name":"id_", "description":"标识", "valueType":"STRING", "insertable":true, "updateable":true, "primary": true },
+        { "id":"aid02", "name":"name_", "description":"姓名", "valueType":"STRING", "insertable":true, "updateable":true, "primary": false },
+        { "id":"aid03", "name":"age_", "description":"年龄", "valueType":"LONG", "insertable":true, "updateable":true, "primary": false }
       ],
       "说明":"对于数据集，总是有CURD And Filter基本操作，其他都是基于这些操作的组合",
-      "commands": [
-
-      ]
+      "commands": []
+    },
+    {
+      "id": "model-basic-item",
+      "name": "SAMPLE_USER_INFO_ITEM",
+      "description": "用户明细对象",
+      "attributes": [
+        { "id":"aid01", "name":"id_", "description":"标识", "valueType":"STRING", "insertable":false, "updateable":false, "primary": true },
+        { "id":"aid02", "name":"name_", "description":"姓名", "valueType":"STRING", "insertable":true, "updateable":true, "primary": false },
+        { "id":"aid03", "name":"age_", "description":"年龄", "valueType":"LONG", "insertable":true, "updateable":true, "primary": false }
+      ],
+      "说明":"对于数据集，总是有CURD And Filter基本操作，其他都是基于这些操作的组合",
+      "commands": []
     }
+  ],
+  "commandsName": [
+      "create-master",
+      "save-master",
+      "get-master",
+      "delete-master",
+      "filter-masters",
+
+      "create-item",
+      "save-item",
+      "filter-items",
+      "delete-item",
+      "get-item",
+
+      "apply-master",
+      "share-to"
   ],
   "commands": [
     {
       "id": "cmd-uid-01",
       "name": "cmd-create-user",
       "description": "创建用户对象命令",
-      "class": "org.halo.thallo.mmr.core.impl.runtime.cmds.CreateDataCommandFactory",
-      "inputs": [
-        {"type":"dataobject", "ref":"model-basic", "reader": "default"}
-      ]
+      "delegate": "CreateDataCommand"
     },
     {
       "id": "cmd-uid-02",
       "name": "cmd-save-user",
       "description": "创建用户对象命令",
-      "class": "org.halo.thallo.mmr.core.impl.runtime.cmds.CreateDataCommandFactory",
+      "delegate": "SaveDataCommand",
       "inputs": [],
       "outputs": []
     },
@@ -40,7 +63,7 @@
       "id": "cmd-uid-03",
       "name": "cmd-filter-users",
       "description": "创建用户对象命令",
-      "class": "org.halo.thallo.mmr.core.impl.runtime.cmds.CreateDataCommandFactory",
+      "delegate": "GetDataCommand",
       "inputs": [],
       "outputs": []
     },
@@ -48,9 +71,14 @@
       "id": "cmd-uid-04",
       "name": "cmd-delete-user",
       "description": "创建用户对象命令",
-      "class": "org.halo.thallo.mmr.core.impl.runtime.cmds.CreateDataCommandFactory",
-      "inputs": [],
-      "outputs": []
+      "delegate": "FilterDataCommand",
+      "xfilters":  {
+        "AND":[
+          {"EQ": {"name":"value"}},
+          {"GT": {"name":"value"}},
+          {"AND": [{"name":"value"},{"age":32}]}
+        ]
+      }
     }
   ]
 }

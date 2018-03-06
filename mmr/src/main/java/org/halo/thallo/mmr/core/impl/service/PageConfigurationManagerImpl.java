@@ -18,7 +18,7 @@ import java.io.IOException;
 public class PageConfigurationManagerImpl implements PageConfigurationManager {
 
     @Autowired
-    @Value("classpath:/schemas")
+    @Value("classpath:/schemas/")
     private Resource configurationDirectory;
 
     @Override

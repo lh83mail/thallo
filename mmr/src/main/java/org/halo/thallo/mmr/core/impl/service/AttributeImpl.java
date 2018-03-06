@@ -15,6 +15,10 @@ public class AttributeImpl extends AbstractModel implements Attribute {
     private boolean updateable = true;
     private ValueType valueType;
     private int length;
+    private boolean isPrimary;
+
+    public AttributeImpl() {
+    }
 
     public AttributeImpl(JSONObject config) {
         super(config);
@@ -24,6 +28,7 @@ public class AttributeImpl extends AbstractModel implements Attribute {
         this.setValueType(config.containsKey("valueType")? ValueType.valueOf(config.getString("valueType")) : ValueType.STRING);
         this.setValue(config.get("value"));
         this.setLength(config.containsKey("length")? config.getIntValue("length") : 50);
+        this.setPrimary((Boolean) config.getOrDefault("primary", false));
     }
 
     @Override
@@ -81,5 +86,15 @@ public class AttributeImpl extends AbstractModel implements Attribute {
 
     public void setUpdateable(boolean updateable) {
         this.updateable = updateable;
+    }
+
+    @Override
+    public void setPrimary(boolean isPrimary) {
+        this.isPrimary = isPrimary;
+    }
+
+    @Override
+    public boolean isPrimary() {
+        return isPrimary;
     }
 }

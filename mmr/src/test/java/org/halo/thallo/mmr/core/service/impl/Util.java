@@ -18,6 +18,7 @@ public class Util {
         id.setName("id");
         id.setId("attr_01");
         id.setValueType(LONG);
+        id.setPrimary(true);
 
         Attribute name = new AttributeImpl();
         name.setName("name");
@@ -32,7 +33,6 @@ public class Util {
         impl.setId("dataobject_id");
         impl.setName("my_unit_test_tbl");
         impl.addAttributes(id, name, locked);
-        impl.setPrimaryAttributes(id);
 
         return impl;
     }

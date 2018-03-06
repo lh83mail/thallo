@@ -13,7 +13,9 @@ public class UseAgeTestCase {
      */
     @Test
     public void loadView() {
-
+        // load view definition -> viewObject
+        // load bind dataObjects -> dataObjects
+        // render view
     }
 
     /**
@@ -21,7 +23,13 @@ public class UseAgeTestCase {
      */
     @Test
     public void loadData() {
-
+        // param: viewId,  dataKey
+        // load view definition -> viewObject
+        // load bind dataObjects -> dataObjects
+        // load DataStores by dataKey and dataObject ? how to select dataKey
+        // load datas -> dataset
+        // doAction(dataset, view) -> result
+        // render(result) : ： 更新到下一个视图状态
     }
 
     /**

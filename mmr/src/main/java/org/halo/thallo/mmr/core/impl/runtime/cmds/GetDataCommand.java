@@ -6,26 +6,14 @@ import org.halo.thallo.mmr.core.runtime.Command;
 import org.halo.thallo.mmr.core.runtime.ViewRequest;
 import org.halo.thallo.mmr.core.service.DataObjectManager;
 import org.halo.thallo.mmr.core.service.MMRException;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-/**
- *  创建新对象命令
- * Created by dell01 on 2018/3/5.
- */
-@Component
-public class CreateDataCommand implements Command {
+@Service
+public class GetDataCommand implements Command {
     private DataObjectManager dataObjectManager;
-
-    /**
-     * 创建后立即保存到库中
-     */
-    private boolean insertWhenCreated;
-
-    public CreateDataCommand(DataObjectManager dataObjectManager) {
-        this.dataObjectManager = dataObjectManager;
-    }
 
     @Override
     public Object execute(ViewRequest viewRequest) throws MMRException {
@@ -39,10 +27,13 @@ public class CreateDataCommand implements Command {
             }
         });
 
-        if (this.insertWhenCreated) {
-            dataObject = dataObjectManager.save(dataObject);
-        }
+        dataObject = dataObjectManager.load(dataObject);
 
         return dataObject.pureData();
+    }
+
+    @Autowired
+    public void setDataObjectManager(DataObjectManager dataObjectManager) {
+        this.dataObjectManager = dataObjectManager;
     }
 }

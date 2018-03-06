@@ -1,12 +1,10 @@
 package org.halo.thallo.mmr.core.runtime;
 
-
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.HashMap; /**
- * 过滤条件
- * Created by dell01 on 2017/9/24.
+ * 排序条件
  */
-public interface Filter {
+public interface Sort {
     void apply(SQL sql, HashMap<String, Object> params);
 }
