@@ -7,9 +7,11 @@ import org.halo.thallo.mmr.core.runtime.*;
 import org.halo.thallo.mmr.core.service.DataObjectManager;
 import org.halo.thallo.mmr.core.service.MMRException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@Service
 public class FilterDataCommand implements Command {
     private DataObjectManager dataObjectManager;
 
