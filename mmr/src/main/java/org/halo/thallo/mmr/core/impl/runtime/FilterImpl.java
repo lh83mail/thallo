@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class FilterImpl implements Filter {
     private final String AND = "AND";
-    private final String OR = "AND";
+    private final String OR = "OR";
     private final String EQ = "=";
     private final String GT = ">";
     private final String LT = "<";
@@ -38,80 +38,81 @@ public class FilterImpl implements Filter {
     }
 
     private void apply(JSONObject config, SQL sql, HashMap<String, Object> params) {
-        config.keySet()
-                .forEach(key -> {
-                    if (AND.equals(key)) {
-                        sql.AND();
-                        config.getJSONArray(key).forEach(d -> this.apply((JSONObject) d, sql, params));
-                    }
-                    else if (OR.equals(key)) {
-                        sql.OR();
-                        config.getJSONArray(AND).forEach(d -> this.apply((JSONObject) d, sql, params));
-                    }
-                    else if (
-                        EQ.equals(key)
-                        || GT.equals(key)
-                        || LT.equals(key)
-                        || GE.equals(key)
-                        || LE.equals(key)
-                    ) {
+        String operator = config.getString("op");
 
-                        String paramName = config.getString("param");
-                        Object value = viewRequest.getRequestDataMap().get(paramName);
-                        if (value == null) {
-                            return;
-                        }
+        if (AND.equals(operator)) {
+            sql.AND();
+            config.getJSONArray("values")
+                    .forEach(d -> this.apply((JSONObject) d, sql, params));
+        }
+        else if (OR.equals(operator)) {
+            sql.OR();
+            config.getJSONArray("values")
+                    .forEach(d -> this.apply((JSONObject) d, sql, params));
+        }
+        else if (
+                EQ.equals(operator)
+                        || GT.equals(operator)
+                        || LT.equals(operator)
+                        || GE.equals(operator)
+                        || LE.equals(operator)
+                ) {
+            String paramName = config.getString("param");
+            Object value = viewRequest.getRequestDataMap().get(paramName);
+            if (value == null) {
+                return;
+            }
 
-                        String colName = config.getString("ref");
-                        if (colName == null || colName.isEmpty()) {
-                            colName = paramName;
-                        }
+            String colName = config.getString("ref");
+            if (colName == null || colName.isEmpty()) {
+                colName = paramName;
+            }
 
-                        sql.WHERE(colName + key +  " :" + paramName);
-                        params.put(paramName, value);
+            sql.WHERE(colName + operator +  " :" + paramName);
+            params.put(paramName, value);
+        }
+        else if (IN.equals(operator)) {
+            String paramName = config.getString("param");
+            Object value = viewRequest.getRequestDataMap().get(paramName);
+            if (value == null) {
+                return;
+            }
 
-                    }
-                    else if (IN.equals(key)) {
-                        String paramName = config.getString("param");
-                        Object value = viewRequest.getRequestDataMap().get(paramName);
-                        if (value == null) {
-                            return;
-                        }
+            String colName = config.getString("ref");
+            if (colName == null || colName.isEmpty()) {
+                colName = paramName;
+            }
 
-                        String colName = config.getString("ref");
-                        if (colName == null || colName.isEmpty()) {
-                            colName = paramName;
-                        }
+            sql.WHERE(colName + IN +  "(:" + paramName + ")");
+            params.put(colName, value);
+        }  else if (
+                STARTS_WITH.equals(operator)
+                        || ENDS_WITH.equals(operator)
+                        || CONTAINS.equals(operator)
+                ) {
+            String paramName = config.getString("param");
+            Object value = viewRequest.getRequestDataMap().get(paramName);
+            if (value == null) {
+                return;
+            }
 
-                        sql.WHERE(colName + IN +  "(:" + paramName + ")");
-                        params.put(colName, value);
-                    }  else if (
-                            STARTS_WITH.equals(key)
-                            || ENDS_WITH.equals(key)
-                            || CONTAINS.equals(key)
-                    ) {
-                        String paramName = config.getString("param");
-                        Object value = viewRequest.getRequestDataMap().get(paramName);
-                        if (value == null) {
-                            return;
-                        }
+            String colName = config.getString("ref");
+            if (colName == null || colName.isEmpty()) {
+                colName = paramName;
+            }
 
-                        String colName = config.getString("ref");
-                        if (colName == null || colName.isEmpty()) {
-                            colName = paramName;
-                        }
+            if (STARTS_WITH.equals(operator)) {
+                value = "%" + value;
+            } else if (ENDS_WITH.equals(operator)) {
+                value = value + "%";
+            } else if (CONTAINS.equals(operator)) {
+                value = "%" + value + "%";
 
-                        if (STARTS_WITH.equals(key)) {
-                            value = "%" + value;
-                        } else if (ENDS_WITH.equals(key)) {
-                            value = value + "%";
-                        } else if (CONTAINS.equals(key)) {
-                            value = "%" + value + "%";
-                        }
-                        sql.WHERE(colName + key +  " :" + paramName);
-                        params.put(colName, value);
-                    }
-                });
+            }
+
+            sql.WHERE(colName + " LIKE :" + paramName);
+            params.put(colName, value);
+        }
     }
 
     @Override

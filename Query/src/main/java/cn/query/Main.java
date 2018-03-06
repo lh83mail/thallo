@@ -10,5 +10,8 @@ public class Main {
         query.setFilter(Filter.and());
 
 
+        //group and, or
+        // logic eq, gt,le, between
+
     }
 }

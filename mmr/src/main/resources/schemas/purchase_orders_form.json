@@ -72,11 +72,16 @@
       "name": "cmd-delete-user",
       "description": "创建用户对象命令",
       "delegate": "FilterDataCommand",
-      "xfilters":  {
-        "AND":[
-          {"EQ": {"name":"value"}},
-          {"GT": {"name":"value"}},
-          {"AND": [{"name":"value"},{"age":32}]}
+      "filter":  {
+        "op": "AND",
+        "values":[
+          {"op":"=", "param":"name_"},
+          {"op":">", "param":"name_"},
+          {"op":"OR", "values": [
+              {"op": "CONTAINS", "param":"name_"},
+              {"op":">", "param":"age_"}
+            ]
+          }
         ]
       }
     }
