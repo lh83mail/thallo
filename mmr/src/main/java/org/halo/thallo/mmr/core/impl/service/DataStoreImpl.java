@@ -237,7 +237,7 @@ public class DataStoreImpl implements DataStore {
                 SELECT("count(1) as count");
                 FROM(dataObject.getName());
                 if (filter != null) {
-                    filter.apply(this, params);
+                    filter.apply(this, countParams);
                 }
             }};
             Number number = jdbcTemplate.queryForObject(countSql.toString(), countParams, Number.class);

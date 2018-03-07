@@ -2,6 +2,8 @@ package org.halo.thallo.mmr.core.service;
 
 import org.halo.thallo.mmr.core.model.PageConfiguration;
 
+import java.util.Map;
+
 /**
  * 页面配置服务
  * Created by dell01 on 2018/3/5.
@@ -13,4 +15,6 @@ public interface PageConfigurationManager {
      * @return
      */
     PageConfiguration load(String viewId);
+
+    PageConfiguration save(Map config);
 }

@@ -29,3 +29,9 @@ create table SAMPLE_USER_INFO (
    age_  int,
    primary key(id_)
 );
+
+create table CORE_CONFIG (
+    id_ varchar(50) not null ,
+    config_ text,
+    primary key(id_)
+)
