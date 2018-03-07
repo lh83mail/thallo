@@ -17,6 +17,11 @@ import java.util.Set;
  * Created by dell01 on 2018/3/5.
  */
 public class PageConfigurationImpl extends AbstractModel implements PageConfiguration {
+    public static final String COMMANDS_KEY = "sys_commands";
+    public static final String DATA_OBJECTS_KEY = "dataObjects";
+    public static final String TITLE_KEY = "title";
+
+
     private String id;
     private String title;
     private String descritpion;
@@ -31,21 +36,21 @@ public class PageConfigurationImpl extends AbstractModel implements PageConfigur
 
         JSONObject json = JSON.parseObject(config);
 
-        this.id = json.getString("id");
-        this.title = json.getString("title");
-        this.descritpion = json.getString("description");
+        this.id = json.getString(ID_KEY);
+        this.title = json.getString(TITLE_KEY);
+        this.descritpion = json.getString(DESCRIPTION_KEY);
 
         // 解析数据集配置
-        if (json.containsKey("dataObjects")) {
-            JSONArray array = json.getJSONArray("dataObjects");
+        if (json.containsKey(DATA_OBJECTS_KEY)) {
+            JSONArray array = json.getJSONArray(DATA_OBJECTS_KEY);
             array.forEach(arr -> {
                 DataObjectImpl impl = new DataObjectImpl(((JSONObject)arr));
                 dataObjectMap.put(impl.getId(), impl);
             });
         }
 
-        if (json.containsKey("commands")) {
-            JSONArray array = json.getJSONArray("commands");
+        if (json.containsKey(COMMANDS_KEY)) {
+            JSONArray array = json.getJSONArray(COMMANDS_KEY);
             array.forEach(arr -> {
                 ConfigableCommand impl = new ConfigableCommand((JSONObject) arr);
                 commandSet.add(impl);

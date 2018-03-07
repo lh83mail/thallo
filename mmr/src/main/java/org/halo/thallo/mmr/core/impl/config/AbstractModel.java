@@ -7,6 +7,10 @@ import org.halo.thallo.mmr.core.model.Model;
  * Created by dell01 on 2018/3/5.
  */
 public class AbstractModel implements Model {
+    public static final String DESCRIPTION_KEY = "desc";
+    public static final String ID_KEY = "id";
+    public static final String NAME_KEY = "name";
+
     private String id;
     private String name;
     private String description;
@@ -15,9 +19,9 @@ public class AbstractModel implements Model {
     }
 
     public AbstractModel(JSONObject config) {
-        this.setId(config.getString("id"));
-        this.setName(config.getString("name"));
-        this.setDescription(config.getString("description"));
+        this.setId(config.getString(ID_KEY));
+        this.setName(config.getString(NAME_KEY));
+        this.setDescription(config.getString(DESCRIPTION_KEY));
     }
 
     @Override
