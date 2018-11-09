@@ -1,7 +1,7 @@
 package org.halo.thallo.mmr.core.impl.service;
 
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
-import org.halo.thallo.mmr.core.model.DataObject;
+import org.halo.thallo.mmr.core.model.DataSchema;
 import org.halo.thallo.mmr.core.model.DataStore;
 import org.halo.thallo.mmr.core.service.DataObjectManager;
 import org.halo.thallo.mmr.core.service.DataStoreManager;
@@ -16,7 +16,7 @@ public class DataStoreManagerImpl implements DataStoreManager {
 
     @Override
     public DataStore getDataStore(String oid) throws MMRException {
-        DataObject dataObject = dataObjectManager.getDataObject(oid);
+        DataSchema dataObject = dataObjectManager.getDataObject(oid);
         if (dataObject == null) {
             throw new MMRException(String.format("找不到对象%s定义", oid));
         }

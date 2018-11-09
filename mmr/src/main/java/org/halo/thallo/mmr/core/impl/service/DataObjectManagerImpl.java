@@ -1,7 +1,7 @@
 package org.halo.thallo.mmr.core.impl.service;
 
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
-import org.halo.thallo.mmr.core.model.DataObject;
+import org.halo.thallo.mmr.core.model.DataSchema;
 import org.halo.thallo.mmr.core.runtime.Filter;
 import org.halo.thallo.mmr.core.runtime.PageRequest;
 import org.halo.thallo.mmr.core.runtime.PagedData;
@@ -12,44 +12,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class DataObjectManagerImpl implements DataObjectManager {
     private DataStoreMapper dataStoreMapper;
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public DataObject createDataObject(String id) {
+    public DataSchema createDataObject(String id) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public DataObject save(DataObject dataObject) throws MMRException {
+    public DataSchema save(DataSchema dataObject) throws MMRException {
         DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
         dataStore.setJdbcTemplate(jdbcTemplate);
         return dataStore.persist();
     }
 
     @Override
-    public DataObject load(DataObject dataObject) throws MMRException {
+    public DataSchema load(DataSchema dataObject) throws MMRException {
         DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
         dataStore.setJdbcTemplate(jdbcTemplate);
         return dataStore.load();
     }
 
     @Override
-    public boolean deleteDataObject(DataObject dataObject) {
+    public boolean deleteDataObject(DataSchema dataObject) {
         return true;
     }
 
     @Override
-    public DataObject getDataObject(String id) {
+    public DataSchema getDataObject(String id) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public PagedData<DataObject> filter(DataObject dataObject, Filter filter, Sort sort, PageRequest pageRequest) throws MMRException {
+    public PagedData<DataSchema> filter(DataSchema dataObject, Filter filter, Sort sort, PageRequest pageRequest) throws MMRException {
         DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
         dataStore.setJdbcTemplate(jdbcTemplate);
         return dataStore.filter(filter, sort, pageRequest);

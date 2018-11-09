@@ -3,7 +3,7 @@ package org.halo.thallo.mmr.core.service.impl;
 import org.halo.thallo.mmr.core.impl.service.AttributeImpl;
 import org.halo.thallo.mmr.core.impl.service.DataObjectImpl;
 import org.halo.thallo.mmr.core.model.Attribute;
-import org.halo.thallo.mmr.core.model.DataObject;
+import org.halo.thallo.mmr.core.model.DataSchema;
 
 import static org.halo.thallo.mmr.core.model.ValueType.*;
 
@@ -12,7 +12,7 @@ import static org.halo.thallo.mmr.core.model.ValueType.*;
  */
 public class Util {
 
-    public static DataObject createUnitTestDataObject() {
+    public static DataSchema createUnitTestDataObject() {
         DataObjectImpl impl = new DataObjectImpl();
         Attribute id = new AttributeImpl();
         id.setName("id");

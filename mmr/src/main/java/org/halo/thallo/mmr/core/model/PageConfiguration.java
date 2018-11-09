@@ -7,7 +7,7 @@ import org.halo.thallo.mmr.core.impl.runtime.ConfigableCommand;
  * Created by dell01 on 2018/3/5.
  */
 public interface PageConfiguration {
-    DataObject getDataObject();
+    DataSchema getDataObject();
 
     ConfigableCommand getConfigableCommand(String commandId);
 

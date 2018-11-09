@@ -1,12 +1,7 @@
 package org.halo.thallo.mmr.core.service.impl;
 
-import org.apache.ibatis.builder.SqlSourceBuilder;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
-import org.halo.thallo.mmr.core.model.DataObject;
+import org.halo.thallo.mmr.core.model.DataSchema;
 import org.halo.thallo.mmr.core.model.DataStore;
 import org.halo.thallo.mmr.core.service.DataStoreManager;
 import org.halo.thallo.mmr.core.service.MMRException;
@@ -99,7 +94,8 @@ public class DataObjectServiceImplTestCase {
         DataStoreManager dataStoreManager = null;
         DataStore store = dataStoreManager.getDataStore("oid");
         Map<String, Object> values = new HashMap<>();
-        DataObject dataObject = store.persist(values);
+//        DataSchema dataObject = store.persist(values);
+        throw new RuntimeException("should test sth");
     }
 
     private void R_D() throws MMRException {
@@ -107,7 +103,7 @@ public class DataObjectServiceImplTestCase {
         DataStoreManager dataStoreManager = null;
         DataStore store = dataStoreManager.getDataStore("oid");
         Map<String, Object> values = new HashMap<>();
-//        DataObject dataObject = store.load(values);
-//        DataObject dataObject = store.delete(values);
+//        DataSchema dataObject = store.load(values);
+//        DataSchema dataObject = store.delete(values);
     }
 }
