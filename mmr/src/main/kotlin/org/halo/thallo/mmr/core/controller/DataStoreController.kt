@@ -2,10 +2,7 @@ package org.halo.thallo.mmr.core.controller
 
 import org.halo.thallo.mmr.core.service.DataStoreManager
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 /**
  * 存储空间管理
@@ -21,7 +18,9 @@ class DataStoreController {
      */
     fun emptyStore(@PathVariable id: String){}
 
-    fun saveStore(@PathVariable id: String){}
+//    fun saveStore(@PathVariable id: String, @RequestBody data: Map<String, *>): Map<String,*>{
+//
+//    }
 
     fun getStore(@PathVariable id: String) {}
 

@@ -19,6 +19,13 @@ public class AbstractModel implements Model {
     }
 
     public AbstractModel(JSONObject config) {
+        if (config == null) {
+            return;
+        }
+        this.parse(config);
+    }
+
+    protected void parse(JSONObject config) {
         this.setId(config.getString(ID_KEY));
         this.setName(config.getString(NAME_KEY));
         this.setDescription(config.getString(DESCRIPTION_KEY));

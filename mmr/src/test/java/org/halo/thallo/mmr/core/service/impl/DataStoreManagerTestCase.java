@@ -1,9 +1,7 @@
 package org.halo.thallo.mmr.core.service.impl;
 
-import org.halo.thallo.mmr.core.service.DataStoreManager;
 import org.junit.runner.RunWith;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.EnableTransactionManagement;

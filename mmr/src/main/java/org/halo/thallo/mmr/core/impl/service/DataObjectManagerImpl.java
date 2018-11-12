@@ -22,35 +22,61 @@ public class DataObjectManagerImpl implements DataObjectManager {
         throw new UnsupportedOperationException();
     }
 
+//    @Override
+//    public DataSchema save(DataSchema dataObject) throws MMRException {
+//        DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
+//        dataStore.setJdbcTemplate(jdbcTemplate);
+//        return dataStore.persist();
+//    }
+//
+//    @Override
+//    public DataSchema load(DataSchema dataObject) throws MMRException {
+//        DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
+//        dataStore.setJdbcTemplate(jdbcTemplate);
+//        return dataStore.load();
+//    }
+//
+//    @Override
+//    public boolean deleteDataObject(DataSchema dataObject) {
+//        return true;
+//    }
+//
+//    @Override
+//    public DataSchema getDataObject(String id) {
+//        throw new UnsupportedOperationException();
+//    }
+//
+//    @Override
+//    public PagedData<DataSchema> filter(DataSchema dataObject, Filter filter, Sort sort, PageRequest pageRequest) throws MMRException {
+//        DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
+//        dataStore.setJdbcTemplate(jdbcTemplate);
+//        return dataStore.filter(filter, sort, pageRequest);
+//    }
+
+
     @Override
     public DataSchema save(DataSchema dataObject) throws MMRException {
-        DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
-        dataStore.setJdbcTemplate(jdbcTemplate);
-        return dataStore.persist();
+        return null;
     }
 
     @Override
     public DataSchema load(DataSchema dataObject) throws MMRException {
-        DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
-        dataStore.setJdbcTemplate(jdbcTemplate);
-        return dataStore.load();
-    }
-
-    @Override
-    public boolean deleteDataObject(DataSchema dataObject) {
-        return true;
-    }
-
-    @Override
-    public DataSchema getDataObject(String id) {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
     public PagedData<DataSchema> filter(DataSchema dataObject, Filter filter, Sort sort, PageRequest pageRequest) throws MMRException {
-        DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
-        dataStore.setJdbcTemplate(jdbcTemplate);
-        return dataStore.filter(filter, sort, pageRequest);
+        return null;
+    }
+
+    @Override
+    public boolean deleteDataObject(DataSchema dataObject) {
+        return false;
+    }
+
+    @Override
+    public DataSchema getDataObject(String id) {
+        return null;
     }
 
     @Autowired

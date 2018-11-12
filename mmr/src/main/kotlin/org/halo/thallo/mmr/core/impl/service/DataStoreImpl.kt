@@ -1,48 +1,90 @@
 package org.halo.thallo.mmr.core.impl.service
 
 import com.alibaba.fastjson.JSONObject
-import org.apache.ibatis.jdbc.SQL
 import org.halo.thallo.mmr.core.impl.config.AbstractModel
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper
 import org.halo.thallo.mmr.core.model.DataSchema
 import org.halo.thallo.mmr.core.model.DataStore
 import org.halo.thallo.mmr.core.model.Model
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.util.HashMap
 
-class DataStoreImpl2
-    constructor(dataObject: DataSchema , dataStoreMapper: DataStoreMapper)  : DataStore {
+class DataStoreImpl (config: JSONObject?) : AbstractModel(config), DataStore {
 
-    private var id: String? = null
-    private var name: String? = null
-    private var description: String? = null
+    /**
+     * 已经初始化
+     */
+    var initialized = false
+        private set(value) {
+            this.initialized = value
+        }
 
-    override fun getId(): String? {
-        return id
+
+    private lateinit var dataObject: DataSchema
+    @Autowired
+    private lateinit var jdbcTemplate: NamedParameterJdbcTemplate
+
+
+    /**
+     * 创建数据表结构
+     */
+    override fun init() {
+
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+
     }
-    override fun setId(id: String?) {
-       this.id = id
+
+    private fun generateCreateTableSql(): StringBuffer {
+
+        val buf = StringBuffer("create table ${this.id} (")
+        val mapper =  DbDefintionMapper();
+        this.dataObject.attributes.forEach {
+            buf.append(mapper.columnDefintion(it))
+                .append(",");
+        }
+
+        val names = this.dataObject.idAttributes.map { it.name }
+        buf.append(" primary key (${names.joinToString(",")})")
+        buf.append(")")
+        return buf
     }
 
-    override fun getName(): String? {
-        return this.name
-    }
-    override fun setName(name: String?) {
-        this.name = name
-    }
 
-    private val dataObject: DataSchema? = null
-    private val dataStoreMapper: DataStoreMapper? = null
-    private var jdbcTemplate: NamedParameterJdbcTemplate? = null
+
+
+//    private StringBuffer generateCreateTableSql(DataSchema dataObject) {
+//        StringBuffer buf = new StringBuffer();
+//        buf.append("create table ")
+//                .append(dataObject.getName())
+//                .append("(");
+//        DbDefintionMapper mapper = new DbDefintionMapper();
+//
+//        dataObject.getAttributes().forEach(a -> {
+//            buf.append(mapper.columnDefintion(a));
+//            buf.append(",");
+//        });
+//
+//        List<Attribute> attributeList = dataObject.getIdAttributes();
+//        String[] names = new String[attributeList.size()];
+//        for (int i = 0; i < names.length; i++) {
+//            names[i] = attributeList.get(i).getName();
+//        }
+//
+//        buf.append(" primary key (")
+//                .append(StringUtils.join(names, ","))
+//                .append(")");
+//        buf.append(")");
+//        return buf;
+//    }
 
     override fun newData(): MutableMap<String, *> {
+
+
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 
-    override fun init() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun pure() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -84,4 +126,9 @@ class DataStoreImpl2
     override fun load(): DataSchema {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+}
+
+fun main(args: Array<String>) {
+    val arr = arrayOf("helo","GO",1,3)
+    println(arr.joinToString(","))
 }

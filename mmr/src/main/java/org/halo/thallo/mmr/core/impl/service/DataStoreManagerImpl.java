@@ -6,6 +6,9 @@ import org.halo.thallo.mmr.core.model.DataStore;
 import org.halo.thallo.mmr.core.service.DataObjectManager;
 import org.halo.thallo.mmr.core.service.DataStoreManager;
 import org.halo.thallo.mmr.core.service.MMRException;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * Created by lihong on 17-10-11.
@@ -21,9 +24,19 @@ public class DataStoreManagerImpl implements DataStoreManager {
             throw new MMRException(String.format("找不到对象%s定义", oid));
         }
 
-        DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
+        DataStoreImpl dataStore = null;//new DataStoreImpl(dataObject, dataStoreMapper);
         return  dataStore;
     }
 
+    @NotNull
+    @Override
+    public DataStore saveDataStore(@NotNull String id, @NotNull DataStore store) {
+        return null;
+    }
 
+    @NotNull
+    @Override
+    public List<DataStore> listDataStores(@NotNull String id, int page, int pageSize) {
+        return null;
+    }
 }
