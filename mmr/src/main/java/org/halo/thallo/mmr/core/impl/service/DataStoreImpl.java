@@ -7,8 +7,9 @@ import org.apache.ibatis.session.SqlSession;
 
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
 import org.halo.thallo.mmr.core.model.Attribute;
-import org.halo.thallo.mmr.core.model.DataObject;
+import org.halo.thallo.mmr.core.model.DataSchema;
 import org.halo.thallo.mmr.core.model.DataStore;
+import org.halo.thallo.mmr.core.model.Model;
 import org.halo.thallo.mmr.core.runtime.Filter;
 import org.halo.thallo.mmr.core.runtime.PageRequest;
 import org.halo.thallo.mmr.core.runtime.PagedData;
@@ -29,12 +30,11 @@ import java.util.Map;
  * Created by lihong on 17-10-11.
  */
 public class DataStoreImpl implements DataStore {
-    private DataObject dataObject;
+    private DataSchema dataObject;
     private DataStoreMapper dataStoreMapper;
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-
-    public DataStoreImpl(DataObject dataObject, DataStoreMapper dataStoreMapper) {
+    public DataStoreImpl(DataSchema dataObject, DataStoreMapper dataStoreMapper) {
         this.dataObject = dataObject;
         this.dataStoreMapper = dataStoreMapper;
     }
@@ -43,7 +43,78 @@ public class DataStoreImpl implements DataStore {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * 初始化表空间
+     * @throws MMRException
+     */
+    @Override
+    public void init() throws MMRException {
+    }
 
+    @Override
+    public void pure() throws MMRException {
+
+    }
+
+    @Override
+    public DataSchema getSchema() throws MMRException {
+        return null;
+    }
+
+    @Override
+    public Map<String, ?> persist(Map<String, ?> dataSet) {
+        return null;
+    }
+
+    @Override
+    public Map<String, ?> load(String id) {
+        return null;
+    }
+
+    @Override
+    public void delete(String id) {
+
+    }
+
+    @Override
+    public Map<String, ?> newData() {
+        return null;
+    }
+
+    @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
+    public void setId(String id) {
+
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public void setName(String name) {
+
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
+    @Override
+    public void setDescription(String description) {
+
+    }
+
+    @Override
+    public Model clone() throws CloneNotSupportedException {
+        return null;
+    }
 
     public boolean create() {
         StringBuffer buf = generateCreateTableSql(dataObject);
@@ -79,7 +150,7 @@ public class DataStoreImpl implements DataStore {
 
 
     @Override
-    public DataObject load() throws MMRException {
+    public DataSchema load() throws MMRException {
         List<Attribute>  idList = this.dataObject.getIdAttributes();
         HashMap<String, Object> params = new HashMap<>();
 
@@ -97,7 +168,7 @@ public class DataStoreImpl implements DataStore {
         return setData(result);
     }
 
-    private DataObject setData(Map<String, ?> values) throws MMRException {
+    private DataSchema setData(Map<String, ?> values) throws MMRException {
         for (Attribute a : dataObject.getAttributes()) {
             a.setValue(values.get(a.getName()));
         }
@@ -110,7 +181,7 @@ public class DataStoreImpl implements DataStore {
      * @return
      * @throws MMRException
      */
-    public DataObject update(Map<String, Object> values) throws MMRException {
+    public DataSchema update(Map<String, Object> values) throws MMRException {
         assert dataObject != null;
 
         SQL sql = new SQL(){{
@@ -128,7 +199,7 @@ public class DataStoreImpl implements DataStore {
     }
 
     @Override
-    public DataObject persist() throws MMRException {
+    public DataSchema persist() throws MMRException {
         assert dataObject != null;
 
         Map<String, Object> values = new HashMap<>();
@@ -169,15 +240,15 @@ public class DataStoreImpl implements DataStore {
         return true;
     }
 
-    private StringBuffer generateDropTableSql(DataObject dataObject) {
+    private StringBuffer generateDropTableSql(DataSchema dataObject) {
         return new StringBuffer("drop table ").append(dataObject.getName());
     }
 
-    private StringBuffer generateEmptyTableSql(DataObject dataObject) {
+    private StringBuffer generateEmptyTableSql(DataSchema dataObject) {
         return new StringBuffer("truncate table ").append(dataObject.getName());
     }
 
-    private StringBuffer generateCreateTableSql(DataObject dataObject) {
+    private StringBuffer generateCreateTableSql(DataSchema dataObject) {
         StringBuffer buf = new StringBuffer();
         buf.append("create table ")
                 .append(dataObject.getName())
@@ -202,7 +273,7 @@ public class DataStoreImpl implements DataStore {
         return buf;
     }
 
-    public PagedData<DataObject> filter(Filter filter, Sort sort, PageRequest pageRequest) throws MMRException {
+    public PagedData<DataSchema> filter(Filter filter, Sort sort, PageRequest pageRequest) throws MMRException {
 
         HashMap<String, Object> params = new HashMap<>();
         SQL sql = new SQL(){{
@@ -220,10 +291,10 @@ public class DataStoreImpl implements DataStore {
 
         }};
 
-        PagedData<DataObject> pagedData = new PagedData<>();
+        PagedData<DataSchema> pagedData = new PagedData<>();
 
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql.toString(), params);
-        ArrayList<DataObject> arrayList = new ArrayList<>();
+        ArrayList<DataSchema> arrayList = new ArrayList<>();
         if (result != null) {
             for (int i = 0, sz = result.size(); i < sz; i++) {
                 arrayList.add(setData(result.get(i)));

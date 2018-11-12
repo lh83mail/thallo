@@ -2,7 +2,7 @@ package org.halo.thallo.mmr.core.service.impl;
 
 import org.halo.thallo.mmr.core.impl.service.DataStoreImpl;
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper;
-import org.halo.thallo.mmr.core.model.DataObject;
+import org.halo.thallo.mmr.core.model.DataSchema;
 import org.halo.thallo.mmr.core.service.MMRException;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class DataStoreImplTestCase {
 
     @Before
     public void setup() {
-        DataObject unitTestDataObject = createUnitTestDataObject();
+        DataSchema unitTestDataObject = createUnitTestDataObject();
         dataStore = new DataStoreImpl(unitTestDataObject, dataStoreMapper);
         dataStore.setJdbcTemplate(jdbcTemplate);
     }
@@ -57,9 +57,9 @@ public class DataStoreImplTestCase {
       //  values.put("id", 1);
         values.put("name", "TestData1");
         values.put("locked", false);
-
-        DataObject dataObject = dataStore.persist(values);
-        System.out.println(dataObject);
+throw new RuntimeException("should test sth");
+//        DataSchema dataObject = dataStore.persist(values);
+//        System.out.println(dataObject);
     }
 
 }

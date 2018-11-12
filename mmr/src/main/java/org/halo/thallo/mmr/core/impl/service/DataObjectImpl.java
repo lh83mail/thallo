@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.halo.thallo.mmr.core.impl.config.AbstractModel;
 import org.halo.thallo.mmr.core.model.Attribute;
-import org.halo.thallo.mmr.core.model.DataObject;
+import org.halo.thallo.mmr.core.model.DataSchema;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Created by dell01 on 2017/9/25.
  */
-public class DataObjectImpl extends AbstractModel implements DataObject {
+public class DataObjectImpl extends AbstractModel implements DataSchema {
 
     private List<Attribute> attributes;
 

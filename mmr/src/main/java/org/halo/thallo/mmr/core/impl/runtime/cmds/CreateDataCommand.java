@@ -1,7 +1,7 @@
 package org.halo.thallo.mmr.core.impl.runtime.cmds;
 
 import org.halo.thallo.mmr.core.model.Attribute;
-import org.halo.thallo.mmr.core.model.DataObject;
+import org.halo.thallo.mmr.core.model.DataSchema;
 import org.halo.thallo.mmr.core.runtime.Command;
 import org.halo.thallo.mmr.core.runtime.ViewRequest;
 import org.halo.thallo.mmr.core.service.DataObjectManager;
@@ -29,7 +29,7 @@ public class CreateDataCommand implements Command {
 
     @Override
     public Object execute(ViewRequest viewRequest) throws MMRException {
-        DataObject dataObject = viewRequest.getPageConfiguration().getDataObject();
+        DataSchema dataObject = viewRequest.getPageConfiguration().getDataObject();
 
         Iterable<Attribute> attributes = dataObject.getAttributes();
         Map<String, Object> dataMap = viewRequest.getRequestDataMap();

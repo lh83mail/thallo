@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.halo.thallo.mmr.core.impl.runtime.ConfigableCommand;
 import org.halo.thallo.mmr.core.impl.service.DataObjectImpl;
-import org.halo.thallo.mmr.core.model.DataObject;
+import org.halo.thallo.mmr.core.model.DataSchema;
 import org.halo.thallo.mmr.core.model.PageConfiguration;
 
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class PageConfigurationImpl extends AbstractModel implements PageConfigur
     private String id;
     private String title;
     private String descritpion;
-    private Map<String,DataObject> dataObjectMap;
+    private Map<String,DataSchema> dataObjectMap;
     private Set<ConfigableCommand> commandSet;
     private String config;
 
@@ -60,7 +60,7 @@ public class PageConfigurationImpl extends AbstractModel implements PageConfigur
     }
 
     @Override
-    public DataObject getDataObject() {
+    public DataSchema getDataObject() {
         return dataObjectMap.values().stream().findFirst().orElse(null);
     }
 
