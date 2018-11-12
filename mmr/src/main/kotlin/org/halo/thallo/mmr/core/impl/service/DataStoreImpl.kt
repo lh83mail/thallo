@@ -1,6 +1,8 @@
 package org.halo.thallo.mmr.core.impl.service
 
+import com.alibaba.fastjson.JSONObject
 import org.apache.ibatis.jdbc.SQL
+import org.halo.thallo.mmr.core.impl.config.AbstractModel
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper
 import org.halo.thallo.mmr.core.model.DataSchema
 import org.halo.thallo.mmr.core.model.DataStore
@@ -10,6 +12,7 @@ import java.util.HashMap
 
 class DataStoreImpl2
     constructor(dataObject: DataSchema , dataStoreMapper: DataStoreMapper)  : DataStore {
+
     private var id: String? = null
     private var name: String? = null
     private var description: String? = null
@@ -27,7 +30,6 @@ class DataStoreImpl2
     override fun setName(name: String?) {
         this.name = name
     }
-
 
     private val dataObject: DataSchema? = null
     private val dataStoreMapper: DataStoreMapper? = null

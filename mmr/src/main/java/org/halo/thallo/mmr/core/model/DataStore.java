@@ -10,6 +10,13 @@ import java.util.Map;
  */
 public interface DataStore extends Model {
     /**
+     * 获取数据存储空间的对象模式
+     * @return
+     * @throws MMRException
+     */
+    DataSchema getSchema() throws MMRException;
+
+    /**
      * 初始化数据存储空间
      * @throws MMRException
      */
@@ -21,12 +28,7 @@ public interface DataStore extends Model {
      */
     void pure() throws MMRException;
 
-    /**
-     * 获取数据存储空间的对象模式
-     * @return
-     * @throws MMRException
-     */
-    DataSchema getSchema() throws MMRException;
+
 
     /**
      * 持久化数据集
