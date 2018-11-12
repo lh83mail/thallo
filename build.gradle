@@ -3,7 +3,12 @@ buildscript {
 		springBootVersion = '1.4.4.RELEASE'
 	}
 	repositories {
+		mavenLocal()
+		maven {
+		  url 'http://maven.aliyun.com/nexus/content/groups/public'
+		}
 		mavenCentral()
+		jcenter()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
@@ -13,6 +18,16 @@ buildscript {
 version = "1.0.0-SNAPSHOT"
 group = "org.halo.thallo"
 
+allprojects {
+	repositories {
+		mavenLocal()
+		maven {
+		  url 'http://maven.aliyun.com/nexus/content/groups/public'
+		}
+		mavenCentral()
+		jcenter()
+	}
+}
 
 subprojects {
     apply plugin: 'java'
@@ -29,14 +44,6 @@ subprojects {
 
     [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-    repositories {
-        mavenLocal()
-        maven {
-          url 'http://maven.aliyun.com/nexus/content/groups/public'
-        }
-        mavenCentral()
-        jcenter()
-    }
 
     bootRepackage {
         enabled = false
