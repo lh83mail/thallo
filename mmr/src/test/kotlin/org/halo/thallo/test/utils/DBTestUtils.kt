@@ -15,4 +15,14 @@ class DBTestUtils (var dataSource: DataSource) {
                 .getTables(null, null, tableName.toUpperCase(), arrayOf(TYPES_TABLE))
         return rs.next()
     }
+
+    fun columnValue(tableName: String, columnName:String, condition:String): Any? {
+        var value:Any? = null
+         runner.query("select ${columnName} from ${tableName} where ${condition}") {
+            if (it.next()) {
+                value = it.getObject(1)
+            }
+        }
+        return value
+    }
 }

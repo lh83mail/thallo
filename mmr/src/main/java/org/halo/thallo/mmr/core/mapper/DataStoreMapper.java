@@ -1,9 +1,7 @@
 package org.halo.thallo.mmr.core.mapper;
 
-import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Update;
 import org.halo.thallo.mmr.core.model.DataSchema;
 import org.halo.thallo.mmr.core.model.DataStore;
 
@@ -25,5 +23,4 @@ public interface DataStoreMapper {
 
     @Insert("insert into data_store (id, name, description, initialized) values (#{id}, #{name}, #{description}, #{initialized})")
     DataStore insertDataStore(DataStore dataStore);
-
 }
