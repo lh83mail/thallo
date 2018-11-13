@@ -16,11 +16,5 @@ public  interface DataSchema extends Model{
     @Override
     Model clone() throws CloneNotSupportedException;
 
-    /**
-     * 转换成 单纯的数据
-     * @return
-     */
-    Object pureData();
-
     List<Attribute> getIdAttributes();
 }

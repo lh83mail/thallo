@@ -43,6 +43,8 @@ public class CreateDataCommand implements Command {
             dataObject = dataObjectManager.save(dataObject);
         }
 
-        return dataObject.pureData();
+//        return dataObject.pureData();
+        //FIXME 处理返回值
+        return null;
     }
 }

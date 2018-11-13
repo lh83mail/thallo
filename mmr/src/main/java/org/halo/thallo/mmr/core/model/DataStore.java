@@ -8,13 +8,7 @@ import java.util.Map;
  * 数据集存放
  * Created by lihong on 17-10-10.
  */
-public interface DataStore extends Model {
-    /**
-     * 获取数据存储空间的对象模式
-     * @return
-     * @throws MMRException
-     */
-    DataSchema getSchema() throws MMRException;
+public interface DataStore {
 
     /**
      * 初始化数据存储空间
@@ -27,7 +21,6 @@ public interface DataStore extends Model {
      * @throws MMRException
      */
     void pure() throws MMRException;
-
 
 
     /**

@@ -2,6 +2,7 @@ package org.halo.thallo.mmr.core.service.impl;
 
 import org.apache.ibatis.session.SqlSession;
 import org.halo.thallo.mmr.core.model.DataStore;
+import org.halo.thallo.mmr.core.service.DataStoreManager;
 import org.halo.thallo.mmr.core.service.MMRException;
 import org.junit.Test;
 import org.junit.runner.RunWith;

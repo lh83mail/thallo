@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.halo.thallo.mmr.core.impl.runtime.ConfigableCommand;
-import org.halo.thallo.mmr.core.impl.service.DataObjectImpl;
 import org.halo.thallo.mmr.core.model.DataSchema;
 import org.halo.thallo.mmr.core.model.PageConfiguration;
 
@@ -44,9 +43,10 @@ public class PageConfigurationImpl extends AbstractModel implements PageConfigur
         if (json.containsKey(DATA_OBJECTS_KEY)) {
             JSONArray array = json.getJSONArray(DATA_OBJECTS_KEY);
             array.forEach(arr -> {
-                DataObjectImpl impl = new DataObjectImpl(((JSONObject)arr));
-                dataObjectMap.put(impl.getId(), impl);
+//                DataObjectImpl impl = new DataObjectImpl(((JSONObject)arr));
+//                dataObjectMap.put(impl.getId(), impl);
             });
+            //FIXME 解析页面配置信息
         }
 
         if (json.containsKey(COMMANDS_KEY)) {

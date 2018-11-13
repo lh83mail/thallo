@@ -38,16 +38,17 @@ public class DataStoreImplTestCase {
     @Before
     public void setup() {
         DataSchema unitTestDataObject = createUnitTestDataObject();
-        dataStore = new DataStoreImpl(unitTestDataObject, dataStoreMapper);
-        dataStore.setJdbcTemplate(jdbcTemplate);
+//        dataStore = new DataStoreImpl(unitTestDataObject, dataStoreMapper);
+//        dataStore.setJdbcTemplate(jdbcTemplate);
+        throw new RuntimeException("do sth.");
     }
     /**
      * 创建新表
      */
     @Test
     public void testDataStoreCreate()  {
-        boolean resulst = dataStore.create();
-        assertTrue(resulst);
+//        boolean resulst = dataStore.create();
+        assertTrue(false);
     }
 
     @Sql("DataStoreImplTestCase.testPerisit.sql")

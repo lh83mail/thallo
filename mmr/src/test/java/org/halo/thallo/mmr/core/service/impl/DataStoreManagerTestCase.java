@@ -1,5 +1,6 @@
 package org.halo.thallo.mmr.core.service.impl;
 
+import org.halo.thallo.mmr.core.service.DataStoreManager;
 import org.junit.runner.RunWith;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.test.context.TestPropertySource;

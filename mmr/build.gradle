@@ -20,6 +20,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-devtools'
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:1.2.1'
+    compile 'commons-dbutils:commons-dbutils:1.6'
     testCompile ('com.h2database:h2')
 //    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 //    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

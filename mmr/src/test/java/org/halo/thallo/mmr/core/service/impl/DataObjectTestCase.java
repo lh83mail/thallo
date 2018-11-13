@@ -1,7 +1,7 @@
 package org.halo.thallo.mmr.core.service.impl;
 
 import org.halo.thallo.mmr.core.impl.service.AttributeImpl;
-import org.halo.thallo.mmr.core.impl.service.DataObjectImpl;
+import org.halo.thallo.mmr.core.impl.service.DataStoreImpl;
 import org.halo.thallo.mmr.core.model.Attribute;
 import org.halo.thallo.mmr.core.model.DataSchema;
 import org.halo.thallo.mmr.core.model.ValueType;
@@ -23,7 +23,7 @@ public class DataObjectTestCase {
      */
     @Test
     public void testDefinine() {
-        DataSchema dataObject = new DataObjectImpl();
+        DataSchema dataObject = new DataStoreImpl();
 
         dataObject.setId(UUID.randomUUID().toString());
         dataObject.setName("testData");

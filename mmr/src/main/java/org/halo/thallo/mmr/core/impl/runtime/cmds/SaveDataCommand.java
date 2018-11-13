@@ -29,7 +29,9 @@ public class SaveDataCommand implements Command {
 
         dataObject = dataObjectManager.save(dataObject);
 
-        return dataObject.pureData();
+//        return dataObject.pureData();
+        //FIXME 处理返回值
+        return null;
     }
 
     @Autowired

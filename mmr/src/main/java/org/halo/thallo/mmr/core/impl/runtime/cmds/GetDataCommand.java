@@ -29,8 +29,11 @@ public class GetDataCommand implements Command {
 
         dataObject = dataObjectManager.load(dataObject);
 
-        return dataObject.pureData();
+//        return dataObject.pureData();
+        //FIXME 处理返回值
+        return null;
     }
+
 
     @Autowired
     public void setDataObjectManager(DataObjectManager dataObjectManager) {
