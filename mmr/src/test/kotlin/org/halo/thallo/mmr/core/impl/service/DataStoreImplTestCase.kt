@@ -55,7 +55,7 @@ open class DataStoreImplTestCase {
         assertTrue("table should be exists in database", dbTestUtils.isTableExists(tableName))
         assertTrue("initialized should be true", dataStoreImpl.initialized)
     }
-
+         
 
 
 }
