@@ -51,8 +51,8 @@ public class DataStoreImplTestCase {
         assertTrue(false);
     }
 
-    @Sql("DataStoreImplTestCase.testPerisit.sql")
-    @Sql(value = "DataStoreImplTestCase.testPerisit-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql("DataStoreImplTestCase.init.sql")
+    @Sql(value = "DataStoreImplTestCase.init-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testPerisit() throws MMRException {
         Map<String, Object> values = new HashMap<>();
       //  values.put("id", 1);

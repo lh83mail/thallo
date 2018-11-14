@@ -2,10 +2,11 @@ package org.halo.thallo.mmr.core.impl.service
 
 import org.apache.commons.dbutils.QueryRunner
 import org.apache.ibatis.session.SqlSession
+import org.apache.ibatis.session.SqlSessionFactory
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper
 import org.halo.thallo.test.utils.DBTestUtils
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.halo.thallo.test.utils.countRows
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,10 +41,13 @@ open class DataStoreImplTestCase {
         dataStoreImpl.dataStoreMapper = dataStoreMapper
     }
 
+    /**
+     * 创建数据结构
+     */
     @Test
     @SqlGroup(
-        Sql("DataStoreImplTestCase.testPerisit.sql" ),
-        Sql(value = ["DataStoreImplTestCase.testPerisit-after.sql"],
+        Sql("DataStoreImplTestCase.init.sql" ),
+        Sql(value = ["DataStoreImplTestCase.init-after.sql"],
                 executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     )
     fun testInit() {
@@ -56,6 +60,24 @@ open class DataStoreImplTestCase {
         assertTrue("initialized should be true", dataStoreImpl.initialized)
     }
 
+    /**
+     * 测试持久化新数据
+     */
+    @Test
+    @SqlGroup(
+            Sql("DataStoreImplTestCase.testPersitNewData.sql" )
+    )
+    fun testPersistNewData() {
+        val data = mapOf(
+            Pair("id",1),
+            Pair("name","张三"),
+            Pair("locked",false)
+        )
+
+        dataStoreImpl.persist(data)
+
+        assertEquals("row should be exists", 1, countRows(sqlSession, dataStoreImpl.name, "id=1"))
+    }
 
 
 }

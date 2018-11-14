@@ -1,6 +1,7 @@
 package org.halo.thallo.test.utils
 
 import org.apache.commons.dbutils.QueryRunner
+import org.apache.ibatis.session.SqlSession
 import javax.sql.DataSource
 
 const val TYPES_TABLE = "TABLE"
@@ -25,4 +26,14 @@ class DBTestUtils (var dataSource: DataSource) {
         }
         return value
     }
+}
+
+fun countRows(sqlSession:SqlSession, tableName:String, condition:String): Int {
+    var count = 0
+    val runner = QueryRunner()
+    runner.query(sqlSession.connection,
+            "select count(1) from ${tableName} where ${condition}") {
+        count = if (it.next()) it.getInt(1)  else 0
+    }
+    return count
 }

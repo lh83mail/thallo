@@ -53,7 +53,6 @@ class DataStoreImpl (config: JSONObject?) : AbstractModel(config), DataSchema, D
      * 添加属性列表
      */
     override fun addAttributes(vararg attributes: Attribute) {
-        if (attributes == null) return
 
         if (this.attributes == null) {
             this.attributes = ArrayList()
@@ -117,7 +116,8 @@ class DataStoreImpl (config: JSONObject?) : AbstractModel(config), DataSchema, D
      * 持久化数据到DataStore中
      */
     override fun persist(data: Map<String, *>): Map<String, *> {
-        return this.dataStoreMapper.insert(this, data)
+        this.dataStoreMapper.insert( data)
+        return emptyMap<String,Any>()
     }
 
     override fun newData(): MutableMap<String, *> {
@@ -125,10 +125,6 @@ class DataStoreImpl (config: JSONObject?) : AbstractModel(config), DataSchema, D
     }
 
     override fun pure() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun persist(): DataSchema {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
