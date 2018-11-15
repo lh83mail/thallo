@@ -1,16 +1,21 @@
 package org.halo.thallo.mmr.core.mapper;
 
 import org.apache.ibatis.jdbc.SQL;
+import org.apache.ibatis.scripting.LanguageDriver;
+import org.halo.thallo.mmr.core.impl.service.DataStoreImpl;
 import org.halo.thallo.mmr.core.model.Attribute;
-import org.halo.thallo.mmr.core.model.DataSchema;
 
 import java.util.Map;
 
+import static org.halo.thallo.mmr.core.impl.service.DataStoreImplKt.getThreadLocal;
+
 /**
  * Created by lihong on 17-10-19.
+ * @author lihong
  */
 public class InsertProvider {
-    public String buildSQL(DataSchema dataObject, Map<String, Object> params) {
+    public String buildSQL(Map<String, Object> params) {
+        DataStoreImpl dataObject = getThreadLocal().get();
         SQL sql = new SQL(){{
             INSERT_INTO(dataObject.getName());
             Iterable<Attribute> attributes = dataObject.getAttributes();

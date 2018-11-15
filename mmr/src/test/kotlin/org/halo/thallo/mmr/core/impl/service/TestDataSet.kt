@@ -11,6 +11,7 @@ fun createDefaultDataStore(): DataStoreImpl {
     id.name = "id"
     id.id = "attr_01"
     id.valueType = ValueType.LONG
+    id.isInsertable = false
     id.isPrimary = true
 
     val name = AttributeImpl()
