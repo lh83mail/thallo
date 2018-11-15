@@ -16,7 +16,7 @@ public interface DataStoreMapper {
     boolean execute(String sql);
 
     @InsertProvider(type = org.halo.thallo.mmr.core.mapper.InsertProvider.class, method = "buildSQL")
-    Map<String, Object> insert(DataSchema schema, Map<String, Object> params);
+    void insert(Map<String, Object> params);
 
     @Update("update data_store set name = #{name} , description = #{description}, initialized = #{initialized} where id = #{id}")
     int updateDataStore(DataStore dataStore);

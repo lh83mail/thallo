@@ -36,11 +36,5 @@ public interface DataStore {
 
     Map<String,?> newData();
 
-    /**
-     *
-     * @return
-     * @throws MMRException
-     */
-    DataSchema persist() throws MMRException;
     DataSchema load() throws MMRException;
 }
