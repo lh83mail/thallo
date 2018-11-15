@@ -13,3 +13,7 @@ spring:
         web-allow-others: true
       path: '/h2-console'
       enabled: true
+mybatis:
+  configuration:
+    setting:
+      logImpl: 'org.apache.ibatis.logging.stdout.StdOutImpl'

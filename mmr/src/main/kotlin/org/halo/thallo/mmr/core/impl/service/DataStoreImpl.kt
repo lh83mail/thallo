@@ -1,13 +1,24 @@
 package org.halo.thallo.mmr.core.impl.service
 
 import com.alibaba.fastjson.JSONObject
+import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator
+import org.apache.ibatis.mapping.MappedStatement
+import org.apache.ibatis.mapping.SqlCommandType
+import org.apache.ibatis.mapping.SqlSource
+import org.apache.ibatis.session.Configuration
+import org.apache.ibatis.session.SqlSessionFactory
 import org.halo.thallo.mmr.core.impl.config.AbstractModel
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper
+import org.halo.thallo.mmr.core.mapper.InsertProvider
 import org.halo.thallo.mmr.core.model.Attribute
 import org.halo.thallo.mmr.core.model.DataSchema
 import org.halo.thallo.mmr.core.model.DataStore
+import org.hibernate.validator.internal.util.annotationfactory.AnnotationFactory
+import org.springframework.beans.factory.annotation.Autowired
 
-class DataStoreImpl (config: JSONObject?) : AbstractModel(config), DataSchema, DataStore {
+val threadLocal: ThreadLocal<DataStoreImpl> = ThreadLocal()
+
+class DataStoreImpl (val sessionFactory:SqlSessionFactory?,  config: JSONObject?) : AbstractModel(config), DataSchema, DataStore {
 
     /**
      * 已经初始化
@@ -27,7 +38,7 @@ class DataStoreImpl (config: JSONObject?) : AbstractModel(config), DataSchema, D
     var attributes: MutableList<Attribute>? = null
 
 
-    constructor(): this(null)
+    constructor(): this(null,null)
 
     init {
         if (config != null) {
@@ -96,7 +107,20 @@ class DataStoreImpl (config: JSONObject?) : AbstractModel(config), DataSchema, D
     override fun init() {
         this.dataStoreMapper.execute(generateCreateTableSql().toString())
         this.initialized = true
+        this.prepareMybatisStatements()
         this.dataStoreMapper.updateDataStore(this)
+    }
+
+    private fun prepareMybatisStatements() {
+        val configuration = sessionFactory.configuration
+
+        val sqlSource: SqlSource = createSqlSource(configuration, this, InsertProvider::class.java)
+        val mappedStatement = MappedStatement.Builder(configuration,this.id + "!DYN_INSERT", sqlSource, SqlCommandType.INSERT)
+        this.idAttributes.filter { it.keyValueProvider == AauoKeyProvider }
+                .size > 0
+        mappedStatement.keyProperty("id")
+        mappedStatement.keyGenerator(Jdbc3KeyGenerator.INSTANCE)
+        configuration.addMappedStatement(mappedStatement.build())
     }
 
     private fun generateCreateTableSql(): StringBuffer {
@@ -116,8 +140,20 @@ class DataStoreImpl (config: JSONObject?) : AbstractModel(config), DataSchema, D
      * 持久化数据到DataStore中
      */
     override fun persist(data: Map<String, *>): Map<String, *> {
-        this.dataStoreMapper.insert( data)
-        return emptyMap<String,Any>()
+        try {
+            threadLocal.set(this)
+            sessionFactory!!.openSession().insert(this.id , data)
+            return data
+//            if (this.dataStoreMapper.exists(data)) {
+//                this.dataStoreMapper.update(data)
+//            } else {
+//
+//            }
+            println(this.dataStoreMapper.insert(data))
+            return   emptyMap<String, Any>()
+        } finally {
+            threadLocal.remove()
+        }
     }
 
     override fun newData(): MutableMap<String, *> {

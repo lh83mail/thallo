@@ -4,7 +4,9 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.halo.thallo.mmr.core.model.DataSchema;
 import org.halo.thallo.mmr.core.model.DataStore;
+import org.jetbrains.annotations.PropertyKey;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,7 +18,7 @@ public interface DataStoreMapper {
     boolean execute(String sql);
 
     @InsertProvider(type = org.halo.thallo.mmr.core.mapper.InsertProvider.class, method = "buildSQL")
-    void insert(Map<String, Object> params);
+    String insert(Map<String, Object> params);
 
     @Update("update data_store set name = #{name} , description = #{description}, initialized = #{initialized} where id = #{id}")
     int updateDataStore(DataStore dataStore);
