@@ -38,7 +38,7 @@ public class DataStoreImplTestCase {
     @Before
     public void setup() {
         DataSchema unitTestDataObject = createUnitTestDataObject();
-//        dataStore = new DataStoreImpl(unitTestDataObject, dataStoreMapper);
+//        dataStore = new DataStoreImpl.kt(unitTestDataObject, dataStoreMapper);
 //        dataStore.setJdbcTemplate(jdbcTemplate);
         throw new RuntimeException("do sth.");
     }

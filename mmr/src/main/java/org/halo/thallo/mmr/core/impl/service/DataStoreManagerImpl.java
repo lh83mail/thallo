@@ -24,7 +24,7 @@ public class DataStoreManagerImpl implements DataStoreManager {
             throw new MMRException(String.format("找不到对象%s定义", oid));
         }
 
-        DataStoreImpl dataStore = null;//new DataStoreImpl(dataObject, dataStoreMapper);
+        DataStoreImpl dataStore = null;//new DataStoreImpl.kt(dataObject, dataStoreMapper);
         return  dataStore;
     }
 

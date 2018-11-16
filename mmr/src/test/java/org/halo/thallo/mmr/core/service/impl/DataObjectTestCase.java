@@ -1,5 +1,6 @@
 package org.halo.thallo.mmr.core.service.impl;
 
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.halo.thallo.mmr.core.impl.service.AttributeImpl;
 import org.halo.thallo.mmr.core.impl.service.DataStoreImpl;
 import org.halo.thallo.mmr.core.model.Attribute;
@@ -22,8 +23,8 @@ public class DataObjectTestCase {
      * 对象定义
      */
     @Test
-    public void testDefinine() {
-        DataSchema dataObject = new DataStoreImpl();
+    public void testDefinine(SqlSessionFactory sessionFactory) {
+        DataSchema dataObject = new DataStoreImpl(sessionFactory, null);
 
         dataObject.setId(UUID.randomUUID().toString());
         dataObject.setName("testData");

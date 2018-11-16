@@ -1,5 +1,6 @@
 package org.halo.thallo.mmr.core.model;
 
+import kotlin.Pair;
 import org.halo.thallo.mmr.core.service.MMRException;
 
 import java.util.Map;
@@ -17,24 +18,13 @@ public interface DataStore {
     void init() throws MMRException;
 
     /**
-     * 清空数据
-     * @throws MMRException
-     */
-    void pure() throws MMRException;
-
-
-    /**
      * 持久化数据集
      * @param dataSet
      * @return
      */
     Map<String,?> persist(Map<String, ?> dataSet);
 
-    Map<String, ?> load(String id);
+    Map<String, ?> load(Map<String, Object> keys);
 
-    void delete(String id);
-
-    Map<String,?> newData();
-
-    DataSchema load() throws MMRException;
+    void delete(Map<String, Object> keys);
 }

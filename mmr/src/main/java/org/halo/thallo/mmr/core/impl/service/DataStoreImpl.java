@@ -29,12 +29,12 @@
 ///**
 // * Created by lihong on 17-10-11.
 // */
-//public class DataStoreImpl implements DataStore {
+//public class DataStoreImpl.kt implements DataStore {
 //    private DataSchema dataObject;
 //    private DataStoreMapper dataStoreMapper;
 //    private NamedParameterJdbcTemplate jdbcTemplate;
 //
-//    public DataStoreImpl(DataSchema dataObject, DataStoreMapper dataStoreMapper) {
+//    public DataStoreImpl.kt(DataSchema dataObject, DataStoreMapper dataStoreMapper) {
 //        this.dataObject = dataObject;
 //        this.dataStoreMapper = dataStoreMapper;
 //    }

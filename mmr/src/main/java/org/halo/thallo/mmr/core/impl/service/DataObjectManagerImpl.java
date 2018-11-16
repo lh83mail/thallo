@@ -24,14 +24,14 @@ public class DataObjectManagerImpl implements DataObjectManager {
 
 //    @Override
 //    public DataSchema save(DataSchema dataObject) throws MMRException {
-//        DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
+//        DataStoreImpl.kt dataStore = new DataStoreImpl.kt(dataObject, dataStoreMapper);
 //        dataStore.setJdbcTemplate(jdbcTemplate);
 //        return dataStore.persist();
 //    }
 //
 //    @Override
 //    public DataSchema load(DataSchema dataObject) throws MMRException {
-//        DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
+//        DataStoreImpl.kt dataStore = new DataStoreImpl.kt(dataObject, dataStoreMapper);
 //        dataStore.setJdbcTemplate(jdbcTemplate);
 //        return dataStore.load();
 //    }
@@ -48,7 +48,7 @@ public class DataObjectManagerImpl implements DataObjectManager {
 //
 //    @Override
 //    public PagedData<DataSchema> filter(DataSchema dataObject, Filter filter, Sort sort, PageRequest pageRequest) throws MMRException {
-//        DataStoreImpl dataStore = new DataStoreImpl(dataObject, dataStoreMapper);
+//        DataStoreImpl.kt dataStore = new DataStoreImpl.kt(dataObject, dataStoreMapper);
 //        dataStore.setJdbcTemplate(jdbcTemplate);
 //        return dataStore.filter(filter, sort, pageRequest);
 //    }

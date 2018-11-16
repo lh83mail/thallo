@@ -1,0 +1,30 @@
+@startuml
+
+Actor ->  Browser:loadView(viewId, state)
+activate Actor
+
+Browser -> ViewController:loadViewConfig(viewId, state)
+activate Browser
+activate ViewController
+ViewController --> Browser: configurationData
+deactivate ViewController
+Browser -> Browser: assembleUI(configurationData)
+Browser -> ViewController: loadInitData(viewId, initView)
+ViewController --> Browser: initData
+Browser -> Browser: bindData()
+Browser -> Actor: renderView()
+deactivate Browser
+
+loop 操作
+    Actor -> Browser:triggerCommand(input)
+    activate Browser
+    Browser -> ViewController: executeCommand(viewId, commandId)
+    ViewController --> Browser: resultData
+    Browser -> Browser: updateData()
+    Browser -> Actor: renderView()
+    deactivate Browser
+end loop
+
+deactivate Actor
+
+@enduml

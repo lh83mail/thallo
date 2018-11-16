@@ -25,3 +25,9 @@
   "type": "type",
   "columns": 2
 }
+
+layout: {
+  width?: 200,
+  height?: 200
+  distion: 'h|v',
+}

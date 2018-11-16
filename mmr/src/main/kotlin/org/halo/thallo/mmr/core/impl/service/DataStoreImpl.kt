@@ -2,23 +2,19 @@ package org.halo.thallo.mmr.core.impl.service
 
 import com.alibaba.fastjson.JSONObject
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator
-import org.apache.ibatis.mapping.MappedStatement
+import org.apache.ibatis.mapping.ResultMap
 import org.apache.ibatis.mapping.SqlCommandType
-import org.apache.ibatis.mapping.SqlSource
-import org.apache.ibatis.session.Configuration
+import org.apache.ibatis.session.SqlSession
 import org.apache.ibatis.session.SqlSessionFactory
 import org.halo.thallo.mmr.core.impl.config.AbstractModel
 import org.halo.thallo.mmr.core.mapper.DataStoreMapper
-import org.halo.thallo.mmr.core.mapper.InsertProvider
+import org.halo.thallo.mmr.core.model.AUTO_INCREMENT
 import org.halo.thallo.mmr.core.model.Attribute
 import org.halo.thallo.mmr.core.model.DataSchema
 import org.halo.thallo.mmr.core.model.DataStore
-import org.hibernate.validator.internal.util.annotationfactory.AnnotationFactory
-import org.springframework.beans.factory.annotation.Autowired
+import org.halo.thallo.mmr.core.mybatis.prepareMybatisStatements
 
-val threadLocal: ThreadLocal<DataStoreImpl> = ThreadLocal()
-
-class DataStoreImpl (val sessionFactory:SqlSessionFactory?,  config: JSONObject?) : AbstractModel(config), DataSchema, DataStore {
+class DataStoreImpl (val sessionFactory:SqlSessionFactory,  config: JSONObject?) : AbstractModel(config), DataSchema, DataStore {
 
     /**
      * 已经初始化
@@ -36,9 +32,6 @@ class DataStoreImpl (val sessionFactory:SqlSessionFactory?,  config: JSONObject?
      * 所有属性列表
      */
     var attributes: MutableList<Attribute>? = null
-
-
-    constructor(): this(null,null)
 
     init {
         if (config != null) {
@@ -107,29 +100,25 @@ class DataStoreImpl (val sessionFactory:SqlSessionFactory?,  config: JSONObject?
     override fun init() {
         this.dataStoreMapper.execute(generateCreateTableSql().toString())
         this.initialized = true
-        this.prepareMybatisStatements()
+        // 创建插入代码块
+        prepareInsertStatement()
         this.dataStoreMapper.updateDataStore(this)
     }
 
-    private fun prepareMybatisStatements() {
-        val configuration = sessionFactory.configuration
 
-        val sqlSource: SqlSource = createSqlSource(configuration, this, InsertProvider::class.java)
-        val mappedStatement = MappedStatement.Builder(configuration,this.id + "!DYN_INSERT", sqlSource, SqlCommandType.INSERT)
-        this.idAttributes.filter { it.keyValueProvider == AauoKeyProvider }
-                .size > 0
-        mappedStatement.keyProperty("id")
-        mappedStatement.keyGenerator(Jdbc3KeyGenerator.INSTANCE)
-        configuration.addMappedStatement(mappedStatement.build())
-    }
-
+    /**
+     * 生成创建数据表的sql
+     */
     private fun generateCreateTableSql(): StringBuffer {
         val buf = StringBuffer("create table ${this.name} (")
-        this.attributes!!.forEach {
-            buf.append(dbDefintionMapper.columnDefintion(it))
-                .append(",");
-        }
 
+        this.attributes?.forEach {
+            buf.append(dbDefintionMapper.columnDefintion(it))
+            if (it.valueProvider == AUTO_INCREMENT) {
+                buf.append(" auto_increment ")
+            }
+            buf.append(",")
+        }
         val names = this.idAttributes.map { it.name }
         buf.append(" primary key (${names.joinToString(",")})")
         buf.append(")")
@@ -140,39 +129,87 @@ class DataStoreImpl (val sessionFactory:SqlSessionFactory?,  config: JSONObject?
      * 持久化数据到DataStore中
      */
     override fun persist(data: Map<String, *>): Map<String, *> {
-        try {
-            threadLocal.set(this)
-            sessionFactory!!.openSession().insert(this.id , data)
-            return data
-//            if (this.dataStoreMapper.exists(data)) {
-//                this.dataStoreMapper.update(data)
-//            } else {
-//
-//            }
-            println(this.dataStoreMapper.insert(data))
-            return   emptyMap<String, Any>()
-        } finally {
-            threadLocal.remove()
+        ensureInsertStatementPrepared()
+        execute { sqlSession ->
+            sqlSession.insert(getInsertStatementId(), data)
+        }
+        return data
+    }
+
+    private fun execute(process: (SqlSession) -> Any?): Any? {
+        val sqlSession = sessionFactory.openSession()
+        return sqlSession.use { sqlSession ->
+            process(sqlSession)
         }
     }
 
-    override fun newData(): MutableMap<String, *> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun delete(keys: Map<String, Any>) {
+        ensureDeleteStatementPrepared()
+        execute {
+            it.delete(getDeleteStatementId(), keys)
+        }
     }
 
-    override fun pure() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun load(keys: Map<String, Any>): MutableMap<String, *> {
+        ensureLoadStatementPrepared()
+       return execute {
+          it.selectOne(getLoadStatementId(), keys)
+        } as MutableMap<String, *>
     }
 
-    override fun load(id: String?): MutableMap<String, *> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    fun getInsertStatementId() = "${id}!DYN_INSERT"
+
+    /**
+     * 准备初始化插入方法
+     */
+    fun prepareInsertStatement() {
+        prepareMybatisStatements(sessionFactory!!.configuration, getInsertStatementId(), SqlProvider(this), "insert", SqlCommandType.INSERT) {
+            idAttributes.forEach { key ->
+                if (key.valueProvider == AUTO_INCREMENT) {
+                    it.keyProperty(key.name)
+                    it.keyGenerator(Jdbc3KeyGenerator.INSTANCE)
+                }
+            }
+        }
     }
 
-    override fun delete(id: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun ensureInsertStatementPrepared() {
+        if (!sessionFactory.configuration.hasStatement(getInsertStatementId())) {
+            prepareInsertStatement();
+        }
     }
 
-    override fun load(): DataSchema {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun getDeleteStatementId() = "${id}!DYN_DELETE"
+
+    /**
+     * 准备初始化插入方法
+     */
+    fun prepareDeleteStatement() {
+        prepareMybatisStatements(sessionFactory!!.configuration, getDeleteStatementId(), SqlProvider(this), "delete", SqlCommandType.DELETE){}
+    }
+
+    fun ensureDeleteStatementPrepared() {
+        if (!sessionFactory.configuration.hasStatement(getDeleteStatementId())) {
+            prepareDeleteStatement()
+        }
+    }
+
+    fun getLoadStatementId() = "${id}!DYN_LOAD"
+    fun ensureLoadStatementPrepared() {
+        if (!sessionFactory.configuration.hasStatement(getLoadStatementId())) {
+            prepareLoadStatement()
+        }
+    }
+
+    fun prepareLoadStatement() {
+        val config = sessionFactory!!.configuration
+        prepareMybatisStatements(config, getLoadStatementId(), SqlProvider(this), "load", SqlCommandType.SELECT) {
+            it.resultMaps(
+                listOf<ResultMap>(
+                    ResultMap.Builder(config, getLoadStatementId() + "-Inline", MutableMap::class.java, mutableListOf()).build()
+                )
+            )
+        }
     }
 }
