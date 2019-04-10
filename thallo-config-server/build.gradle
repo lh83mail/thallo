@@ -1,4 +1,6 @@
 dependencies {
-    compile project(':thallo-core')
+    compile "org.springframework.boot:spring-boot-starter"
     compile 'org.springframework.cloud:spring-cloud-config-server'
+
+    testCompile "org.springframework.boot:spring-boot-starter-test"
 }

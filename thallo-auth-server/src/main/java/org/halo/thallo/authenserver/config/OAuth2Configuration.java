@@ -17,14 +17,13 @@
 package org.halo.thallo.authenserver.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.web.server.ManagementServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -32,7 +31,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -47,6 +46,7 @@ import java.security.KeyPair;
  */
 @Configuration
 @SessionAttributes("authorizationRequest")
+@EnableWebSecurity
 public class OAuth2Configuration implements WebMvcConfigurer {
 
     /**
@@ -64,9 +64,9 @@ public class OAuth2Configuration implements WebMvcConfigurer {
      */
     @Configuration
     protected static class LoginConfig extends WebSecurityConfigurerAdapter {
-
-        @Autowired
-        private AuthenticationManager authenticationManager;
+//
+//        @Autowired
+//        private AuthenticationManager authenticationManager;
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -74,10 +74,10 @@ public class OAuth2Configuration implements WebMvcConfigurer {
                     .anyRequest().authenticated();
         }
 
-        @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.parentAuthenticationManager(authenticationManager);
-        }
+//        @Override
+//        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//            auth.parentAuthenticationManager(super.authenticationManager());
+//        }
     }
 
     /**
@@ -87,8 +87,8 @@ public class OAuth2Configuration implements WebMvcConfigurer {
     @EnableAuthorizationServer
     protected static class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 
-        @Autowired
-        private AuthenticationManager authenticationManager;
+//        @Autowired
+//        private AuthenticationManager authenticationManager;
 
         @Bean
         public JwtAccessTokenConverter jwtAccessTokenConverter() {
@@ -100,6 +100,7 @@ public class OAuth2Configuration implements WebMvcConfigurer {
             return converter;
         }
 
+
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             clients.inMemory()
@@ -109,11 +110,18 @@ public class OAuth2Configuration implements WebMvcConfigurer {
                             "password").scopes("openid");
         }
 
+//        @Override
+//        public void configure(AuthorizationServerEndpointsConfigurer endpoints)
+//                throws Exception {
+//            endpoints.authenticationManager(authenticationManager).accessTokenConverter(
+//                    jwtAccessTokenConverter());
+//        }
+
+
         @Override
-        public void configure(AuthorizationServerEndpointsConfigurer endpoints)
-                throws Exception {
-            endpoints.authenticationManager(authenticationManager).accessTokenConverter(
-                    jwtAccessTokenConverter());
+        public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+            super.configure(endpoints);
+            endpoints.accessTokenConverter(jwtAccessTokenConverter());
         }
 
         @Override

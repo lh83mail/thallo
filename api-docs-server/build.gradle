@@ -1,0 +1,7 @@
+// https://github.com/xiaoymin/Swagger-Bootstrap-UI
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile 'io.springfox:springfox-swagger2:2.9.2'
+    compile 'com.github.xiaoymin:swagger-bootstrap-ui:1.9.2'
+}

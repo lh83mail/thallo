@@ -3,6 +3,17 @@ spring:
     name: thallo_gateway_server
   cloud:
     gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://docs.spring.io"
+              - "http://baidu.com"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
       routes:
         - id: hello_route
           uri: lb://example-server
@@ -16,14 +27,14 @@ spring:
             - Path=/qst/{segment}
           filters:
             - SetPath=/{segment}
-security:
-    oauth2:
-        client:
-            clientId: acme
-            clientSecret: acmesecret
-            accessTokenUri: http://localhost:8084/uaa/oauth/access_token
-            userAuthorizationUri: http://localhost:8084/uaa/oauth/authorize
-            clientAuthenticationScheme: form
-        resource:
-          user-info-uri:  'http://localhost:8084/uaa/oauth/authorize'
-          token-info-uri: 'http://localhost:8084/uaa/oauth/check_token'
+#security:
+#    oauth2:
+#        client:
+#            clientId: acme
+#            clientSecret: acmesecret
+#            accessTokenUri: http://localhost:8084/uaa/oauth/access_token
+#            userAuthorizationUri: http://localhost:8084/uaa/oauth/authorize
+#            clientAuthenticationScheme: form
+#        resource:
+#          user-info-uri:  'http://localhost:8084/uaa/oauth/authorize'
+#          token-info-uri: 'http://localhost:8084/uaa/oauth/check_token'
