@@ -7,4 +7,4 @@ spring:
     config:
       server:
         native:
-          search-locations: 'file:///home/lihong/Workspace/temp/config'
+          search-locations: 'file://${user.home}/.spring-cloud/config-respo/'

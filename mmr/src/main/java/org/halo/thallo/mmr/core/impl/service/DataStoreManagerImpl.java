@@ -7,12 +7,14 @@ import org.halo.thallo.mmr.core.service.DataObjectManager;
 import org.halo.thallo.mmr.core.service.DataStoreManager;
 import org.halo.thallo.mmr.core.service.MMRException;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by lihong on 17-10-11.
  */
+@Service
 public class DataStoreManagerImpl implements DataStoreManager {
     private DataObjectManager dataObjectManager;
     private DataStoreMapper dataStoreMapper;

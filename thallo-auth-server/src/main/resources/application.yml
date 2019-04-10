@@ -3,9 +3,9 @@ server:
 
 spring:
   application:
-    name: auth_server
+    name: thallo_auth_server
   datasource:
-    url: 'jdbc:mysql://localhost:3306/ftest?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false'
+    url: 'jdbc:mysql://localhost:3306/identity_v2?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false'
     username: 'root'
     password: 'root'
     driverClassName: 'com.mysql.cj.jdbc.Driver'

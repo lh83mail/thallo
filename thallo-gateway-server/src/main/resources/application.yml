@@ -1,6 +1,21 @@
 spring:
   application:
     name: thallo_gateway_server
+  cloud:
+    gateway:
+      routes:
+        - id: hello_route
+          uri: lb://example-server
+          predicates:
+            - Path=/service/{segment}
+          filters:
+            - SetPath=/{segment}
+        - id: 163_route
+          uri: lb://simple-client1
+          predicates:
+            - Path=/qst/{segment}
+          filters:
+            - SetPath=/{segment}
 security:
     oauth2:
         client:

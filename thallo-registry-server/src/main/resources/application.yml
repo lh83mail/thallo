@@ -1,9 +1,18 @@
 server:
   port: 8761
+spring:
+  application:
+    name: registry-server
+  profiles:
+    active: default
 
 eureka:
+    ## 如果使用IP而不是域名访问, 需要打开此项
+    # preferIpAddress: true
   client:
+    ## 不注册自己到注册服务器
     registerWithEureka: false
+    ## 不获取注册服务器信息
     fetchRegistry: false
   server:
-    waitTimeInMsWhenSyncEmpty: 0
+      waitTimeInMsWhenSyncEmpty: 0

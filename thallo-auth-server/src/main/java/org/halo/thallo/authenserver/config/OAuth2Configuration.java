@@ -1,7 +1,23 @@
+/*
+ * Copyright (c) 2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 package org.halo.thallo.authenserver.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
+import org.springframework.boot.actuate.autoconfigure.web.server.ManagementServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -19,19 +35,24 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.sql.DataSource;
 import java.security.KeyPair;
 
-;
-
 /**
- * Created by lihong on 17-3-28.
+ * OAuth2 服务器配置
+ * @author lihong
+ * @version 1.0.0
+ * @date 2018-12-24 10:34
  */
 @Configuration
-public class AuthServerConfiguration extends WebMvcConfigurerAdapter {
+@SessionAttributes("authorizationRequest")
+public class OAuth2Configuration implements WebMvcConfigurer {
 
+    /**
+     * 配置登录视图
+     * @param registry
+     */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
@@ -39,35 +60,29 @@ public class AuthServerConfiguration extends WebMvcConfigurerAdapter {
     }
 
     /**
-     * Spring 安全配置： 表单登录
+     * Web 安全配置
      */
     @Configuration
-    @Order(ManagementServerProperties.ACCESS_OVERRIDE_ORDER)
-    @SessionAttributes("authorizationRequest")
     protected static class LoginConfig extends WebSecurityConfigurerAdapter {
 
         @Autowired
         private AuthenticationManager authenticationManager;
-        @Autowired
-        private DataSource dataSource;
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.formLogin().loginPage("/login")
-                    .permitAll().and().authorizeRequests()
-                    .anyRequest()
-                    .authenticated();
+            http.formLogin().loginPage("/login").permitAll().and().authorizeRequests()
+                    .anyRequest().authenticated();
         }
 
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.parentAuthenticationManager(authenticationManager)
-                    .eraseCredentials(true)
-                    .jdbcAuthentication()
-                    .dataSource(dataSource);
+            auth.parentAuthenticationManager(authenticationManager);
         }
     }
 
+    /**
+     * OAuth 数据服务配置
+     */
     @Configuration
     @EnableAuthorizationServer
     protected static class OAuth2Config extends AuthorizationServerConfigurerAdapter {
@@ -107,6 +122,6 @@ public class AuthServerConfiguration extends WebMvcConfigurerAdapter {
             oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess(
                     "isAuthenticated()");
         }
-    }
 
+    }
 }

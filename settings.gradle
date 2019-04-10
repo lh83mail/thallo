@@ -1,12 +1,9 @@
 include 'thallo-core'
 include 'thallo-config-server'
 include 'thallo-registry-server'
-include 'thallo-server'
-include 'thallo-client'
 include 'thallo-dashboard'
 include 'thallo-auth-server'
 include 'thallo-gateway-server'
-
 include 'thallo-examples:service-api'
 include 'thallo-examples:simple-server-side'
 include 'thallo-examples:simple-client-side'
