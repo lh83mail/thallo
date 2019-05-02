@@ -1,0 +1,105 @@
+@host=localhost:8084
+@username=admin
+@userpwd=123456
+@clientid=acme
+@clientsecret=acmesecret
+@redirect_uri=http://jyj.tjhx.gov.cn
+
+## 登录
+GET http://{{host}}/login
+
+GET http://{{host}}/logout
+
+POST http://{{host}}/login
+Content-Type: application/x-www-form-urlencoded
+
+username=admin&password=123456&_csrf=fffc871e-0aa6-4c25-8363-abd948654b35
+
+
+
+## 授权码模式(code)
+# step1
+GET http://{{host}}/oauth/authorize
+    ?response_type=code&client_id={{clientid}}&client_secret={{clientsecret}}
+    &redirect_uri={{redirect_uri}}
+
+# step2
+GET http://localhost:8084/login
+Cookie: JSESSIONID=5BCF5276C095FC4235D0E9A276410BFB
+
+#step3
+POST http://{{host}}/login
+Content-Type: application/x-www-form-urlencoded
+
+username={{username}}&password={{userpwd}}&_csrf=fffc871e-0aa6-4c25-8363-abd948654b35
+
+#step4
+POST http://{{host}}/oauth/authorize
+Content-Type: application/x-www-form-urlencoded
+
+_csrf=13b74ac1-cee4-4e78-83ab-884b1fc5c020&user_oauth_approval=true
+
+#step5 
+POST http://{{host}}/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic acme acmesecret
+
+grant_type=authorization_code&redirect_uri={{redirect_uri}}&code=v8j8vT
+
+
+# {
+#   "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTY4MTA1NzIsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BTllPTkUiXSwianRpIjoiZjY4MGQ1MDgtOTM4Yy00OTk2LThjNmEtOWNhZDdlNWM0ZmY4IiwiY2xpZW50X2lkIjoiYWNtZSIsInNjb3BlIjpbIm9wZW5pZCJdfQ.Buca2yB5rkU0CvnNphACT9ibom9xmd8w5YwuI2X-DbVgHzxTDVGq51PiXhhBYR7Li7iGSR9J2yPSXBuMSAcn2anuIZl0xBtsdcpX8Nv5aidFHDmjPsdch5z-gYHR9JpxmQsDj5bORzvYMRCevzGPGkdUdtBGfKqC2cJ2JMEFHMXyVoqyhwqIeAEN1JmXhGHcNdLGE3VJemTuQ8aErqjB11MykMrXwlnA62PvX-oGU_sWvUvwKQz18pKhyn2wNQtwb519AnqyMsGcFNaglwDuAVNhmgyPkyexEXJ_uMKY_5XqR85dAH_VD-iRU_wcqYv1_JSvldE8JVM5PCJXcOb1bw",
+#   "token_type": "bearer",
+#   "refresh_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbIm9wZW5pZCJdLCJhdGkiOiJmNjgwZDUwOC05MzhjLTQ5OTYtOGM2YS05Y2FkN2U1YzRmZjgiLCJleHAiOjE1NTkzNTkzNzIsImF1dGhvcml0aWVzIjpbIlJPTEVfQU5ZT05FIl0sImp0aSI6IjBiNjk4ZDgyLTIyNGYtNDRlYS1hMzYzLWZjOWQ2OTQ0YjM5OSIsImNsaWVudF9pZCI6ImFjbWUifQ.HcxhUQQ54sRilNOs7Qaabzr2UADITDzJvd8_AZBf0aYC5LTC3R_MHVbIcsjeb8AmrJsl04CDeLc3Nup21ECZRrfysvj-Asmwq40vQuTjs2F875mJ4On3QRUoStEMpsqUjAF2jrcNZMe7G3kfQZn4S-5mGH67Iv5Z3yhTwukyJ24X-B8OE_CIVrxZLRdcR4X-Zv3luHNiBRrdmsxs4sFwTWyXBDox8NSj6tM6kSF3kAAL6uNxENjZyRVHLKup6Aplv5RrtGJD0Og7EnGLFVSvtqnnjrHHTiPV3SB-PgSkMaEsB7uFYpXm3SWcQaSUBIx8OIIWD-SjHirx8EHD7gONrw",
+#   "expires_in": 43199,
+#   "scope": "openid",
+#   "jti": "f680d508-938c-4996-8c6a-9cad7e5c4ff8"
+# }
+
+
+## 简化模式（implicit grant type）
+# step 1
+GET http://{{host}}/oauth/authorize
+    ?response_type=token&client_id={{clientid}}&client_secret={{clientsecret}}
+    &redirect_uri={{redirect_uri}}
+
+
+
+# step 4
+POST http://{{host}}/oauth/authorize
+Content-Type: application/x-www-form-urlencoded
+
+_csrf=13b74ac1-cee4-4e78-83ab-884b1fc5c020&user_oauth_approval=true
+
+
+#http://jyj.tjhx.gov.cn#access_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTY4MDkyODgsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BTllPTkUiXSwianRpIjoiNDg5NTcxNjMtYjQ2ZC00Y2JkLTk5ODUtNTUxM2UyZmI5OWFiIiwiY2xpZW50X2lkIjoiYWNtZSIsInNjb3BlIjpbIm9wZW5pZCJdfQ.hWUNuj7B7ZhjAZgwER3mjYf_GWE0oHs5-J1NDC8DHH_KvkjSWMEd7tbQ3Qkyph7XmuaOf3BwikskfZLA5X4wBO6gGj-iW8sk6L7kKUOoS6EWmpbnA3oAft_NqyYhQ49lvCo_sj5YxvA6FZs1TQD1DcG6DWWSLf8zhPkYe-S4zsWxBNmPmo8wJoHBCX-iHBrgSF2ZCz-pHZJLmaG_gA4oTPTo4CGEdUNTUXqDa0IKDbJnj-94HV-b5KRoDEMREvwU4yFRmDwz-xSCYGEcWICkER0VzK1aZlU2vlpoUgPBHMR3oKSvi2EdzSLAm763Ef1uSY44_pr3Ko_D4jNf56SRgA&token_type=bearer&expires_in=43199&scope=openid&jti=48957163-b46d-4cbd-9985-5513e2fb99ab
+
+## 密码模式（Resource Owner Password Credentials Grant） not support
+POST http://{{host}}/oauth/token?client_id={{clientid}}&client_secret={{clientsecret}}
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&username=admin&password=123456
+
+
+## 客户端模式 
+POST http://{{host}}/oauth/token
+Authorization: Basic acmex acmesecretx
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+
+
+#=================================
+## 更新令牌
+POST http://{{host}}/oauth/token
+Authorization: Basic {{clientid}} {{clientsecret}}
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token&refresh_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbIm9wZW5pZCJdLCJhdGkiOiI2Y2Q3ZDEwZS1mZmI3LTQ3ZTAtYjhkNi1jMTgyZDYxYzhjNDMiLCJleHAiOjE1NTkzNTk2MTIsImF1dGhvcml0aWVzIjpbIlJPTEVfQU5ZT05FIl0sImp0aSI6IjdiYmFiZDc2LWFlZjUtNDk5Ni05ZWQ4LWVhOTNhOWE0NTZmNiIsImNsaWVudF9pZCI6ImFjbWUifQ.jt8odL2SNM11OK4YZqU8PG8eSaupzO58rNJ4fQr66L9xEMhRg7ZExeftrUoPq1TCRTV3EPAfYEmfbxDgpGEzuuyQas_VIHTg2ne9R0nBd73nA1cph1iWUzt1H19dejsRDbbczV2rGFwJvV6GwvcYjI69g84-RhmB7nhUpXknxq4mJGRTxVOg67OBqQ0wXfqdMPKuY-ppk4on_1lvZP8ncVdRnCoW6dOMBIAoVFVHWmtVJk2ySAPUXc6iNEfVAGNiHfA2-2z4oxeFCKwUIN1GqS6bXmlB7W-Ccu8Bcb5FdOYg_5kCgO-wHqnthmPzjb5TK_hvD5MEgjoQgPb4gykoqQ
+
+
+
+
+
+
+

@@ -9,6 +9,10 @@ spring:
     username: 'root'
     password: 'root'
     driverClassName: 'com.mysql.cj.jdbc.Driver'
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    # password: password
 
 security:
   user:
@@ -18,5 +22,28 @@ security:
 logging:
   level:
     org:
+      thalo: 'DEBUG'
       springframework:
         security: 'DEBUG'
+
+
+thallo:
+  authzserver:
+    security:
+      oauth2:
+        clients:
+          ## 开启内存中存放oauth2 client信息，方便开发环境测试
+          memory-clients-enabled: true
+          jdbc-clients-enabled: true
+          client-details:
+            - client-id: acme
+              client-secret: '{noop}acmesecret'
+              redirect-uri:
+                - http://jyj.tjhx.gov.cn
+              authorizedGrantTypes:
+                - authorization_code
+                - refresh_token
+                - implicit
+                - client_credentials
+              scopes:
+                - openid

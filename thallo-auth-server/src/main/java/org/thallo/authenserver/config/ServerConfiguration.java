@@ -14,21 +14,16 @@
  *  limitations under the License.
  */
 
-package org.halo.thallo.authenserver.config;
+package org.thallo.authenserver.config;
 
-import org.halo.thallo.authenserver.authen.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.provisioning.JdbcUserDetailsManagerConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.sql.DataSource;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * 认证服务全局配置
@@ -47,9 +42,10 @@ public class ServerConfiguration {
 
     }
 
-    @Bean
-    public UserDetailsService jdbcUserDetailService() {
-        return new UserDetailServiceImpl(dataSource);
-    }
 
+
+    public static void main(String[] args) throws NoSuchAlgorithmException {
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        System.out.println(encoder.encode("123456"));
+    }
 }

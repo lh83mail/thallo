@@ -11,6 +11,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
     compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.4.RELEASE'
 
+    compile 'org.springframework.boot:spring-boot-starter-data-redis'
+
     // data base
     compile 'org.springframework.boot:spring-boot-starter-jdbc'
     compile 'mysql:mysql-connector-java:6.0.6'

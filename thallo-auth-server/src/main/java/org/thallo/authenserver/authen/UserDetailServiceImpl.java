@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.halo.thallo.authenserver.authen;
+package org.thallo.authenserver.authen;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +34,7 @@ import java.util.List;
  * @date 2018-12-23 20:10
  */
 public class UserDetailServiceImpl extends JdbcDaoImpl {
+    public String ROLE_ANYONE = "ROLE_ANYONE";
 
     public UserDetailServiceImpl(DataSource dataSource) {
         this.setDataSource(dataSource);
@@ -44,33 +46,31 @@ public class UserDetailServiceImpl extends JdbcDaoImpl {
     @Override
     protected List<UserDetails> loadUsersByUsername(String username) {
         return getJdbcTemplate().query(this.getUsersByUsernameQuery(),
-                new String[] { username }, (rs, i) -> {
-                    String owner = rs.getString(1);
-                    String password = rs.getString(2);
-                    boolean enabled = rs.getInt(3) == 0;
-                    return new User(owner, "{MD5}{"+owner+"}" +password, enabled, true, true, true,
-                            AuthorityUtils.NO_AUTHORITIES);
+            new String[] { username }, (rs, i) -> {
+                String owner = rs.getString(1);
+                String password = rs.getString(2);
+                boolean enabled = rs.getInt(3) == 0;
+                return new User(owner, password, enabled, true, true, true,
+                        AuthorityUtils.NO_AUTHORITIES);
         });
-    }
-
-    @Override
-    protected List<GrantedAuthority> loadUserAuthorities(String username) {
-        return AuthorityUtils.NO_AUTHORITIES;
     }
 
     /**
      * 加载用户权限
-     * @param uid
-     * @param authorities
+     * @param uid 用户 uid
      */
     @Override
-    protected void addCustomAuthorities(String uid, List<GrantedAuthority> authorities) {
+    protected List<GrantedAuthority> loadUserAuthorities(String uid) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
         String queryRoles = "select role_ from sec_role_members_ where member_ = ? and tenant_ = ?";
         String tenant = loadTenantByUser(uid);
 
         List<SimpleGrantedAuthority> authDbs = getJdbcTemplate().query(queryRoles, new String[] {uid, tenant},
                 (rs, i) -> new SimpleGrantedAuthority(this.getRolePrefix() + rs.getString(1)));
+        authorities.add(new SimpleGrantedAuthority(ROLE_ANYONE));
         authorities.addAll(authDbs);
+
+        return authorities;
     }
 
     /**
