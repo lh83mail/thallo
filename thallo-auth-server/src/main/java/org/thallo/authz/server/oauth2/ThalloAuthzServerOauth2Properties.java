@@ -1,4 +1,4 @@
-package org.thallo.authenserver.oauth2;
+package org.thallo.authz.server.oauth2;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

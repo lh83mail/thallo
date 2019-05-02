@@ -26,7 +26,6 @@ logging:
       springframework:
         security: 'DEBUG'
 
-
 thallo:
   authzserver:
     security:

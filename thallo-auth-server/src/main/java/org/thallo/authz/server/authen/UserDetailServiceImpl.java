@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.thallo.authenserver.authen;
+package org.thallo.authz.server.authen;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;

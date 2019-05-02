@@ -14,11 +14,8 @@
  *  limitations under the License.
  */
 
-package org.thallo.authenserver.config;
+package org.thallo.authz.server.config;
 
-import org.thallo.authenserver.authen.UserDetailServiceImpl;
-import org.thallo.authenserver.oauth2.DelegateClientDetailService;
-import org.thallo.authenserver.oauth2.ThalloAuthzServerOauth2Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +40,9 @@ import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.thallo.authz.server.authen.UserDetailServiceImpl;
+import org.thallo.authz.server.oauth2.DelegateClientDetailService;
+import org.thallo.authz.server.oauth2.ThalloAuthzServerOauth2Properties;
 
 import javax.sql.DataSource;
 import java.security.KeyPair;
