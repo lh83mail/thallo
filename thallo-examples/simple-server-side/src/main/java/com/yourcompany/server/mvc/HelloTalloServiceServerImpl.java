@@ -1,7 +1,8 @@
 package com.yourcompany.server.mvc;
 
-import com.yourcompany.service.HelloThalloService;
-import com.yourcompany.service.Thallo;
+
+import com.yourcompany.server.service.HelloThalloService;
+import com.yourcompany.server.service.Thallo;
 import org.springframework.web.bind.annotation.RestController;
 
 /**

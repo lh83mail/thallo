@@ -39,7 +39,7 @@ public class UserDetailServiceImpl extends JdbcDaoImpl {
     public UserDetailServiceImpl(DataSource dataSource) {
         this.setDataSource(dataSource);
         this.setEnableGroups(false);
-        this.setUsernameBasedPrimaryKey(false);
+        this.setUsernameBasedPrimaryKey(true);
         this.setUsersByUsernameQuery("select owner_, password_, state_ from sys_account_ where account_ = ? and schema_ = 's_account'");
     }
 

@@ -25,6 +25,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
@@ -34,6 +36,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
@@ -47,6 +52,8 @@ import org.thallo.authz.server.oauth2.ThalloAuthzServerOauth2Properties;
 import javax.sql.DataSource;
 import java.security.KeyPair;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -60,15 +67,22 @@ import java.util.Set;
 @EnableWebSecurity
 public class OAuth2Configuration implements WebMvcConfigurer {
 
+    @Bean
+    KeyPair keyPair() {
+        KeyPair keyPair = new KeyStoreKeyFactory(new ClassPathResource("keystore.jks"), "foobar".toCharArray())
+                .getKeyPair("test");
+        return keyPair;
+    }
+
     /**
      * 配置登录视图
      * @param registry
      */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/login").setViewName("login");
-        registry.addViewController("/logout").setViewName("login");
-        registry.addViewController("/oauth/confirm_access").setViewName("authorize");
+//        registry.addViewController("/login").setViewName("login");
+//        registry.addViewController("/logout").setViewName("login");
+//        registry.addViewController("/oauth/confirm_access").setViewName("authorize");
     }
 
     /**
@@ -79,28 +93,27 @@ public class OAuth2Configuration implements WebMvcConfigurer {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.formLogin().loginPage("/login")
-                    .permitAll()
-                    .successForwardUrl("/")
+            http.formLogin()
+//                    .loginPage("/login").permitAll()
+//                    .successForwardUrl("/")
                     .and()
                     .authorizeRequests()
+                    .mvcMatchers("/.well-known/jwks").permitAll()
                     .anyRequest()
                     .authenticated()
                     .and()
                     .logout()
                     .and().csrf().ignoringAntMatchers("/**");
-
         }
 
         @Bean
         public UserDetailsService jdbcUserDetailService(DataSource dataSource) {
             return new UserDetailServiceImpl(dataSource);
         }
-
     }
 
     /**
-     * OAuth 数据服务配置
+     * OAuth2 服务配置
      */
     @Configuration
     @EnableAuthorizationServer
@@ -113,18 +126,19 @@ public class OAuth2Configuration implements WebMvcConfigurer {
         private RedisConnectionFactory connectionFactory;
         @Autowired
         private DataSource dataSource;
-
+        @Autowired
+        private KeyPair keyPair;
         @Autowired
         private ThalloAuthzServerOauth2Properties thalloAuthzServerOauth2Properites;
 
 
         @Bean
-        public JwtAccessTokenConverter jwtAccessTokenConverter() {
+        public JwtAccessTokenConverter accessTokenConverter() {
             JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-            KeyPair keyPair = new KeyStoreKeyFactory(
-                    new ClassPathResource("keystore.jks"), "foobar".toCharArray())
-                    .getKeyPair("test");
-            converter.setKeyPair(keyPair);
+            converter.setKeyPair(this.keyPair);
+            DefaultAccessTokenConverter defaultAccessTokenConverter = new DefaultAccessTokenConverter();
+            defaultAccessTokenConverter.setUserTokenConverter(new SubjectAttributeUserTokenConverter());
+            converter.setAccessTokenConverter(defaultAccessTokenConverter);
             return converter;
         }
 
@@ -174,9 +188,10 @@ public class OAuth2Configuration implements WebMvcConfigurer {
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
             super.configure(endpoints);
-            endpoints.accessTokenConverter(jwtAccessTokenConverter())
-            .userDetailsService(userDetailsService)
-            .tokenStore(new RedisTokenStore(connectionFactory));
+            endpoints
+                .accessTokenConverter(accessTokenConverter())
+                .userDetailsService(userDetailsService)
+                .tokenStore(new RedisTokenStore(connectionFactory));
         }
 
 
@@ -184,8 +199,25 @@ public class OAuth2Configuration implements WebMvcConfigurer {
         public void configure(AuthorizationServerSecurityConfigurer oauthServer)
                 throws Exception {
             super.configure(oauthServer);
-            oauthServer.allowFormAuthenticationForClients();
+            oauthServer
+                    .tokenKeyAccess("permitAll()")
+                    .checkTokenAccess("isAuthenticated()") //allow check token
+                    .allowFormAuthenticationForClients();
         }
 
+    }
+}
+
+
+class SubjectAttributeUserTokenConverter extends DefaultUserAuthenticationConverter {
+    @Override
+    public Map<String, ?> convertUserAuthentication(Authentication authentication) {
+        Map<String, Object> response = new LinkedHashMap<String, Object>();
+        response.put("user_name", authentication.getName());
+        response.put("sub", authentication.getName());
+        if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
+            response.put(AUTHORITIES, AuthorityUtils.authorityListToSet(authentication.getAuthorities()));
+        }
+        return response;
     }
 }

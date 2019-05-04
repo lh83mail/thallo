@@ -1,6 +1,28 @@
 spring:
   application:
-    name: thallo_gateway_server
+    name: gateway-server
+  security:
+    oauth2:
+      client:
+        registration:
+          login-client:
+            provider: uaa
+            client-id: acme
+            client-secret: acmesecret
+            authorization-grant-type: authorization_code
+            redirect-uri-template: "http://jyj.tjhx.gov.cn"
+            scope: openid
+        provider:
+          uaa:
+            authorization-uri: http://localhost:8084/oauth/authorize
+            token-uri: http://localhost:8084/oauth/token
+#            user-info-uri: http://localhost:8084/oauth/userinfo
+#            token-info-uri: http://localhost:8084/oauth/check_token
+            user-name-attribute: sub
+            jwk-set-uri: http://localhost:8084/.well-known/jwks
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8084/.well-known/jwks
   cloud:
     gateway:
       globalcors:
@@ -9,32 +31,44 @@ spring:
             allowedOrigins:
               - "http://docs.spring.io"
               - "http://baidu.com"
+              - "*"
             allowedMethods:
               - GET
               - POST
               - PUT
               - DELETE
+      discovery:
+        locator:
+          enabled: true
       routes:
-        - id: hello_route
-          uri: lb://example-server
-          predicates:
-            - Path=/service/{segment}
-          filters:
-            - SetPath=/{segment}
         - id: 163_route
-          uri: lb://simple-client1
+          uri: https://www.163.com
           predicates:
             - Path=/qst/{segment}
           filters:
             - SetPath=/{segment}
-#security:
-#    oauth2:
-#        client:
-#            clientId: acme
-#            clientSecret: acmesecret
-#            accessTokenUri: http://localhost:8084/uaa/oauth/access_token
-#            userAuthorizationUri: http://localhost:8084/uaa/oauth/authorize
-#            clientAuthenticationScheme: form
-#        resource:
-#          user-info-uri:  'http://localhost:8084/uaa/oauth/authorize'
-#          token-info-uri: 'http://localhost:8084/uaa/oauth/check_token'
+        - id: starter-service
+          uri: http://localhost:8088
+          predicates:
+            - Path=/starter/**
+          filters:
+            - StripPrefix=1
+            - TokenRelay=
+        - id: authz-server
+          uri: http://localhost:8084
+          predicates:
+          - Path=/authz-server/**
+          filters:
+          - StripPrefix=1
+        - id: serverside-service
+          uri: http://localhost:8082
+          predicates:
+          - Path=/sd/**
+          filters:
+          - StripPrefix=1
+          - TokenRelay=
+
+logging:
+  level:
+    org.thalo: 'DEBUG'
+    org.springframework: 'DEBUG'
