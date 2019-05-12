@@ -103,9 +103,10 @@ public class OAuth2Configuration implements WebMvcConfigurer {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.formLogin()
-                    .successForwardUrl(properties.getSuccessForwardUrl())
+                    .defaultSuccessUrl(properties.getDefaultSuccessUrl())
+//                    .successForwardUrl(properties.getSuccessForwardUrl())
                     .failureForwardUrl(properties.getAuthenticationFailureUrl())
-
+                    .failureUrl(properties.getFailureUrl())
                     .and()
                     .authorizeRequests()
                     .mvcMatchers(properties.getResources())
@@ -116,7 +117,6 @@ public class OAuth2Configuration implements WebMvcConfigurer {
                     .and()
                     .logout()
                     .logoutSuccessUrl(properties.getLogoutSuccessUrl())
-
                     .and()
                     .csrf()
                     .ignoringAntMatchers("/**");

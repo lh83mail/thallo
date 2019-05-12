@@ -5,13 +5,25 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("thallo.authzserver.security")
 public class AuthzSecurityProperties {
     /**
-     * 登录成功后跳转地址
+     * 指定如果用户登录前未访问需要授权访问的页面，登录成功后的跳转链接
      */
-    private String successForwardUrl = "/";
+    private String defaultSuccessUrl = "/";
+
     /**
-     * 认证失败后的跳转地址
+     * 授权成功时的跳转链接
      */
-    private String authenticationFailureUrl = "/login?failure";
+    private String successForwardUrl;
+
+    /**
+     * 授权失败时的跳转链接
+     */
+    private String authenticationFailureUrl;
+
+    /**
+     * 登陆失败时跳转路径
+     */
+    private String failureUrl = "/login?error";
+
     /**
      * 注销成功后跳转地址
      */
@@ -22,12 +34,12 @@ public class AuthzSecurityProperties {
      */
     private String[] resources;
 
-    public String getSuccessForwardUrl() {
-        return successForwardUrl;
+    public String getDefaultSuccessUrl() {
+        return defaultSuccessUrl;
     }
 
-    public void setSuccessForwardUrl(String successForwardUrl) {
-        this.successForwardUrl = successForwardUrl;
+    public void setDefaultSuccessUrl(String defaultSuccessUrl) {
+        this.defaultSuccessUrl = defaultSuccessUrl;
     }
 
     public String getAuthenticationFailureUrl() {
@@ -52,5 +64,21 @@ public class AuthzSecurityProperties {
 
     public void setResources(String[] resources) {
         this.resources = resources;
+    }
+
+    public String getSuccessForwardUrl() {
+        return successForwardUrl;
+    }
+
+    public void setSuccessForwardUrl(String successForwardUrl) {
+        this.successForwardUrl = successForwardUrl;
+    }
+
+    public String getFailureUrl() {
+        return failureUrl;
+    }
+
+    public void setFailureUrl(String failureUrl) {
+        this.failureUrl = failureUrl;
     }
 }
