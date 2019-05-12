@@ -13,11 +13,9 @@ spring:
     host: 127.0.0.1
     port: 6379
     # password: password
-
-security:
-  user:
-    password: 'password'
-  ignored: '/css/**,/js/**,/favicon.ico,/webjars/**'
+  security:
+    user:
+      password: 'password'
 
 logging:
   level:
@@ -29,6 +27,9 @@ logging:
 thallo:
   authzserver:
     security:
+      resources:
+        - /.well-known/jwks
+        - /custoken
       oauth2:
         clients:
           ## 开启内存中存放oauth2 client信息，方便开发环境测试
@@ -44,5 +45,6 @@ thallo:
                 - refresh_token
                 - implicit
                 - client_credentials
+                - password
               scopes:
                 - openid

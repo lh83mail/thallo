@@ -5,12 +5,12 @@ spring:
     oauth2:
       client:
         registration:
-          login-client:
+          sso:
             provider: uaa
-            client-id: acme
-            client-secret: acmesecret
+            client-id: acme5
+            client-secret: acmesecret5
             authorization-grant-type: authorization_code
-            redirect-uri-template: "http://jyj.tjhx.gov.cn"
+            redirect-uri-template: "{baseUrl}/login/oauth2/callback/{registrationId}"
             scope: openid
         provider:
           uaa:
@@ -18,11 +18,11 @@ spring:
             token-uri: http://localhost:8084/oauth/token
 #            user-info-uri: http://localhost:8084/oauth/userinfo
 #            token-info-uri: http://localhost:8084/oauth/check_token
-            user-name-attribute: sub
+#            user-name-attribute: sub
             jwk-set-uri: http://localhost:8084/.well-known/jwks
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://localhost:8084/.well-known/jwks
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri: http://localhost:8084/.well-known/jwks
   cloud:
     gateway:
       globalcors:

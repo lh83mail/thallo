@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -89,26 +90,53 @@ public class OAuth2Configuration implements WebMvcConfigurer {
      * Web 安全配置
      */
     @Configuration
+    @EnableConfigurationProperties(AuthzSecurityProperties.class)
     protected static class LoginConfig extends WebSecurityConfigurerAdapter {
+        private AuthzSecurityProperties properties;
+
+        @Autowired
+        public LoginConfig(AuthzSecurityProperties properties) {
+            super();
+            this.properties = properties;
+        }
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.formLogin()
-//                    .loginPage("/login").permitAll()
-//                    .successForwardUrl("/")
+                    .successForwardUrl(properties.getSuccessForwardUrl())
+                    .failureForwardUrl(properties.getAuthenticationFailureUrl())
+
                     .and()
                     .authorizeRequests()
-                    .mvcMatchers("/.well-known/jwks").permitAll()
+                    .mvcMatchers(properties.getResources())
+                    .permitAll()
                     .anyRequest()
                     .authenticated()
+
                     .and()
                     .logout()
-                    .and().csrf().ignoringAntMatchers("/**");
+                    .logoutSuccessUrl(properties.getLogoutSuccessUrl())
+
+                    .and()
+                    .csrf()
+                    .ignoringAntMatchers("/**");
         }
 
         @Bean
         public UserDetailsService jdbcUserDetailService(DataSource dataSource) {
             return new UserDetailServiceImpl(dataSource);
+        }
+
+        /**
+         * 需要配置这个支持password模式
+         * support password grant type
+         * @return
+         * @throws Exception
+         */
+        @Override
+        @Bean
+        public AuthenticationManager authenticationManagerBean() throws Exception {
+            return super.authenticationManagerBean();
         }
     }
 
@@ -130,6 +158,14 @@ public class OAuth2Configuration implements WebMvcConfigurer {
         private KeyPair keyPair;
         @Autowired
         private ThalloAuthzServerOauth2Properties thalloAuthzServerOauth2Properites;
+
+
+        /**
+         * 注入authenticationManager
+         * 来支持 password grant type
+         */
+        @Autowired
+        private AuthenticationManager authenticationManager;
 
 
         @Bean
@@ -190,6 +226,7 @@ public class OAuth2Configuration implements WebMvcConfigurer {
             super.configure(endpoints);
             endpoints
                 .accessTokenConverter(accessTokenConverter())
+                .authenticationManager(authenticationManager)   // enable password auth type
                 .userDetailsService(userDetailsService)
                 .tokenStore(new RedisTokenStore(connectionFactory));
         }

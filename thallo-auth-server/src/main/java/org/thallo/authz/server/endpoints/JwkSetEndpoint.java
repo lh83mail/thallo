@@ -13,7 +13,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 
 /**
- * jwk公开可以
+ * jwk公开
  */
 @FrameworkEndpoint
 class JwkSetEndpoint {
@@ -25,7 +25,7 @@ class JwkSetEndpoint {
 
     @GetMapping("/.well-known/jwks")
     @ResponseBody
-    public Map<String, Object> getKey(Principal principal) {
+    public Map<String, Object> getKey() {
         RSAPublicKey publicKey = (RSAPublicKey) this.keyPair.getPublic();
         RSAKey key = new RSAKey.Builder(publicKey).build();
         return new JWKSet(key).toJSONObject();
