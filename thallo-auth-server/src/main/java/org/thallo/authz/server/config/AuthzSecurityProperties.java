@@ -17,7 +17,7 @@ public class AuthzSecurityProperties {
     /**
      * 授权失败时的跳转链接
      */
-    private String authenticationFailureUrl;
+    private String authenticationFailureUrl="/login?authfail";
 
     /**
      * 登陆失败时跳转路径

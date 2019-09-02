@@ -1,0 +1,51 @@
+##
+@host=http://localhost:8084
+@clientid=acme
+@clientsecret=acmesecret
+@redirect_uri=http://jyj.tjhx.gov.cn
+@user=admin
+@password=123456
+
+## 授权模式
+### 授权码 Authorization Code
+
+###发起请求
+GET {{host}}/oauth/authorize?response_type=code&client_id={{clientid}}&client_secret={{clientsecret}}&redirect_uri={{redirect_uri}}
+
+###换取令牌
+POST {{host}}/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic {{clientid}} {{clientsecret}}
+
+grant_type=authorization_code&redirect_uri={{redirect_uri}}&code=v8j8vT
+
+
+### 隐式许可 Implicit
+## 发起请求
+GET {{host}}/oauth/authorize?response_type=token&client_id={{clientid}}&client_secret={{clientsecret}}&redirect_uri={{redirect_uri}}
+
+
+### 资源所有者密码凭证 Resource Owner Password Credentials
+Not support
+
+
+### 客户端凭证 Client Credentials
+### 请求客户端令牌
+POST {{host}}/oauth/token
+Authorization: Basic {{clientid}} {{clientsecret}}
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+
+
+####
+
+GET {{host}}/custoken
+
+
+### 验证令牌
+
+@token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJfbmFtZSI6ImFkbWluIiwic2NvcGUiOltdLCJleHAiOjE1Njc0ODAyNTksImF1dGhvcml0aWVzIjpbIlJPTEVfQU5ZT05FIl0sImp0aSI6IjM4NTNjMGFhLTUxODItNGQ2Zi05ODdkLTYxZDlhZDFmYTYzNiIsImNsaWVudF9pZCI6ImFjbWUifQ.OcepGJIhx8nMMLODIBf-US0-ARUWm-EMBuXpnXCRd7vi4GKOQUE5h4H1NajbQHr_RrB4_p7Xmd3nPOAdpJZp8FoBmctSjj58srvqislJt15c46TMOHZTa2yWydB-QOrfw3ZUyY8I6ylq_frJ-bdPYWtpTaqZ-PAAkcoQM_Z5W7kip3mE92YK1mp2LFpmBy06o7Ymbz0a0qkmtHksJ1F7S_EMwf860LLwKyCjDw6-2mWF7vG3pthhSzr8ihOClr6buktsBmVnDhOMl5WurM_OUc8ZdF8QSxWLyRV-C3t8qq0UPVYX4EMfkvhJeOzpvhvp8w1ttvf1fqMDgnZ3ogl74g
+
+GET {{host}}/oauth/check_token?token={{token}}
+Authorization: Bearer {{token}}

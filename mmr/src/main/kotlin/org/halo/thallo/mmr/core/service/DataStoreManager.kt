@@ -1,6 +1,5 @@
 package org.halo.thallo.mmr.core.service
 
-import org.halo.thallo.mmr.core.model.DataStore
 
 /**
  * 数据管理器
@@ -12,8 +11,9 @@ interface DataStoreManager {
      * @param id
      * @return
      */
-    @Throws(MMRException::class)
-    fun getDataStore(id: String): DataStore
+    fun getStore(id: String): DataStore
+
+    fun get(store: DataStore): DataStore
 
     /**
      * 保存数据存储配置空间
@@ -21,13 +21,12 @@ interface DataStoreManager {
      * @param store
      * @return
      */
-    fun saveDataStore(id: String, store: DataStore): DataStore
+    fun save(store: DataStore): DataStore
 
-    /**
-     * 获取数据存储配置信息
-     * @param id
-     * @param cfg
-     * @return
-     */
-    fun listDataStores(id: String, page: Int = 1,  pageSize: Int = 20): List<DataStore>
+    fun update(store: DataStore): DataStore
+
+    fun delete(store: DataStore)
+
+    fun query(filter: Filter, pageRequest: PageRequest) : Page<DataStore>
+
 }

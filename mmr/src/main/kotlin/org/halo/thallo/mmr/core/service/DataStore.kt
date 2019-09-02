@@ -1,5 +1,7 @@
 package org.halo.thallo.mmr.core.service
 
+import org.halo.thallo.mmr.core.exceptions.MMRException
+
 /**
  * 数据集存放
  * Created by lihong on 17-10-10.

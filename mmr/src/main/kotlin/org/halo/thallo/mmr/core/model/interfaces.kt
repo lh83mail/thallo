@@ -13,3 +13,20 @@ interface ValueProvider {
      */
     fun getValue(): Any?
 }
+
+/**
+ * 值类型
+ */
+enum class ValueType{
+    STRING,
+    DATE,
+    BOOL,
+    LONG,
+    BINARY,
+    FLOAT,
+    TEXT;
+}
+
+enum class Operation {
+
+}

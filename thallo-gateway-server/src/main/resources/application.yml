@@ -1,36 +1,38 @@
+###########################################################
+## doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-gateway/2.1.0.RELEASE/single/spring-cloud-gateway.html#gateway-how-it-works
+###########################################################
+
 spring:
   application:
     name: gateway-server
-  security:
-    oauth2:
-      client:
-        registration:
-          sso:
-            provider: uaa
-            client-id: acme5
-            client-secret: acmesecret5
-            authorization-grant-type: authorization_code
-            redirect-uri-template: "{baseUrl}/login/oauth2/callback/{registrationId}"
-            scope: openid
-        provider:
-          uaa:
-            authorization-uri: http://localhost:8084/oauth/authorize
-            token-uri: http://localhost:8084/oauth/token
-#            user-info-uri: http://localhost:8084/oauth/userinfo
-#            token-info-uri: http://localhost:8084/oauth/check_token
-#            user-name-attribute: sub
-            jwk-set-uri: http://localhost:8084/.well-known/jwks
-#      resourceserver:
-#        jwt:
-#          jwk-set-uri: http://localhost:8084/.well-known/jwks
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          sso:
+#            provider: uaa
+#            client-id: acme5
+#            client-secret: acmesecret5
+#            authorization-grant-type: authorization_code
+#            redirect-uri-template: "{baseUrl}/login/oauth2/callback/{registrationId}"
+#            scope: openid
+#        provider:
+#          uaa:
+#            authorization-uri: http://localhost:8084/oauth/authorize
+#            token-uri: http://localhost:8084/oauth/token
+##            user-info-uri: http://localhost:8084/oauth/userinfo
+##            token-info-uri: http://localhost:8084/oauth/check_token
+##            user-name-attribute: sub
+#            jwk-set-uri: http://localhost:8084/.well-known/jwks
+##      resourceserver:
+##        jwt:
+##          jwk-set-uri: http://localhost:8084/.well-known/jwks
   cloud:
     gateway:
       globalcors:
         corsConfigurations:
           '[/**]':
             allowedOrigins:
-              - "http://docs.spring.io"
-              - "http://baidu.com"
               - "*"
             allowedMethods:
               - GET
@@ -53,7 +55,7 @@ spring:
             - Path=/starter/**
           filters:
             - StripPrefix=1
-            - TokenRelay=
+#            - TokenRelay=
         - id: authz-server
           uri: http://localhost:8084
           predicates:
@@ -66,7 +68,7 @@ spring:
           - Path=/sd/**
           filters:
           - StripPrefix=1
-          - TokenRelay=
+#          - TokenRelay=
 
 logging:
   level:

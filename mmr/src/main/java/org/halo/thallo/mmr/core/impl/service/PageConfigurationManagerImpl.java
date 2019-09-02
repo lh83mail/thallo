@@ -47,6 +47,7 @@ public class PageConfigurationManagerImpl implements PageConfigurationManager {
         Map<String, String> params = new HashMap<>();
         params.put("id", viewId);
         params.put("config", JSON.toJSONString(config));
+        jdbcTemplate.queryfor
         Number count = jdbcTemplate.queryForObject("select count(1) from CORE_CONFIG where id_ = :id", params, Number.class);
         if (count.intValue() > 0) {
             jdbcTemplate.update("update CORE_CONFIG set config_ = :config where id_ = :id", params);

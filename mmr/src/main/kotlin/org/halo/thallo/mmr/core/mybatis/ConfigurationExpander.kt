@@ -6,7 +6,7 @@ import org.apache.ibatis.mapping.MappedStatement
 import org.apache.ibatis.mapping.SqlCommandType
 import org.apache.ibatis.mapping.SqlSource
 import org.apache.ibatis.session.Configuration
-import org.halo.thallo.mmr.core.service.MMRException
+import org.halo.thallo.mmr.core.exceptions.MMRException
 import java.lang.reflect.Method
 import java.util.*
 

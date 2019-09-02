@@ -10,21 +10,18 @@ interface Attribute : Model {
 
     var value: Any?
 
-    val isInsertable: Boolean
-
-    var valueType: ValueType
-
     /**
-     * 对属性的操作
-     * @return
+     * 数据类型
      */
-    val operation: Operation?
+    var type: ValueType
 
     val length: Int
-
-    val isUpdateable: Boolean
 
     var isPrimary: Boolean
 
     var valueProvider: ValueProvider
+
+    val updateAble: Boolean
+
+    val insertable: Boolean
 }

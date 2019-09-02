@@ -65,7 +65,7 @@ public class DataController {
     }
 
     /**
-     * 执行数据操作
+     * 执行数据命令
      * @param viewId
      * @param commandId
      * @param requestData
