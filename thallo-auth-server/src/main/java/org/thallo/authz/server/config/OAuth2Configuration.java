@@ -24,6 +24,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
@@ -37,12 +38,13 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -81,10 +83,13 @@ public class OAuth2Configuration implements WebMvcConfigurer {
      */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("/login").setViewName("login");
+         registry.addViewController("/").setViewName("login-success");
+         registry.addViewController("/login").setViewName("login");
 //        registry.addViewController("/logout").setViewName("login");
 //        registry.addViewController("/oauth/confirm_access").setViewName("authorize");
     }
+
+
 
     /**
      * Web 安全配置
@@ -100,27 +105,45 @@ public class OAuth2Configuration implements WebMvcConfigurer {
             this.properties = properties;
         }
 
+        @Bean
+        public TokenStore redisTokenStore(RedisConnectionFactory connectionFactory) {
+            return new RedisTokenStore(connectionFactory);
+        }
+
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.formLogin()
+            http
+                .authorizeRequests()
+                    .mvcMatchers("/auth/login").permitAll()
+                    .mvcMatchers("/webjars/**", "/login").permitAll()
+                    .anyRequest().authenticated()
+                    .and()
+                .formLogin()
+                    .loginPage("/login")
                     .defaultSuccessUrl(properties.getDefaultSuccessUrl())
 //                    .successForwardUrl(properties.getSuccessForwardUrl())
                     .failureForwardUrl(properties.getAuthenticationFailureUrl())
                     .failureUrl(properties.getFailureUrl())
                     .and()
-                    .authorizeRequests()
-                    .mvcMatchers(properties.getResources())
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated()
-
-                    .and()
-                    .logout()
+                .logout()
+                    .logoutUrl("/logout")
                     .logoutSuccessUrl(properties.getLogoutSuccessUrl())
                     .and()
-                    .csrf()
-                    .ignoringAntMatchers("/**");
+                .csrf()
+                    .ignoringRequestMatchers(
+                            new AntPathRequestMatcher("/auth/login"),
+                            new AntPathRequestMatcher("/logout")
+                    )
+                    .and()
+                .rememberMe();
         }
+
+        @Override
+        public void configure(WebSecurity web) throws Exception {
+            web.debug(true);
+            super.configure(web);
+        }
+
 
         @Bean
         public UserDetailsService jdbcUserDetailService(DataSource dataSource) {
@@ -139,6 +162,8 @@ public class OAuth2Configuration implements WebMvcConfigurer {
             return super.authenticationManagerBean();
         }
     }
+
+
 
     /**
      * OAuth2 服务配置
@@ -228,7 +253,10 @@ public class OAuth2Configuration implements WebMvcConfigurer {
                 .accessTokenConverter(accessTokenConverter())
                 .authenticationManager(authenticationManager)   // enable password auth type
                 .userDetailsService(userDetailsService)
+
                 .tokenStore(new RedisTokenStore(connectionFactory));
+//              .tokenStore(new JwtTokenStore(accessTokenConverter()))
+//            ;
         }
 
 
@@ -241,6 +269,8 @@ public class OAuth2Configuration implements WebMvcConfigurer {
                     .checkTokenAccess("isAuthenticated()") //allow check token
                     .allowFormAuthenticationForClients();
         }
+
+
 
     }
 }
