@@ -4,15 +4,16 @@ server:
 spring:
   application:
     name: thallo-starter
-  redis:
-    host: 127.0.0.1
-    port: 6379
+#  redis:
+#    host: 127.0.0.1
+#    port: 6379
     # password: password
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8084/.well-known/jwks
+
 logging:
   level:
     org:

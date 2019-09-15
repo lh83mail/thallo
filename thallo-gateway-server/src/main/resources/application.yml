@@ -5,28 +5,29 @@
 spring:
   application:
     name: gateway-server
-#  security:
-#    oauth2:
+  security:
+    oauth2:
 #      client:
 #        registration:
 #          sso:
-#            provider: uaa
-#            client-id: acme5
-#            client-secret: acmesecret5
+#            provider: thallo
+#            client-id: acme
+#            client-secret: acmesecret
 #            authorization-grant-type: authorization_code
-#            redirect-uri-template: "{baseUrl}/login/oauth2/callback/{registrationId}"
-#            scope: openid
+##            redirect-uri-template: "{baseUrl}/oauth2/callback/{registrationId}"
+#            redirect-uri-template: "http://localhost:8080/thallo-starter/userinfo"
+#            scope: auth
 #        provider:
-#          uaa:
+#          thallo:
 #            authorization-uri: http://localhost:8084/oauth/authorize
 #            token-uri: http://localhost:8084/oauth/token
-##            user-info-uri: http://localhost:8084/oauth/userinfo
+#            user-info-uri: http://localhost:8084/oauth/userinfo
 ##            token-info-uri: http://localhost:8084/oauth/check_token
 ##            user-name-attribute: sub
-#            jwk-set-uri: http://localhost:8084/.well-known/jwks
-##      resourceserver:
-##        jwt:
-##          jwk-set-uri: http://localhost:8084/.well-known/jwks
+##            jwk-set-uri: http://localhost:8084/.well-known/jwks
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8084/.well-known/jwks
   cloud:
     gateway:
       globalcors:
@@ -43,32 +44,13 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: 163_route
-          uri: https://www.163.com
-          predicates:
-            - Path=/qst/{segment}
-          filters:
-            - SetPath=/{segment}
-        - id: starter-service
+        - id: thallo-starter
           uri: http://localhost:8088
           predicates:
-            - Path=/starter/**
+            - Path=/thallo-starter/**
           filters:
             - StripPrefix=1
 #            - TokenRelay=
-        - id: authz-server
-          uri: http://localhost:8084
-          predicates:
-          - Path=/authz-server/**
-          filters:
-          - StripPrefix=1
-        - id: serverside-service
-          uri: http://localhost:8082
-          predicates:
-          - Path=/sd/**
-          filters:
-          - StripPrefix=1
-#          - TokenRelay=
 
 logging:
   level:

@@ -16,6 +16,7 @@
 
 package org.thallo.authz.server.config;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -43,12 +46,16 @@ import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticat
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thallo.authz.server.authen.UserDetailServiceImpl;
+import org.thallo.authz.server.authen.VerifyXTokenFilter;
+import org.thallo.authz.server.authen.XTokenAuthenticationProvider;
 import org.thallo.authz.server.oauth2.DelegateClientDetailService;
 import org.thallo.authz.server.oauth2.ThalloAuthzServerOauth2Properties;
 
@@ -85,11 +92,16 @@ public class OAuth2Configuration implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
          registry.addViewController("/").setViewName("login-success");
          registry.addViewController("/login").setViewName("login");
-//        registry.addViewController("/logout").setViewName("login");
-//        registry.addViewController("/oauth/confirm_access").setViewName("authorize");
     }
 
 
+
+
+
+    @Bean
+    public UserDetailsService jdbcUserDetailService(DataSource dataSource) {
+        return new UserDetailServiceImpl(dataSource);
+    }
 
     /**
      * Web 安全配置
@@ -116,8 +128,10 @@ public class OAuth2Configuration implements WebMvcConfigurer {
                 .authorizeRequests()
                     .mvcMatchers("/auth/login").permitAll()
                     .mvcMatchers("/webjars/**", "/login").permitAll()
+                    .mvcMatchers("/.well-known/jwks").permitAll()
                     .anyRequest().authenticated()
                     .and()
+                .addFilterBefore(new VerifyXTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
                     .loginPage("/login")
                     .defaultSuccessUrl(properties.getDefaultSuccessUrl())
@@ -135,29 +149,28 @@ public class OAuth2Configuration implements WebMvcConfigurer {
                             new AntPathRequestMatcher("/logout")
                     )
                     .and()
-                .rememberMe();
+                .rememberMe()
+                    .and();
+
         }
+
 
         @Override
         public void configure(WebSecurity web) throws Exception {
             web.debug(true);
             super.configure(web);
+
         }
 
 
-        @Bean
-        public UserDetailsService jdbcUserDetailService(DataSource dataSource) {
-            return new UserDetailServiceImpl(dataSource);
-        }
-
-        /**
-         * 需要配置这个支持password模式
-         * support password grant type
-         * @return
-         * @throws Exception
-         */
         @Override
+        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+            super.configure(auth);
+            auth.authenticationProvider(new XTokenAuthenticationProvider());
+        }
+
         @Bean
+        @Override
         public AuthenticationManager authenticationManagerBean() throws Exception {
             return super.authenticationManagerBean();
         }

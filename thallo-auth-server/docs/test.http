@@ -168,3 +168,7 @@ grant_type=authorization_code&redirect_uri={{redirect_uri}}&code=oZeB9Q
 
 
 http://localhost:8080/authz-server/oauth/authorize?response_type=token&client_id=acme&client_secret=acmesecret&scope=openid&redirect_uri=http://jyj.tjhx.gov.cn
+
+
+
+

@@ -4,18 +4,14 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.provider.token.*;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
 
 @Configuration
-//@EnableResourceServer
-public class Confi {
+public class Confi extends WebSecurityConfigurerAdapter {
 
     @LoadBalanced
     @Bean
@@ -24,6 +20,21 @@ public class Confi {
         restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
         return restTemplate;
     }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        super.configure(http);
+        http.httpBasic().disable();
+        http.oauth2ResourceServer()
+            .jwt();
+    }
+
+//    @Autowired
+//    private RedisConnectionFactory connectionFactory;
+//    @Bean
+//    public TokenStore tokenStore() {
+//        return new JwkTokenStore();
+//    }
 
 
 //    private final ResourceServerProperties resource;

@@ -17,7 +17,7 @@ POST {{host}}/oauth/token
 Content-Type: application/x-www-form-urlencoded
 Authorization: Basic {{clientid}} {{clientsecret}}
 
-grant_type=authorization_code&redirect_uri={{redirect_uri}}&code=v8j8vT
+grant_type=authorization_code&redirect_uri={{redirect_uri}}&code=0y1akY
 
 
 ### 隐式许可 Implicit
@@ -45,7 +45,32 @@ GET {{host}}/custoken
 
 ### 验证令牌
 
-@token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJfbmFtZSI6ImFkbWluIiwic2NvcGUiOltdLCJleHAiOjE1Njc0ODAyNTksImF1dGhvcml0aWVzIjpbIlJPTEVfQU5ZT05FIl0sImp0aSI6IjM4NTNjMGFhLTUxODItNGQ2Zi05ODdkLTYxZDlhZDFmYTYzNiIsImNsaWVudF9pZCI6ImFjbWUifQ.OcepGJIhx8nMMLODIBf-US0-ARUWm-EMBuXpnXCRd7vi4GKOQUE5h4H1NajbQHr_RrB4_p7Xmd3nPOAdpJZp8FoBmctSjj58srvqislJt15c46TMOHZTa2yWydB-QOrfw3ZUyY8I6ylq_frJ-bdPYWtpTaqZ-PAAkcoQM_Z5W7kip3mE92YK1mp2LFpmBy06o7Ymbz0a0qkmtHksJ1F7S_EMwf860LLwKyCjDw6-2mWF7vG3pthhSzr8ihOClr6buktsBmVnDhOMl5WurM_OUc8ZdF8QSxWLyRV-C3t8qq0UPVYX4EMfkvhJeOzpvhvp8w1ttvf1fqMDgnZ3ogl74g
+@token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYzlkMDA4MTY4MjEyN2I3MDE2ODIxMzcyYzA3MDAwMCIsInVzZXJfbmFtZSI6IjJjOWQwMDgxNjgyMTI3YjcwMTY4MjEzNzJjMDcwMDAwIiwic2NvcGUiOlsiYXV0aCIsInByb2ZpbGUiXSwiZXhwIjoxNTY4NDM0MzA1LCJhdXRob3JpdGllcyI6WyJST0xFX0FOWU9ORSJdLCJqdGkiOiI4ODhjZGM1MC1lNThmLTQxZDItYjU3Yi02MzdlMWMzZDczZjYiLCJjbGllbnRfaWQiOiJhY21lIn0.Cmm3MFDscWCDG0VfaxHHtf7XB0i1gqW6HsH6qVjXO0iVYB7Zdw9ww1u35BD0JQTkJdv5lQbwaIvCpCsZaf9Tsh5ZZNxb63srgu2xV44tLXNSRKeFbAFehtICKHFTV5IpB17IjhkiLwdO09v0SVTuTMeP2I4MU2zj-yvbgkYve4oyfcrpL6jXSqIaobgG6B1wLXTpppM-EKfeLkCyh0ArsyLlUiBN9alC2x_0XhFFQbuwIpQJIzB6pf5qaqoo_ot-7EnLl1pWpm1pYC7oNGUzIzmGADmnya9IiMfywIREDE_vgs8UrJyCuAV7nL92w4HFsMGh200kSoB75MQIRjnNvg
 
 GET {{host}}/oauth/check_token?token={{token}}
 Authorization: Bearer {{token}}
+
+
+### XTOKEN 认证
+GET {{host}}/pro
+Authorization: XTOKEN Godotot
+
+### 
+GET {{host}}/pro?client_id={{clientid}}
+Authorization: Bearer {{token}}
+
+### by usernanme
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{"username":"{{user}}", "password": "{{password}}"}
+
+
+
+### XTOKEN 认证
+GET http://localhost:8088/userinfo
+Authorization: Bearer {{token}}
+
+
+####
+GET {{host}}/.well-known/jwks

@@ -9,10 +9,10 @@ spring:
     username: 'root'
     password: 'root'
     driverClassName: 'com.mysql.cj.jdbc.Driver'
-#  redis:
-#    host: 127.0.0.1
-#    port: 6379
-    # password: password
+  redis:
+    host: 127.0.0.1
+    port: 6379
+#     password: password
   security:
     user:
       password: 'password'
@@ -41,6 +41,7 @@ thallo:
               client-secret: '{noop}acmesecret'
               redirect-uri:
                 - http://jyj.tjhx.gov.cn
+                - http://localhost:8080/thallo-starter/userinfo
               authorizedGrantTypes:
                 - authorization_code
                 - refresh_token
@@ -48,4 +49,5 @@ thallo:
                 - client_credentials
                 - password
               scopes:
-                - openid
+                - auth
+                - profile
