@@ -1,0 +1,41 @@
+@host=http://localhost:8080
+
+@auth_host=http://localhost:8084
+
+
+@api_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYzlkMDA4MTY4MjEyN2I3MDE2ODIxMzcyYzA3MDAwMCIsInVzZXJfbmFtZSI6IjJjOWQwMDgxNjgyMTI3YjcwMTY4MjEzNzJjMDcwMDAwIiwic2NvcGUiOltdLCJleHAiOjE1NzI4MDg2OTYsImF1dGhvcml0aWVzIjpbIlJPTEVfQU5ZT05FIl0sImp0aSI6ImJmYzRmMDBmLTJkNjQtNDA2NS04ZGIxLTcwOWJiNWYwNThmYyIsImNsaWVudF9pZCI6ImFjbWUifQ.j2fUyOr1Ka9SkLHMQoF5dGQIkp7e52A7-TUR7iR5h0UXWUixO3N23iGhQp_H-xaE8GPdPzZM-w8xtUn6Ga5ZxlBd8AQbelc1tz_OhAxF0YKZECpGr0hHlC8S-_4Zcdn195nnfhqINRdoPvA5apRQzlEMn5BHdSoLZSLsrwhewXlU4UoB4T6R3xOzyujAsQA8C7tuqUmTi7EeM0RtJqragrbdJjbLh8MJlQwvMnyMqBcoqYJRlbZkoQKjKHiLD8KXkeoPaIk5TIJ7Ta_MveESoqg1AjMNmJfjytS09Ds3GZVbMv_UG6KJ_FEn-88M7DFzx_q9GFCJZOyAdZZpfQpOPw
+
+
+###
+POST {{auth_host}}/auth/login
+Content-Type: application/json
+
+{"username":"admin", "password": "123456"}
+
+
+####
+GET http://localhost:8088/userinfo
+Authorization: Bearer {{api_token}}
+
+
+####
+GET http://localhost:8082/sayHello?name=Direct
+Authorization: Bearer {{api_token}}
+
+
+
+###
+GET {{host}}/thallo-starter/userinfo
+Authorization: Bearer {{api_token}}
+
+###
+GET {{host}}/example-server-htp/sayHello?name=BYHttp
+Authorization: Bearer {{api_token}}
+
+###
+GET {{host}}/example-server/sayHello?name=FRK
+Authorization: Bearer {{api_token}}
+
+
+
+

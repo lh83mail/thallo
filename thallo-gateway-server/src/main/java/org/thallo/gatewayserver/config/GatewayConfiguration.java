@@ -14,30 +14,6 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @Configuration
 //@EnableWebFluxSecurity
 public class GatewayConfiguration  {
-
-//    @Autowired
-//    private DiscoveryClient discoveryClient;
-//    @Autowired
-//    ApplicationContext context;
-//
-//
-//    @Bean
-//    SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
-//        System.out.println("::::::::::::::::::" + discoveryClient);
-//
-//        http.csrf().disable();
-//        http.oauth2ResourceServer().jwt()
-//                .jwkSetUri("http://localhost:8084/.well-known/jwks");
-//        http.authorizeExchange()
-//             .pathMatchers("/authz-server/**").permitAll()
-//             .anyExchange()
-//                .authenticated();
-//
-//        SecurityWebFilterChain result = http.build();
-//        return result;
-//
-//    }
-
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
@@ -51,17 +27,5 @@ public class GatewayConfiguration  {
                 .jwt();//.jwtAuthenticationConverter(new JwtOAuth2AuthenticationTokenConverter());
         return http.build();
     }
-
-
-//    @Configuration
-//    public static class SecurityConfig extends WebSecurityConfigurerAdapter {
-//
-//        @Override
-//        protected void configure(HttpSecurity http) throws Exception {
-//            super.configure(http);
-//            http.oauth2ResourceServer()
-//                    .jwt();
-//        }
-//    }
 
 }

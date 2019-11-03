@@ -1,5 +1,6 @@
 package com.yourcompany.server.service;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,7 @@ public class Thallo {
     private String message;
     private Date createTime = new Date();
     private Map<String, String> attributes;
+    private Principal principal;
 
     public Thallo() {
         attributes = new HashMap<>();
@@ -39,5 +41,13 @@ public class Thallo {
 
     public void setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;
+    }
+
+    public void setPrincipal(Principal principal) {
+        this.principal = principal;
+    }
+
+    public Principal getPrincipal() {
+        return principal;
     }
 }
