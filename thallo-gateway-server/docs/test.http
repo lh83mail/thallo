@@ -3,7 +3,7 @@
 @auth_host=http://localhost:8084
 
 
-@api_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYzlkMDA4MTY4MjEyN2I3MDE2ODIxMzcyYzA3MDAwMCIsInVzZXJfbmFtZSI6IjJjOWQwMDgxNjgyMTI3YjcwMTY4MjEzNzJjMDcwMDAwIiwic2NvcGUiOltdLCJleHAiOjE1NzI4MDg2OTYsImF1dGhvcml0aWVzIjpbIlJPTEVfQU5ZT05FIl0sImp0aSI6ImJmYzRmMDBmLTJkNjQtNDA2NS04ZGIxLTcwOWJiNWYwNThmYyIsImNsaWVudF9pZCI6ImFjbWUifQ.j2fUyOr1Ka9SkLHMQoF5dGQIkp7e52A7-TUR7iR5h0UXWUixO3N23iGhQp_H-xaE8GPdPzZM-w8xtUn6Ga5ZxlBd8AQbelc1tz_OhAxF0YKZECpGr0hHlC8S-_4Zcdn195nnfhqINRdoPvA5apRQzlEMn5BHdSoLZSLsrwhewXlU4UoB4T6R3xOzyujAsQA8C7tuqUmTi7EeM0RtJqragrbdJjbLh8MJlQwvMnyMqBcoqYJRlbZkoQKjKHiLD8KXkeoPaIk5TIJ7Ta_MveESoqg1AjMNmJfjytS09Ds3GZVbMv_UG6KJ_FEn-88M7DFzx_q9GFCJZOyAdZZpfQpOPw
+@api_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYzlkMDA4MTY4MjEyN2I3MDE2ODIxMzcyYzA3MDAwMCIsInVzZXJfbmFtZSI6IjJjOWQwMDgxNjgyMTI3YjcwMTY4MjEzNzJjMDcwMDAwIiwic2NvcGUiOltdLCJleHAiOjE1NzMzOTQxMzUsImF1dGhvcml0aWVzIjpbIlJPTEVfQU5ZT05FIl0sImp0aSI6IjczOTAwMThlLTBkNzgtNGM2ZC1iZjlmLTRjYTc0YWQ4NzUwNCIsImNsaWVudF9pZCI6ImFjbWUifQ.Hn0T3uKMl_uILedoXXba1nUoOTcN9cfuNvX7v2ZjYu3T9qbbuAk0VqvJq4oqA8nCQLq0kYnGUDB8porQW2tOc7FYnYps7Qw1LuBEzG0TkSjgHpe_H2ZUuoD4rmWJh8DEnsdjDprwwFW8V2NqAKjXKvrQXVkouYafgj4XQsDqHd_dNFxn01bmI_s5moOrXG3qoNWt43uwgO1Q-PiQfGiW-Ln6rEkbqcQHcorgFTf69V9V6-GCaOAA4iW8IMRZNGSGelJgblALcor2JujS01cU1mIggginPXUQ4I5iGRlhkN6LYYW_o32xs0MaBqH6WcjU8XvIQLdQemB14fRbXpAQ5g
 
 
 ###
@@ -23,14 +23,13 @@ GET http://localhost:8082/sayHello?name=Direct
 Authorization: Bearer {{api_token}}
 
 
-
 ###
 GET {{host}}/thallo-starter/userinfo
 Authorization: Bearer {{api_token}}
 
 ###
 GET {{host}}/example-server-htp/sayHello?name=BYHttp
-Authorization: Bearer {{api_token}}
+Authorization: Bearer {{api_token}}    
 
 ###
 GET {{host}}/example-server/sayHello?name=FRK
@@ -39,3 +38,11 @@ Authorization: Bearer {{api_token}}
 
 
 
+# spring boot状态服务 ======================================================================
+###
+GET http://192.168.1.105:8088/actuator
+Authorization: Bearer {{api_token}}
+
+###
+GET http://192.168.1.105:8088/actuator/health
+Authorization: Bearer {{api_token}}

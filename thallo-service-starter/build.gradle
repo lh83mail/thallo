@@ -1,18 +1,21 @@
 dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-config'
     compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-    compile 'org.springframework.cloud:spring-cloud-starter-security'
+    compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
+
 
     compile "org.springframework.boot:spring-boot-starter"
     compile "org.springframework.boot:spring-boot-starter-web"
+    // 健康监控
     compile 'org.springframework.boot:spring-boot-starter-actuator'
 
-
+    // 系统安全
+    compile 'org.springframework.cloud:spring-cloud-starter-security'
     compile 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    compile 'org.springframework.security.oauth:spring-security-oauth2:2.3.5.RELEASE'
-
-
-//    compile 'org.springframework.boot:spring-boot-starter-data-redis'
+    // 负载均衡
+    compile 'org.springframework.cloud:spring-cloud-loadbalancer'
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-ribbon'
 
     //
     testCompile 'org.springframework.boot:spring-boot-starter-test'

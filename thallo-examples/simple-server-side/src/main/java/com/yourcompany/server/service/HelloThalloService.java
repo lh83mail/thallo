@@ -11,5 +11,5 @@ import java.security.Principal;
  */
 public interface HelloThalloService {
     @RequestMapping(value = "/sayHello", method = {RequestMethod.GET})
-    Thallo sayHello(@RequestParam("name") String name, Principal principal);
+    Thallo sayHello(@RequestParam("name") String name);
 }

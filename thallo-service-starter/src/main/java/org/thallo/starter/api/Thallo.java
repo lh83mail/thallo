@@ -1,4 +1,4 @@
-package com.yourcompany.server.service;
+package org.thallo.starter.api;
 
 import java.security.Principal;
 import java.util.Date;

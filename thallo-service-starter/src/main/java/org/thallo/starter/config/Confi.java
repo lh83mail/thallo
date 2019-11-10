@@ -10,14 +10,6 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestOperations;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.common.util.OAuth2Utils;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -28,12 +20,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 @Configuration
-@EnableOAuth2Client
 public class Confi extends WebSecurityConfigurerAdapter {
 
     @LoadBalanced
     @Bean
-    public RestTemplate restTemplate(OAuth2ClientContext oauth2ClientContext){
+    public RestTemplate restTemplate(){
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
         restTemplate.setInterceptors(Arrays.asList(new ClientHttpRequestInterceptor() {
@@ -54,6 +45,12 @@ public class Confi extends WebSecurityConfigurerAdapter {
         return restTemplate;
     }
 
+
+//    @Bean
+//    public OAuth2RestTemplate restTemplate(UserInfoRestTemplateFactory factory) {
+//        return factory.getUserInfoRestTemplate();
+//    }
+
     private HttpServletRequest getHttpServletRequest() {
         try {
             return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -66,10 +63,15 @@ public class Confi extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
-        http.httpBasic().disable();
-        http.oauth2ResourceServer()
-            .jwt();
+        http
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().disable()
+                .httpBasic().disable()
+                .oauth2ResourceServer()
+                .jwt()
+                ;
     }
 
 //    @Autowired

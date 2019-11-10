@@ -4,19 +4,34 @@ server:
 spring:
   application:
     name: thallo-starter
-#  redis:
-#    host: 127.0.0.1
-#    port: 6379
-    # password: password
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8084/.well-known/jwks
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+feign:
+  hystrix:
+    enabled: true
+
+ribbon:
+  OkToRetryOnAllOperations: false
+
+hystrix:
+  command:
+    serverMethod:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
 logging:
   level:
     org:
-      thalo: 'DEBUG'
-      springframework:
-        security: 'DEBUG'
+      thalo: DEBUG
+#      springframework: DEBUG

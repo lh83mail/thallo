@@ -1,9 +1,0 @@
-@startuml
-Client -> DataStoreManger:create()
-DataStoreManger -> DataStore:create()
-DataStoreManger --> Client:DataStore
-
-Client -> DataStore:createDataObject()
-DataStore -> DataObject:create()
-DataStore --> Client
-@enduml
