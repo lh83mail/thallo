@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_HOST:192.168.1.115:8848}
+        file-extension: json
+      discovery:
+        server-addr: ${NACOS_HOST:192.168.1.115:8848}
+        file-extension: json
