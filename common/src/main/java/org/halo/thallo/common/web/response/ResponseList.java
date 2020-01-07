@@ -1,4 +1,4 @@
-package org.halo.thallo.common.rest.response;
+package org.halo.thallo.common.web.response;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -1,10 +1,9 @@
-package org.halo.thallo.common.rest.response;
+package org.halo.thallo.common.web.response;
 
 
 import org.springframework.data.domain.Page;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created at 2019/11/12 11:16

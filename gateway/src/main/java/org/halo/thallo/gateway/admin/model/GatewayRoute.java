@@ -14,6 +14,8 @@ public class GatewayRoute extends BaseModel<String> {
     private String predicates;
     private String filters;
     private String description;
+    @Builder.Default
     private Integer orders = 0;
+    @Builder.Default
     private String status = "Y";
 }

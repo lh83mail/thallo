@@ -1,5 +1,10 @@
 package org.halo.thallo.gateway.admin.service;
 
+import org.halo.thallo.gateway.admin.model.GatewayRoute;
+import org.halo.thallo.gateway.admin.model.GatewayRouteQueryParam;
+
+import java.util.List;
+
 /**
  * Create At  2020/1/6 17:32
  *
@@ -21,21 +26,21 @@ public interface GatewayRouteService {
      * @param gatewayRoute
      * @return
      */
-    boolean add(GatewayRoute gatewayRoute);
+    GatewayRoute add(GatewayRoute gatewayRoute);
 
     /**
      * 查询网关路由
      *
      * @return
      */
-    List<GatewayRouteVo> query(GatewayRouteQueryParam gatewayRouteQueryParam);
+    List<GatewayRoute> query(GatewayRouteQueryParam gatewayRouteQueryParam);
 
     /**
      * 更新网关路由信息
      *
      * @param gatewayRoute
      */
-    boolean update(GatewayRoute gatewayRoute);
+    GatewayRoute update(GatewayRoute gatewayRoute);
 
     /**
      * 根据id删除网关路由

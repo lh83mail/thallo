@@ -20,8 +20,8 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class BusConfig {
 
-    private static final String EXCHANGE_NAME = "spring-boot-exchange";
-    private static final String ROUTING_KEY = "gateway-route";
+    public static final String EXCHANGE_NAME = "spring-boot-exchange";
+    public static final String ROUTING_KEY = "gateway-route";
 
     @Value("${spring.application.name}")
     private String appName;
