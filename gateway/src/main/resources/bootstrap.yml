@@ -4,11 +4,29 @@ spring:
   cloud:
     nacos:
       config:
+        prefix: thallo
         server-addr: ${NACOS_HOST:127.0.0.1:8848}
-        file-extension: json
+        file-extension: yaml
       discovery:
         server-addr: ${NACOS_HOST:127.0.0.1:8848}
-        file-extension: json
+        file-extension: yaml
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+      actuator:
+        verbose:
+          enabled: true
+
+  profiles:
+    active: gateway, security
 
 
 management:
@@ -16,3 +34,7 @@ management:
     web:
       exposure:
         include: '*'
+  endpoint:
+    gateway:
+      enabled: true
+

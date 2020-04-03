@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.halo.thallo.common.model.BaseModel;
 import org.springframework.beans.BeanUtils;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.util.Date;
@@ -20,12 +22,13 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseEntity<ID, M extends BaseModel<ID>> implements Serializable {
-    private ID id;
+public class BaseEntity<M extends BaseModel> implements Serializable {
     private String createdBy;
     private Date createAt;
     private String updatedBy;
     private Date updateAt;
+    private Boolean deleted;
+
 
     public void apply(M m) {
         BeanUtils.copyProperties(m, this);

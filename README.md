@@ -1,6 +1,11 @@
 # thallo
 脚手架项目
 
+# 项目结构
+
+* common  基础抽象和共用代码
+* gateway 网关项目
+* 
 
 # 使用的开源项目
 * https://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.0.2.RELEASE/single/spring-cloud-config.html

@@ -12,8 +12,11 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.support.converter.ContentTypeDelegatingMessageConverter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.HashMap;
 
 
 /**
@@ -36,22 +39,29 @@ public class BusAdminConfig {
     }
 
     @Bean
-    TopicExchange exchange() {
+    TopicExchange adminExchange() {
         log.info("exchange:{}", EXCHANGE_NAME);
         return new TopicExchange(EXCHANGE_NAME);
     }
 
     @Bean
-    Binding binding(Queue queue, TopicExchange exchange) {
+    Binding adminBinding(Queue queue, TopicExchange exchange) {
         log.info("binding {} to {} with {}", queue, exchange, ROUTING_KEY);
         return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
     }
 
     @Bean
-    public MessageConverter messageConverter() {
+    public MessageConverter adminMessageConverter() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         return new ContentTypeDelegatingMessageConverter(new Jackson2JsonMessageConverter(objectMapper));
+    }
+
+    @Bean
+    @Value("${thallo.security.username}")
+    public Object helloXXXXXX(String value) {
+        System.out.println(">>>>>>>>>>>:::::" + value);
+        return new HashMap<>();
     }
 
 }

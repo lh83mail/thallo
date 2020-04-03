@@ -4,8 +4,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.halo.thallo.common.entity.UuidBaseEntity;
 import org.halo.thallo.gateway.admin.model.GatewayRoute;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 
 /**
@@ -18,6 +21,7 @@ import javax.persistence.Table;
 @Table(name = "gateway_route")
 @Data
 @EqualsAndHashCode(callSuper=true)
+@GenericGenerator(name = "system-uuid", strategy = "uuid")
 public class GatewayRouteEntity extends UuidBaseEntity<GatewayRoute>  {
     private String uri;
     private String routeId;

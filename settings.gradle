@@ -10,3 +10,5 @@ include 'thallo-examples:simple-server-side'
 include 'thallo-examples:simple-service'
 include 'common'
 include 'gateway'
+include 'dev-runtime'
+

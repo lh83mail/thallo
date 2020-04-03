@@ -15,8 +15,9 @@ public class BusReceiver {
     @Autowired
     private RouteService routeService;
 
-    public void handleMessage(RouteDefinition routeDefinition, int action) {
-        log.info("Received Message:<{}, action: {}>", routeDefinition, action);
+    public void handleMessage(RouteDefinition routeDefinition) {
+        log.info("Received Message:<{}, action: {}>", routeDefinition);
+        int action = 1;
         switch (action) {
             case ACTION_SAVE:
                 routeService.save(routeDefinition);

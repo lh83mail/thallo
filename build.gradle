@@ -1,35 +1,28 @@
 buildscript {
-    ext {
+	ext {
 		springBootVersion = '2.1.4.RELEASE'
-        springCloudVersion = 'Greenwich.RELEASE'
+		springCloudVersion = 'Greenwich.RELEASE'
 		springAlibabaBootVersion = "2.1.0.RELEASE"
 		jetcache_version="2.5.15"
 		mysql_driver_version="6.0.6"
 	}
-	repositories {
-		mavenLocal()
-		maven {
-		  url 'http://maven.aliyun.com/nexus/content/groups/public'
-		}
-		mavenCentral()
-		jcenter()
-	}
-
-
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+}
+plugins {
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 }
 
 
 version = "1.0.0-SNAPSHOT"
 group = "org.halo.thallo"
 
+
 allprojects {
+
 	repositories {
 		mavenLocal()
 		maven {
-		  url 'http://maven.aliyun.com/nexus/content/groups/public'
+		  url 'https://maven.aliyun.com/nexus/content/groups/public'
 		}
 		mavenCentral()
 		jcenter()
@@ -38,14 +31,13 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
 
     [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 	dependencies {
-
 		compileOnly 'org.projectlombok:lombok:1.18.10'
 		annotationProcessor 'org.projectlombok:lombok:1.18.10'
 

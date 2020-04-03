@@ -32,7 +32,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @Component
 @Slf4j
 public class RouteServiceImpl implements RouteService {
-    private final static String ROUTE_DEF_PREFIX = "gateway_routes_";
+    private final static String ROUTE_DEF_PREFIX = "gateway_routes::";
 
     private Map<String, RouteDefinition> routeDefinitionMap = synchronizedMap(new HashMap<>());
 
@@ -86,4 +86,5 @@ public class RouteServiceImpl implements RouteService {
         routeDefinitionMap.remove(id);
         log.info("删除路由1条：{},目前路由共{}条", id, routeDefinitionMap.size());
     }
+
 }

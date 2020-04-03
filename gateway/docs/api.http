@@ -1,0 +1,38 @@
+@host=http://127.0.0.1:8080
+
+
+######################
+POST {{host}}/gateway/routes
+Content-Type: application/json
+
+{
+    "routeId": "test",
+    "uri": "https://www.baidu.com",
+    "predicates": "[  {\"name\":\"Path\", \"args\": {\"patterns\":\"/mytest/**\"}}]",
+    "filters": "[{\"name\":\"StripPrefix\", \"args\": {\"parts\":1}}]",
+    "description": "测试环境"
+}
+
+### 
+PUT {{host}}/gateway/routes/8a7eb25c7139e1e001713a081b0a0016
+Content-Type: application/json
+
+{
+    "routeId": "test",
+    "uri": "https://www.baidu.com",
+    "predicates": "[  {\"name\":\"Path\", \"args\": {\"patterns\":\"/mytest/**\"}}]",
+    "filters": "[{\"name\":\"StripPrefix\", \"args\": {\"parts\":1}}]",
+    "description": "测试环境"
+}
+
+
+####
+GET http://localhost:8080/mytest
+
+
+# {
+# name: "Path",
+# args: {
+#     "Path": "/path"
+# }
+# }

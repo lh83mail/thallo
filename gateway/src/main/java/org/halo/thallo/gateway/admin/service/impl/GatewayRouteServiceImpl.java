@@ -145,6 +145,7 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
                 gatewayRouteCache.put(entity.getRouteId(), gatewayRouteToRouteDefinition(entity))
         );
         log.info("全局初使化网关路由成功!");
+
         return true;
     }
 }
