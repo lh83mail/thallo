@@ -5,10 +5,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.gateway.config.GlobalCorsProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.reactive.config.CorsRegistration;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.DelegatingWebFluxConfiguration;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -25,11 +28,23 @@ public class WebMvcConfig implements WebFluxConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-
+        //FIX 全局CORS配置对于Webflux不生效，导致 OPTIONS /path 产生HTTP CODE 403
         globalCorsProperties.getCorsConfigurations().forEach((k,v) -> {
             registry.addMapping(k)
-            .allowedOrigins(v.getAllowedOrigins().toArray(new String[v.getAllowedOrigins().size()]));
+                .allowedOrigins(listToArray(v.getAllowedOrigins()))
+                .allowedHeaders(listToArray(v.getAllowedHeaders()))
+                .allowedMethods(listToArray(v.getAllowedMethods()))
+                .allowCredentials(v.getAllowCredentials())
+                .exposedHeaders(listToArray(v.getExposedHeaders()))
+                .maxAge(v.getMaxAge());
         });
     }
 
+
+    private String [] listToArray(List<String> list) {
+        if (list == null) {
+            return null;
+        }
+        return list.toArray(new String[list.size()]);
+    }
 }
