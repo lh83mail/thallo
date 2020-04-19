@@ -39,7 +39,7 @@ public class GatewayRouteController {
         return ok(gatewayRoutService.delete(id));
     }
 
-    @ApiOperation(value = "修改网关路由", notes = "修改指定网关路由信息")
+        @ApiOperation(value = "修改网关路由", notes = "修改指定网关路由信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "网关路由ID", required = true, dataType = "long"),
             @ApiImplicitParam(name = "gatewayRoutForm", value = "网关路由实体", required = true, dataType = "GatewayRouteForm")

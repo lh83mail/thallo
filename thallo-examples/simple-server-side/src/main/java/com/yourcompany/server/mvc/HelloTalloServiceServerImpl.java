@@ -19,10 +19,10 @@ import java.security.Principal;
 public class HelloTalloServiceServerImpl implements HelloThalloService {
     @Override
     public Thallo sayHello(String name) {
-        Principal principal = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getUserPrincipal();
+//        Principal principal = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getUserPrincipal();
         Thallo thallo = new Thallo();
         thallo.setMessage("Hello, " + name);
-        thallo.setPrincipal(principal.getName());
+//        thallo.setPrincipal(principal.getName());
         return thallo;
     }
 }

@@ -48,10 +48,11 @@ jetcache:
 
 logging:
   level:
-    org.springframework.cloud: debug
-    com.springboot.cloud: debug
+    org.springframework: debug
+    com.springboot: debug
     com.jalja.org.spring: debug
     redis.clients: trace
+    org.springframework.web: trace
   path: logs/
   file:
     max-size: 1GB

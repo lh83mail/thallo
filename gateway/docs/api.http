@@ -26,9 +26,44 @@ Content-Type: application/json
 }
 
 
+###
+POST {{host}}/gateway/routes
+Content-Type: application/json
+
+{
+    "routeId": "payable_api",
+    "uri": "http://payable.zemutec.com/",
+    "predicates": "[  {\"name\":\"Path\", \"args\": {\"patterns\":\"/payable/**\"}}]",
+    "filters": "[{\"name\":\"StripPrefix\", \"args\": {\"parts\":1}}]",
+    "description": "测试环境"
+}
+
+8a7eb25c713a833d01713da5cde30000
+
+###
+GET {{host}}/actuator/gateway/globalfilters
+
+####
+POST {{host}}/payable/backend/identity/login
+Content-Type: application/json
+
+{
+    "account": "15902347086",
+    "password": "123456",
+    "authType": "P"
+}
+
+
 ####
 GET http://localhost:8080/mytest
 
+####
+GET http://localhost:8080/actuator/health
+####
+OPTIONS    http://localhost:8080/mytest
+Access-Control-Request-Method: BATC
+Host: api.alice.com
+Connection: keep-alive
 
 # {
 # name: "Path",

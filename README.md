@@ -4,7 +4,9 @@
 # 项目结构
 
 * common  基础抽象和共用代码
-* gateway 网关项目
+* gateway 网关服务
+* authnz  认证首选服务
+* transMgr 事务管理服务器
 * 
 
 # 使用的开源项目

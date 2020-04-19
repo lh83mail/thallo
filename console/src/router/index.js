@@ -84,6 +84,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/gateway',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/gateway/index'),
+        name: '网关管理',
+        meta: { title: '网关管理', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/documentation',
     component: Layout,
     children: [
