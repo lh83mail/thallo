@@ -5,3 +5,5 @@
 ### 功能
 * 
 
+# 参考
+基础源码来自 [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
