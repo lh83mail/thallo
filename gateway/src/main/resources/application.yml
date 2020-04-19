@@ -53,6 +53,6 @@ logging:
     com.jalja.org.spring: debug
     redis.clients: trace
     org.springframework.web: trace
-  path: logs/
+  path: logs/${spring.application.name}
   file:
     max-size: 1GB

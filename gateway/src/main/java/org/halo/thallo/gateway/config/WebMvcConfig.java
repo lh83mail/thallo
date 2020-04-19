@@ -34,17 +34,19 @@ public class WebMvcConfig implements WebFluxConfigurer {
                 .allowedOrigins(listToArray(v.getAllowedOrigins()))
                 .allowedHeaders(listToArray(v.getAllowedHeaders()))
                 .allowedMethods(listToArray(v.getAllowedMethods()))
-                .allowCredentials(v.getAllowCredentials())
+                .allowCredentials(v.getAllowCredentials() == null ? false : v.getAllowCredentials())
                 .exposedHeaders(listToArray(v.getExposedHeaders()))
-                .maxAge(v.getMaxAge());
+                .maxAge(v.getMaxAge() == null ?  1800L : v.getMaxAge());
         });
     }
 
 
     private String [] listToArray(List<String> list) {
         if (list == null) {
-            return null;
+            return EMPTY_STRING_ARRAY;
         }
         return list.toArray(new String[list.size()]);
     }
+
+    private final static String[] EMPTY_STRING_ARRAY = new String[]{};
 }

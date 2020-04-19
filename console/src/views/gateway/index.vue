@@ -10,75 +10,12 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-
-      <el-table-column
-        prop="name"
-        label="姓坝"
-        width="180"
-      />
-      <!--
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
-        <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Date" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Title" min-width="150px">
-        <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
-          <el-tag>{{ row.type | typeFilter }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="Author" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span style="color:red;">{{ row.reviewer }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Imp" width="80px">
-        <template slot-scope="{row}">
-          <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
-        </template>
-      </el-table-column>
-      <el-table-column label="Readings" align="center" width="95">
-        <template slot-scope="{row}">
-          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Status" class-name="status-col" width="100">
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            Edit
-          </el-button>
-          <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
-            Publish
-          </el-button>
-          <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
-            Draft
-          </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            Delete
-          </el-button>
-        </template>
-      </el-table-column> -->
+      <el-table-column prop="routeId" label="路由标识" width="180" />
+      <el-table-column prop="uri" label="uri" />
+      <el-table-column prop="createAt" label="创建时间" width="180" :formatter="dateFormater" />
+      <el-table-column prop="updateAt" label="更新时间" width="180" :formatter="dateFormater" />
+      <el-table-column prop="description" label="描述" />
     </el-table>
-
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
   </div>
@@ -87,12 +24,13 @@
 <script>
 import Pagination from '@/components/Pagination'
 import { searchRoutes } from '@/api/gateway'
+import { format } from 'date-fns'
 
 export default {
   components: { Pagination },
   data() {
     return {
-      tableKey: 0,
+      tableKey: 'id',
       list: null,
 
       total: 0,
@@ -114,13 +52,18 @@ export default {
 
   methods: {
     getList() {
-      console.log('Here')
-      console.log('gat', searchRoutes)
-      searchRoutes()
-        .then(res => { this.list = res.list })
+      searchRoutes(this.listQuery)
+        .then(res => {
+          this.list = res.data
+          this.total = res.total
+        })
         .finally(() => {
           this.listLoading = false
         })
+    },
+
+    dateFormater(row, col, val, idx) {
+      return val ? format(val, 'YYYY-MM-DD HH:mm:ss') : '--'
     },
 
     sortChange(data) {
