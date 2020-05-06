@@ -59,7 +59,7 @@
             <el-tab-pane label="路由断言(Predicates)" name="first">
               <el-collapse>
 
-                <component :is="item.name + 'Predicates'" v-for="item in form.predicates" :key="item.name" :item="item" />
+                <component :is="item.name + 'Predicates'" v-for="item in form.predicates" :key="item.name" :item.sync="item" />
                 <!-- <el-collapse-item title="主机名匹配(Host)" name="Host">
                       <el-form-item label="patterns" >
                         <el-input  name="patterns"/>
@@ -67,6 +67,7 @@
                     </el-collapse-item> -->
 
               </el-collapse>
+
             </el-tab-pane>
             <el-tab-pane label="过滤器(Filters)" name="second">配置管理</el-tab-pane>
           </el-tabs>
@@ -89,6 +90,21 @@ import Pagination from '@/components/Pagination'
 import { searchRoutes } from '@/api/gateway'
 import { format } from 'date-fns'
 import PathPredicates from './components/PathPredicates'
+
+// TODO 断言动态定义
+// const predicatesDefs = [
+//   { name: 'Path', args: { patterns: undefined, matchOptionalTrailingSeparator: true }},
+//   { name: 'Header', args: { name: undefined, regexp: undefined }},
+//   { name: 'Host', args: { patterns: undefined }},
+//   { name: 'Method', args: { methods: undefined }},
+//   { name: 'Cookie', args: { name: undefined, regexp: undefined }},
+//   { name: 'Between', args: { datetime1: undefined, datetime2: undefined }},
+//   { name: 'Before', args: { datetime: undefined }},
+//   { name: 'After', args: { datetime: undefined }},
+//   { name: 'Query', args: { param: undefined, regexp: undefined }},
+//   { name: 'RemoteAddr', args: { sources: undefined }},
+//   { name: 'Weight', args: { group: undefined, weight: 1 }}
+// ]
 
 export default {
   components: { Pagination, PathPredicates },
@@ -115,7 +131,7 @@ export default {
         uri: '',
         routeId: '',
         predicates: [
-          { name: 'Path', args: { patterns: '/payable/**' }}
+          { name: 'Path', args: { patterns: '/payable/**', matchOptionalTrailingSeparator: true }}
         ],
         filters: [],
         description: null,
@@ -178,7 +194,12 @@ export default {
 
     onSubmit: function() {
       console.log(this.form)
+    },
+
+    onItemUpdate(item) {
+      console.log('item changed, ', item)
     }
+
   }
 }
 </script>
