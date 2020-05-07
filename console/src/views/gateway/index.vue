@@ -58,16 +58,21 @@
           <el-tabs v-model="form.defaultTab">
             <el-tab-pane label="路由断言(Predicates)" name="first">
               <el-collapse>
-
-                <component :is="item.name + 'Predicates'" v-for="item in form.predicates" :key="item.name" :item.sync="item" />
-                <!-- <el-collapse-item title="主机名匹配(Host)" name="Host">
-                      <el-form-item label="patterns" >
-                        <el-input  name="patterns"/>
-                      </el-form-item>
-                    </el-collapse-item> -->
-
+                <component :is="item.name + 'Predicates'" v-for="item in form.predicates" :key="item.name" :item="item" @update:item="onItemUpdate" />
               </el-collapse>
 
+              <el-dropdown class="width-10 my-sm" placement="bottom-start" @command="handleCommand">
+                <el-button type="default" class="width-10">
+                  增加过滤器<i class="el-icon-arrow-down el-icon--right" />
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item icon="el-icon-circle-check" command="a">黄金糕</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-circle-check" command="b">狮子头</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-circle-check" command="c">螺蛳粉</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-success" command="d" disabled>双皮奶</el-dropdown-item>
+                  <el-dropdown-item command="e" divided>蚵仔煎</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </el-tab-pane>
             <el-tab-pane label="过滤器(Filters)" name="second">配置管理</el-tab-pane>
           </el-tabs>
@@ -91,7 +96,6 @@ import { searchRoutes } from '@/api/gateway'
 import { format } from 'date-fns'
 import PathPredicates from './components/PathPredicates'
 
-// TODO 断言动态定义
 // const predicatesDefs = [
 //   { name: 'Path', args: { patterns: undefined, matchOptionalTrailingSeparator: true }},
 //   { name: 'Header', args: { name: undefined, regexp: undefined }},
@@ -198,6 +202,19 @@ export default {
 
     onItemUpdate(item) {
       console.log('item changed, ', item)
+
+      this.form.predicates = this.form.predicates.map(i => {
+        if (i.name === item.name) {
+          return item
+        }
+        return i
+      })
+
+      console.log('updat4ed', this.form)
+    },
+
+    handleCommand(cmd) {
+      console.log('cmd', cmd)
     }
 
   }

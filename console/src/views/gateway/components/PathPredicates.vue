@@ -1,22 +1,28 @@
 <template>
-  <el-collapse-item title="路径匹配(Path)" name="Path">
+  <collapge-item-conainer title="路径匹配(Path)" @close="fireCloseEvent">
     <el-form-item label="patterns">
       <el-input v-model="args.patterns" />
     </el-form-item>
     <el-form-item label="完全匹配">
       <el-switch v-model="args.matchOptionalTrailingSeparator" />
     </el-form-item>
-  </el-collapse-item>
+  </collapge-item-conainer>
 </template>
 
 <script>
+import CollapgeItemConainer from './CollapgeItemConainer'
+
 export default {
+  components: {
+    CollapgeItemConainer
+  },
   props: {
     item: {
       type: Object,
       required: true
     }
   },
+
   data() {
     return {
       name: 'Path',
@@ -29,20 +35,25 @@ export default {
 
   watch: {
     'args.patterns': function(nv, ov) {
-      console.log('>>>>', nv)
-      this.$emit('update:item',
-        { name: 'Path', args: { ...this.$data, patterns: nv }})
+      this.fireUpdate(this.$data)
     },
     'args.matchOptionalTrailingSeparator': function(nv, ov) {
-      console.log('>>>>', nv)
-      this.$emit('update:item',
-        { name: 'Path', args: { ...this.$data, patterns: nv }})
+      this.fireUpdate(this.$data)
     }
   },
 
   created() {
     this.name = this.item.name
-    this.args = { ... this.item.args }
+    this.args = { ...this.item.args }
+  },
+
+  methods: {
+    fireCloseEvent() {
+      this.$emit('close')
+    },
+    fireUpdate(item) {
+      this.$emit('update:item', item)
+    }
   }
 }
 </script>
