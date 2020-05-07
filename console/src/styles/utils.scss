@@ -1,0 +1,74 @@
+/**
+ * 常用样式工具类
+ * @author lh83mail
+ */
+@import "./element-variables.scss";
+
+ // Variables
+ $layout-gutter: 8px;
+
+$xs:    $layout-gutter / 2;
+$sm:    $layout-gutter;
+$md:    $layout-gutter * 2;
+$lg:    $layout-gutter * 3;
+
+ 
+// Width
+@for $i from 1 through 10 {
+  .width-#{$i} { width: 10% * $i !important; }
+}
+
+// Space
+// [<类型>p|m][<方向>t|r|b|l|x|y]?0
+// [<类型>p|m][<方向>t|r|b|l|x|y]?-[<尺寸>sm|md|lg]
+$spacings: (
+    0:  0,
+    xs: $xs,
+    sm: $sm,
+    md: $md,
+    lg: $lg
+);
+$positions: (
+  t: 'top',
+  r: 'right',
+  b: 'bottom',
+  l: 'left'
+);
+$boxNames: ( p:"padding", m:"margin" );
+.p0 { padding: 0 !important; }
+.m0 { margin: 0 !important; }
+@each $s, $sv in $spacings {
+  @each $b, $bv in $boxNames {
+    @each $p, $pv in $positions {
+      .#{$b}#{$p}-#{$s} {
+        #{$bv}-#{$pv}: $sv !important;
+      }
+    }
+
+    .#{$b}-#{$s} {
+      #{$bv}: $sv !important;
+    }
+
+    .#{$b}x-#{$s} {
+      #{$bv}-left: $sv !important;
+      #{$bv}-right: $sv !important;
+    }
+    .#{$b}y-#{$s} {
+      #{$bv}-top: $sv !important;
+      #{$bv}-bottom: $sv !important;
+    }  
+  }  
+} 
+
+//Colors
+$colorAlias: (
+  primary: $--color-primary,
+  success: $--color-success,
+  warning: $--color-warning,
+  danger: $--color-danger,
+);
+
+@each $c, $v in $colorAlias {
+  .text-#{$c} {color: $v !important;}
+}
+
