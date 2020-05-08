@@ -1,10 +1,7 @@
 <template>
-  <collapge-item-conainer title="路径匹配(Path)" :name="name" @close="fireCloseEvent">
-    <el-form-item label="patterns">
+  <collapge-item-conainer title="主机匹配(Host)" :name="name" @close="fireCloseEvent">
+    <el-form-item label="主机名">
       <el-input v-model="args.patterns" />
-    </el-form-item>
-    <el-form-item label="完全匹配">
-      <el-switch v-model="args.matchOptionalTrailingSeparator" />
     </el-form-item>
   </collapge-item-conainer>
 </template>
@@ -25,19 +22,15 @@ export default {
 
   data() {
     return {
-      name: 'Path',
+      name: 'Host',
       args: {
-        patterns: undefined,
-        matchOptionalTrailingSeparator: true
+        patterns: undefined
       }
     }
   },
 
   watch: {
     'args.patterns': function(nv, ov) {
-      this.fireUpdate(this.$data)
-    },
-    'args.matchOptionalTrailingSeparator': function(nv, ov) {
       this.fireUpdate(this.$data)
     }
   },

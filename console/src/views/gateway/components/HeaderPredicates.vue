@@ -1,10 +1,10 @@
 <template>
-  <collapge-item-conainer title="路径匹配(Path)" :name="name" @close="fireCloseEvent">
-    <el-form-item label="patterns">
-      <el-input v-model="args.patterns" />
+  <collapge-item-conainer title="Http请求头匹配(Request)" :name="name" @close="fireCloseEvent">
+    <el-form-item label="名称">
+      <el-input v-model="args.name" />
     </el-form-item>
-    <el-form-item label="完全匹配">
-      <el-switch v-model="args.matchOptionalTrailingSeparator" />
+    <el-form-item label="值">
+      <el-input v-model="args.regexp" />
     </el-form-item>
   </collapge-item-conainer>
 </template>
@@ -25,23 +25,19 @@ export default {
 
   data() {
     return {
-      name: 'Path',
+      name: 'Header',
       args: {
-        patterns: undefined,
-        matchOptionalTrailingSeparator: true
+        name: undefined,
+        regexp: undefined
       }
     }
   },
 
   watch: {
-    'args.patterns': function(nv, ov) {
-      this.fireUpdate(this.$data)
-    },
-    'args.matchOptionalTrailingSeparator': function(nv, ov) {
+    'args.name': function(nv, ov) {
       this.fireUpdate(this.$data)
     }
   },
-
   created() {
     this.name = this.item.name
     this.args = { ...this.item.args }

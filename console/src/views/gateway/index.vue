@@ -54,32 +54,35 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item>
-          <el-tabs v-model="form.defaultTab">
-            <el-tab-pane label="路由断言(Predicates)" name="first">
-              <el-collapse>
-                <component :is="item.name + 'Predicates'" v-for="item in form.predicates" :key="item.name" :item="item" @update:item="onItemUpdate" />
-              </el-collapse>
-
-              <el-dropdown class="width-10 my-sm" placement="bottom-start" @command="handleCommand">
-                <el-button type="default" class="width-10">
-                  增加过滤器<i class="el-icon-arrow-down el-icon--right" />
-                </el-button>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item icon="el-icon-circle-check" command="a">黄金糕</el-dropdown-item>
-                  <el-dropdown-item icon="el-icon-circle-check" command="b">狮子头</el-dropdown-item>
-                  <el-dropdown-item icon="el-icon-circle-check" command="c">螺蛳粉</el-dropdown-item>
-                  <el-dropdown-item icon="el-icon-success" command="d" disabled>双皮奶</el-dropdown-item>
-                  <el-dropdown-item command="e" divided>蚵仔煎</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </el-tab-pane>
-            <el-tab-pane label="过滤器(Filters)" name="second">配置管理</el-tab-pane>
-          </el-tabs>
-        </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="form.description" type="textarea" :autosize="{ minRows: 1, maxRows: 3}" />
         </el-form-item>
+
+        <el-tabs v-model="form.defaultTab" class="p-md">
+          <el-tab-pane label="路由断言(Predicates)" name="first">
+            <el-collapse :value="defaultPredicateItem">
+              <component :is="item.name + 'Predicates'" v-for="item in form.predicates" :key="item.name" :item="item" @update:item="onItemUpdate" @close="removePrediate(item)" />
+            </el-collapse>
+
+            <el-dropdown class="width-10 my-sm" placement="bottom-start" @command="handlePredicateChecked">
+              <el-button type="default" class="width-10">
+                增加断言<i class="el-icon-arrow-down el-icon--right" />
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item
+                  v-for="item in predicatesDefs"
+                  :key="item.name"
+                  :icon="item.checked ? 'el-icon-success' : 'el-icon-circle-check'"
+                  :command="item"
+                  :disabled="item.checked"
+                >
+                  {{ item.title }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-tab-pane>
+          <el-tab-pane label="过滤器(Filters)" name="second">配置管理</el-tab-pane>
+        </el-tabs>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -87,7 +90,9 @@
         <el-button type="primary" @click="onSubmit">确 定</el-button>
       </div>
     </el-dialog>
+
   </div>
+
 </template>
 
 <script>
@@ -95,23 +100,16 @@ import Pagination from '@/components/Pagination'
 import { searchRoutes } from '@/api/gateway'
 import { format } from 'date-fns'
 import PathPredicates from './components/PathPredicates'
-
-// const predicatesDefs = [
-//   { name: 'Path', args: { patterns: undefined, matchOptionalTrailingSeparator: true }},
-//   { name: 'Header', args: { name: undefined, regexp: undefined }},
-//   { name: 'Host', args: { patterns: undefined }},
-//   { name: 'Method', args: { methods: undefined }},
-//   { name: 'Cookie', args: { name: undefined, regexp: undefined }},
-//   { name: 'Between', args: { datetime1: undefined, datetime2: undefined }},
-//   { name: 'Before', args: { datetime: undefined }},
-//   { name: 'After', args: { datetime: undefined }},
-//   { name: 'Query', args: { param: undefined, regexp: undefined }},
-//   { name: 'RemoteAddr', args: { sources: undefined }},
-//   { name: 'Weight', args: { group: undefined, weight: 1 }}
-// ]
+import HeaderPredicates from './components/HeaderPredicates'
+import HostPredicates from './components/HostPredicates'
 
 export default {
-  components: { Pagination, PathPredicates },
+  components: {
+    Pagination,
+    PathPredicates,
+    HeaderPredicates,
+    HostPredicates
+  },
   data() {
     return {
       tableKey: 'id',
@@ -144,6 +142,9 @@ export default {
         defaultTab: 'first'
       },
 
+      // 默认展开的断言面板
+      defaultPredicateItem: [],
+
       rules: {
         routeId: [
           { required: true, message: '请输入路由标识', trigger: 'blur' }
@@ -151,7 +152,21 @@ export default {
         uri: [
           { required: true, message: '请输入uri', trigger: 'blur' }
         ]
-      }
+      },
+
+      predicatesDefs: [
+        { name: 'Path', title: '路径匹配(Path)', args: { patterns: undefined, matchOptionalTrailingSeparator: true }},
+        { name: 'Header', title: '请求头匹配(Header)', args: { name: undefined, regexp: undefined }},
+        { name: 'Host', title: '主机匹配(Host)', args: { patterns: undefined }},
+        { name: 'Method', title: '请求方法匹配(Method)', args: { methods: undefined }},
+        { name: 'Cookie', title: 'Cookie匹配(Cookie)', args: { name: undefined, regexp: undefined }},
+        { name: 'Between', title: '时间段匹配(Between)', args: { datetime1: undefined, datetime2: undefined }},
+        { name: 'Before', title: '起始时间匹配(Before)', args: { datetime: undefined }},
+        { name: 'After', title: '结束时间匹配(After)', args: { datetime: undefined }},
+        { name: 'Query', title: 'URL查询匹配(Query)', args: { param: undefined, regexp: undefined }},
+        { name: 'RemoteAddr', title: '客户端地址匹配(RemoteAddr)', args: { sources: undefined }},
+        { name: 'Weight', title: '权重匹配(Weight)', args: { group: undefined, weight: 1 }}
+      ]
     }
   },
 
@@ -165,10 +180,23 @@ export default {
         .then(res => {
           this.list = res.data
           this.total = res.total
+
+          this.refreshPredicatesStatus()
         })
         .finally(() => {
           this.listLoading = false
         })
+    },
+
+    refreshPredicatesStatus() {
+      const checked = (this.form.predicates || []).map(p => p.name)
+
+      this.predicatesDefs = this.predicatesDefs.map(d => {
+        d.checked = checked.includes(d.name)
+        return d
+      })
+
+      console.log('LLLL:', this.predicatesDefs)
     },
 
     dateFormater(row, col, val, idx) {
@@ -201,20 +229,29 @@ export default {
     },
 
     onItemUpdate(item) {
-      console.log('item changed, ', item)
-
       this.form.predicates = this.form.predicates.map(i => {
         if (i.name === item.name) {
           return item
         }
         return i
       })
-
-      console.log('updat4ed', this.form)
     },
 
-    handleCommand(cmd) {
-      console.log('cmd', cmd)
+    handlePredicateChecked(cmd) {
+      const predicates = this.form.predicates || []
+      predicates.push({
+        name: cmd.name,
+        args: { ...cmd.args }
+      })
+      this.defaultPredicateItem.push(cmd.name)
+      this.form.predicates = predicates
+      this.refreshPredicatesStatus()
+    },
+
+    removePrediate(item) {
+      this.form.predicates = this.form.predicates.filter(p => p.name !== item.name)
+      this.defaultPredicateItem = this.defaultPredicateItem.map(n => n !== item.name)
+      this.refreshPredicatesStatus()
     }
 
   }
