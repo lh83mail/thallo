@@ -1,16 +1,16 @@
 <template>
-  <collapge-item-conainer title="路径匹配(Path)" :name="name" @close="fireCloseEvent">
-    <el-form-item label="patterns">
-      <el-input v-model="args.patterns" />
+  <collapge-item-conainer title="URL查询参数匹配(Weight)" :name="name" @close="fireCloseEvent">
+    <el-form-item label="分组">
+      <el-input v-model="args.group" />
     </el-form-item>
-    <el-form-item label="完全匹配">
-      <el-switch v-model="args.matchOptionalTrailingSeparator" />
+    <el-form-item label="权重值">
+      <el-input-number v-model="args.weight" />
     </el-form-item>
   </collapge-item-conainer>
 </template>
 
 <script>
-import CollapgeItemConainer from './CollapgeItemConainer'
+import CollapgeItemConainer from '../CollapgeItemConainer'
 
 export default {
   components: {
@@ -25,23 +25,22 @@ export default {
 
   data() {
     return {
-      name: 'Path',
+      name: 'Weight',
       args: {
-        patterns: undefined,
-        matchOptionalTrailingSeparator: true
+        group: undefined,
+        weight: 1
       }
     }
   },
 
   watch: {
-    'args.patterns': function(nv, ov) {
+    'args.group': function(nv, ov) {
       this.fireUpdate(this.$data)
     },
-    'args.matchOptionalTrailingSeparator': function(nv, ov) {
+    'args.weight': function(nv, ov) {
       this.fireUpdate(this.$data)
     }
   },
-
   created() {
     this.name = this.item.name
     this.args = { ...this.item.args }

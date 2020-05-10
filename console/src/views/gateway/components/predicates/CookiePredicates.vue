@@ -1,13 +1,16 @@
 <template>
-  <collapge-item-conainer title="主机匹配(Host)" :name="name" @close="fireCloseEvent">
-    <el-form-item label="主机名">
-      <el-input v-model="args.patterns" />
+  <collapge-item-conainer title="Cookie匹配(Cookie)" :name="name" @close="fireCloseEvent">
+    <el-form-item label="名称">
+      <el-input v-model="args.name" />
+    </el-form-item>
+    <el-form-item label="值">
+      <el-input v-model="args.regexp" />
     </el-form-item>
   </collapge-item-conainer>
 </template>
 
 <script>
-import CollapgeItemConainer from './CollapgeItemConainer'
+import CollapgeItemConainer from '../CollapgeItemConainer'
 
 export default {
   components: {
@@ -22,19 +25,22 @@ export default {
 
   data() {
     return {
-      name: 'Host',
+      name: 'Cookie',
       args: {
-        patterns: undefined
+        name: undefined,
+        regexp: undefined
       }
     }
   },
 
   watch: {
-    'args.patterns': function(nv, ov) {
+    'args.name': function(nv, ov) {
+      this.fireUpdate(this.$data)
+    },
+    'args.regexp': function(nv, ov) {
       this.fireUpdate(this.$data)
     }
   },
-
   created() {
     this.name = this.item.name
     this.args = { ...this.item.args }

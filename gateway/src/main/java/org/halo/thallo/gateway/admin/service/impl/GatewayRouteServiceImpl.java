@@ -133,8 +133,8 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
     public List<GatewayRoute> query(GatewayRouteQueryParam gatewayRouteQueryParam) {
         List<GatewayRouteEntity> entities = this.routeEntityRepository.findAll(gatewayRouteQueryParam);
         return entities.stream()
-                    .map(e -> e.to(GatewayRoute.class))
-                    .collect(Collectors.toList());
+                .map(e -> e.to(GatewayRoute.class))
+                .collect(Collectors.toList());
     }
 
     @Override

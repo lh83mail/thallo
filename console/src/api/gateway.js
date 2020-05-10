@@ -10,9 +10,7 @@ const uri_base = `${process.env.VUE_APP_GATEWAY_BASE_API}/gateway/routes`
  * @param {*} search
  */
 export function searchRoutes(data) {
-  return request.post(`${uri_base}/conditions`, {
-    data
-  })
+  return request.post(`${uri_base}/conditions`, data)
 }
 
 /**
@@ -20,9 +18,7 @@ export function searchRoutes(data) {
  * @param {*} data
  */
 export function addRoute(data) {
-  return request.post(`${uri_base}`, {
-    data
-  })
+  return request.post(`${uri_base}`, data)
 }
 
 /**
@@ -38,9 +34,7 @@ export function deleteRoute(id) {
  * @param {*} data 修改指定网关路由信息
  */
 export function updateRoute(id, data) {
-  return request.put(`${uri_base}/${id}`, {
-    data
-  })
+  return request.put(`${uri_base}/${id}`, data)
 }
 
 /**

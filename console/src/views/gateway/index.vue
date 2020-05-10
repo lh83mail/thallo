@@ -1,5 +1,16 @@
 <template>
   <div class="app-container">
+
+    <div class="filter-container">
+      <el-button type="primary" icon="el-icon-plus" @click="showEditor">
+        增加路由
+      </el-button>
+
+      <el-button type="default">
+        实施更改
+      </el-button>
+    </div>
+
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -17,8 +28,8 @@
       <el-table-column prop="description" label="描述" />
       <el-table-column fixed="right" label="操作" width="400">
         <template v-slot:default="scope">
-          <el-button type="text" size="small">过滤器</el-button>
-          <el-button type="text" size="small">前置拦截</el-button>
+          <el-button type="text" size="small" @click="showEditor(scope.row)">配置</el-button>
+          <el-button type="text" size="small" class="text-danger">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -31,7 +42,7 @@
     />
 
     <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-      <el-form :model="form" :rules="rules" :label-width="formLabelWidth">
+      <el-form ref="editorFrom" :model="form" :rules="rules" :label-width="formLabelWidth">
         <el-form-item label="路由标识" prop="routeId">
           <el-input v-model="form.routeId" />
         </el-form-item>
@@ -58,36 +69,21 @@
           <el-input v-model="form.description" type="textarea" :autosize="{ minRows: 1, maxRows: 3}" />
         </el-form-item>
 
-        <el-tabs v-model="form.defaultTab" class="p-md">
-          <el-tab-pane label="路由断言(Predicates)" name="first">
-            <el-collapse :value="defaultPredicateItem">
-              <component :is="item.name + 'Predicates'" v-for="item in form.predicates" :key="item.name" :item="item" @update:item="onItemUpdate" @close="removePrediate(item)" />
-            </el-collapse>
-
-            <el-dropdown class="width-10 my-sm" placement="bottom-start" @command="handlePredicateChecked">
-              <el-button type="default" class="width-10">
-                增加断言<i class="el-icon-arrow-down el-icon--right" />
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
-                  v-for="item in predicatesDefs"
-                  :key="item.name"
-                  :icon="item.checked ? 'el-icon-success' : 'el-icon-circle-check'"
-                  :command="item"
-                  :disabled="item.checked"
-                >
-                  {{ item.title }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </el-tab-pane>
-          <el-tab-pane label="过滤器(Filters)" name="second">配置管理</el-tab-pane>
-        </el-tabs>
+        <el-form-item label="路由断言">
+          <div class="editor-container">
+            <json-editor v-model="form.predicates" />
+          </div>
+        </el-form-item>
+        <el-form-item label="过滤器">
+          <div class="editor-container">
+            <json-editor v-model="form.filters" />
+          </div>
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button type="primary" :disabled="form.valid" @click="onSubmit">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -97,18 +93,14 @@
 
 <script>
 import Pagination from '@/components/Pagination'
-import { searchRoutes } from '@/api/gateway'
+import { searchRoutes, getRoute, addRoute, updateRoute } from '@/api/gateway'
 import { format } from 'date-fns'
-import PathPredicates from './components/PathPredicates'
-import HeaderPredicates from './components/HeaderPredicates'
-import HostPredicates from './components/HostPredicates'
+import JsonEditor from '@/components/JsonEditor'
 
 export default {
   components: {
     Pagination,
-    PathPredicates,
-    HeaderPredicates,
-    HostPredicates
+    JsonEditor
   },
   data() {
     return {
@@ -127,21 +119,18 @@ export default {
       },
 
       formLabelWidth: '80px',
-      dialogFormVisible: true,
+      dialogFormVisible: false,
       form: {
         id: null,
         uri: '',
         routeId: '',
-        predicates: [
-          { name: 'Path', args: { patterns: '/payable/**', matchOptionalTrailingSeparator: true }}
-        ],
-        filters: [],
+        predicates: '[]',
+        filters: '[]',
         description: null,
         orders: 0,
-        status: 'Y',
-        defaultTab: 'first'
+        status: 'Y'
       },
-
+      defaultTab: 'first',
       // 默认展开的断言面板
       defaultPredicateItem: [],
 
@@ -152,21 +141,28 @@ export default {
         uri: [
           { required: true, message: '请输入uri', trigger: 'blur' }
         ]
-      },
+      }
 
-      predicatesDefs: [
-        { name: 'Path', title: '路径匹配(Path)', args: { patterns: undefined, matchOptionalTrailingSeparator: true }},
-        { name: 'Header', title: '请求头匹配(Header)', args: { name: undefined, regexp: undefined }},
-        { name: 'Host', title: '主机匹配(Host)', args: { patterns: undefined }},
-        { name: 'Method', title: '请求方法匹配(Method)', args: { methods: undefined }},
-        { name: 'Cookie', title: 'Cookie匹配(Cookie)', args: { name: undefined, regexp: undefined }},
-        { name: 'Between', title: '时间段匹配(Between)', args: { datetime1: undefined, datetime2: undefined }},
-        { name: 'Before', title: '起始时间匹配(Before)', args: { datetime: undefined }},
-        { name: 'After', title: '结束时间匹配(After)', args: { datetime: undefined }},
-        { name: 'Query', title: 'URL查询匹配(Query)', args: { param: undefined, regexp: undefined }},
-        { name: 'RemoteAddr', title: '客户端地址匹配(RemoteAddr)', args: { sources: undefined }},
-        { name: 'Weight', title: '权重匹配(Weight)', args: { group: undefined, weight: 1 }}
-      ]
+      // predicatesDefs: [
+      //   { name: 'Path', title: '路径匹配(Path)', args: { patterns: undefined, matchOptionalTrailingSeparator: true }},
+      //   { name: 'Header', title: '请求头匹配(Header)', args: { name: undefined, regexp: undefined }},
+      //   { name: 'Host', title: '主机匹配(Host)', args: { patterns: undefined }},
+      //   { name: 'Method', title: '请求方法匹配(Method)', args: { methods: undefined }},
+      //   { name: 'Cookie', title: 'Cookie匹配(Cookie)', args: { name: undefined, regexp: undefined }},
+      //   { name: 'Between', title: '时间段匹配(Between)', args: { datetime1: undefined, datetime2: undefined }},
+      //   { name: 'Before', title: '起始时间匹配(Before)', args: { datetime: undefined }},
+      //   { name: 'After', title: '结束时间匹配(After)', args: { datetime: undefined }},
+      //   { name: 'Query', title: 'URL查询参数匹配(Query)', args: { param: undefined, regexp: undefined }},
+      //   { name: 'RemoteAddr', title: '客户端地址匹配(RemoteAddr)', args: { sources: undefined }},
+      //   { name: 'Weight', title: '权重匹配(Weight)', args: { group: undefined, weight: 1 }}
+      // ],
+
+      // filterDefs: [
+      //   { component: 'BasicFilter', name: 'AddRequestHeader', title: '增加请求头', fields: [{ name: 'name', type: 'string', label: '名称' }, { name: 'value', type: 'string', label: '值' }] },
+      //   { component: 'BasicFilter', name: 'AddRequestParameter', title: '增加查询参数', fields: [{ name: 'name', type: 'string', label: '名称' }, { name: 'value', type: 'string', label: '值' }] },
+      //   { component: 'BasicFilter', name: 'AddResponseHeader', title: '增加响应请求头', fields: [{ name: 'name', type: 'string', label: '名称' }, { name: 'value', type: 'string', label: '值' }] },
+      //   { component: 'BasicFilter', name: 'DedupeResponseHeader', title: '清理重复响应头', fields: [{ name: 'name', type: 'string', label: '名称' }, { name: 'strategy', type: 'string', label: '值', value: 'RETAIN_FIRST' }] },
+      // ]
     }
   },
 
@@ -181,23 +177,21 @@ export default {
           this.list = res.data
           this.total = res.total
 
-          this.refreshPredicatesStatus()
+          // this.refreshPredicatesStatus()
         })
         .finally(() => {
           this.listLoading = false
         })
     },
 
-    refreshPredicatesStatus() {
-      const checked = (this.form.predicates || []).map(p => p.name)
+    // refreshPredicatesStatus() {
+    //   const checked = (this.form.predicates || []).map(p => p.name)
 
-      this.predicatesDefs = this.predicatesDefs.map(d => {
-        d.checked = checked.includes(d.name)
-        return d
-      })
-
-      console.log('LLLL:', this.predicatesDefs)
-    },
+    //   this.predicatesDefs = this.predicatesDefs.map(d => {
+    //     d.checked = checked.includes(d.name)
+    //     return d
+    //   })
+    // },
 
     dateFormater(row, col, val, idx) {
       return val ? format(val, 'YYYY-MM-DD HH:mm:ss') : '--'
@@ -224,8 +218,55 @@ export default {
       return sort === `+${key}` ? 'ascending' : 'descending'
     },
 
+    showEditor(item) {
+      this.dialogFormVisible = true
+      this.resetForm()
+      if (item) {
+        getRoute(item.id)
+          .then(res => {
+            this.form = {
+              ...res.data,
+              predicates: JSON.parse(res.data.predicates || {}),
+              filters: JSON.parse(res.data.filters || [])
+            }
+          })
+      }
+    },
+
+    resetForm() {
+      this.form = {
+        id: null,
+        uri: '',
+        routeId: '',
+        predicates: [],
+        filters: [],
+        description: null,
+        orders: 0,
+        status: 'Y'
+      }
+    },
+
     onSubmit: function() {
-      console.log(this.form)
+      const params = {
+        ...this.form
+      }
+
+      let action
+      if (params.id) {
+        action = updateRoute(params.id, params)
+      } else {
+        action = addRoute(params)
+      }
+
+      action.then(r => {
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        })
+
+        this.dialogFormVisible = false
+        this.getList()
+      })
     },
 
     onItemUpdate(item) {
@@ -235,25 +276,34 @@ export default {
         }
         return i
       })
-    },
-
-    handlePredicateChecked(cmd) {
-      const predicates = this.form.predicates || []
-      predicates.push({
-        name: cmd.name,
-        args: { ...cmd.args }
-      })
-      this.defaultPredicateItem.push(cmd.name)
-      this.form.predicates = predicates
-      this.refreshPredicatesStatus()
-    },
-
-    removePrediate(item) {
-      this.form.predicates = this.form.predicates.filter(p => p.name !== item.name)
-      this.defaultPredicateItem = this.defaultPredicateItem.map(n => n !== item.name)
-      this.refreshPredicatesStatus()
     }
+
+    // handlePredicateChecked(cmd) {
+    //   const predicates = this.form.predicates || []
+    //   predicates.push({
+    //     name: cmd.name,
+    //     args: { ...cmd.args }
+    //   })
+    //   this.defaultPredicateItem = [cmd.name]
+    //   this.form.predicates = predicates
+    //   this.refreshPredicatesStatus()
+    // },
+
+    // removePrediate(item) {
+    //   this.form.predicates = this.form.predicates.filter(p => p.name !== item.name)
+    //   this.defaultPredicateItem = this.defaultPredicateItem.map(n => n !== item.name)
+    //   this.refreshPredicatesStatus()
+    // },
 
   }
 }
 </script>
+
+<style scoped>
+.editor-container{
+  position: relative;
+  height: 100%;
+  font-size: 12px;
+  line-height: 18px;
+}
+</style>

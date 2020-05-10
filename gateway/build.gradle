@@ -9,7 +9,12 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
 
-    implementation "org.springframework.boot:spring-boot-starter-amqp"
+// 消息总线 https://cloud.spring.io/spring-cloud-static/spring-cloud-bus/2.2.1.RELEASE/reference/html/#quick-start
+    // 使用rabbitmq作为消息实现
+    implementation "org.springframework.cloud:spring-cloud-starter-bus-amqp"
+//    // 使用kafka作为消息实现
+//    implementation "org.springframework.cloud:spring-cloud-starter-bus-kafka"
+
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'

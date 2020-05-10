@@ -1,7 +1,7 @@
 <template>
-  <collapge-item-conainer title="Http请求头匹配(Request)" :name="name" @close="fireCloseEvent">
-    <el-form-item label="名称">
-      <el-input v-model="args.name" />
+  <collapge-item-conainer title="URL查询参数匹配(Query)" :name="name" @close="fireCloseEvent">
+    <el-form-item label="参数名">
+      <el-input v-model="args.param" />
     </el-form-item>
     <el-form-item label="值">
       <el-input v-model="args.regexp" />
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import CollapgeItemConainer from './CollapgeItemConainer'
+import CollapgeItemConainer from '../CollapgeItemConainer'
 
 export default {
   components: {
@@ -25,16 +25,19 @@ export default {
 
   data() {
     return {
-      name: 'Header',
+      name: 'Query',
       args: {
-        name: undefined,
+        param: undefined,
         regexp: undefined
       }
     }
   },
 
   watch: {
-    'args.name': function(nv, ov) {
+    'args.param': function(nv, ov) {
+      this.fireUpdate(this.$data)
+    },
+    'args.regexp': function(nv, ov) {
       this.fireUpdate(this.$data)
     }
   },

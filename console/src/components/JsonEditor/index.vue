@@ -1,6 +1,6 @@
 <template>
   <div class="json-editor">
-    <textarea ref="textarea" />
+    <textarea ref="textarea" @focus="onFocu" />
   </div>
 </template>
 
@@ -25,6 +25,10 @@ export default {
   },
   watch: {
     value(value) {
+      if (!this.jsonEditor) {
+        return
+      }
+
       const editorValue = this.jsonEditor.getValue()
       if (value !== editorValue) {
         this.jsonEditor.setValue(JSON.stringify(this.value, null, 2))
@@ -46,7 +50,11 @@ export default {
       this.$emit('input', cm.getValue())
     })
   },
+
   methods: {
+    onFocu() {
+      console.log('SSSSSSSSFFF')
+    },
     getValue() {
       return this.jsonEditor.getValue()
     }
