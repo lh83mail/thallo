@@ -12,11 +12,8 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.support.converter.ContentTypeDelegatingMessageConverter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.HashMap;
 
 
 /**
@@ -32,11 +29,11 @@ public class BusAdminConfig {
     public static final String EXCHANGE_NAME = BusConfig.EXCHANGE_NAME;
     public static final String ROUTING_KEY =  BusConfig.ROUTING_KEY;
 
-    @Bean
-    Queue adminQueue() {
-        log.info("queue name:{}", QUEUE_NAME);
-        return new Queue(QUEUE_NAME, false);
-    }
+//    @Bean
+//    Queue adminQueue() {
+//        log.info("queue name:{}", QUEUE_NAME);
+//        return new Queue(QUEUE_NAME, false);
+//    }
 
     @Bean
     TopicExchange adminExchange() {
@@ -44,24 +41,17 @@ public class BusAdminConfig {
         return new TopicExchange(EXCHANGE_NAME);
     }
 
-    @Bean
-    Binding adminBinding(Queue queue, TopicExchange exchange) {
-        log.info("binding {} to {} with {}", queue, exchange, ROUTING_KEY);
-        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
-    }
+//    @Bean
+//    Binding adminBinding(Queue queue, TopicExchange exchange) {
+//        log.info("binding {} to {} with {}", queue, exchange, ROUTING_KEY);
+//        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
+//    }
 
     @Bean
     public MessageConverter adminMessageConverter() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         return new ContentTypeDelegatingMessageConverter(new Jackson2JsonMessageConverter(objectMapper));
-    }
-
-    @Bean
-    @Value("${thallo.security.username}")
-    public Object helloXXXXXX(String value) {
-        System.out.println(">>>>>>>>>>>:::::" + value);
-        return new HashMap<>();
     }
 
 }

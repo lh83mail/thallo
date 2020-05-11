@@ -10,6 +10,7 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(basePackages = "org.thallo.authnz", repositoryBaseClass = CommonJpaRepository.class)
 @EnableTransactionManagement
 //@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableAuthorizationServer
 public class AuthnzServer {
     public static void main(String[] args) {
         SpringApplication.run(AuthnzServer.class, args);

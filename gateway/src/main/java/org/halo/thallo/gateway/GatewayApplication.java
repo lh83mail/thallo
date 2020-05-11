@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EntityScan(basePackages = {"org.halo.thallo.gateway.**.entity"})
 @EnableJpaRepositories(basePackages = "org.halo.thallo.gateway", repositoryBaseClass = CommonJpaRepository.class)
 @EnableTransactionManagement
+//@EnableWebFluxSecurity
 public class GatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);

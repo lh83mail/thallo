@@ -9,6 +9,11 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
 
+//    // Security 安全配置 https://docs.spring.io/spring-boot/docs/2.1.4.RELEASE/reference/htmlsingle/#boot-features-security-webflux
+//    implementation "org.springframework.boot:spring-boot-starter-security"
+//    implementation "org.springframework.security:spring-security-oauth2-client"
+
+
 // 消息总线 https://cloud.spring.io/spring-cloud-static/spring-cloud-bus/2.2.1.RELEASE/reference/html/#quick-start
     // 使用rabbitmq作为消息实现
     implementation "org.springframework.cloud:spring-cloud-starter-bus-amqp"

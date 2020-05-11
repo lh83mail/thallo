@@ -1,9 +1,12 @@
 
 dependencies {
     implementation project(":common")
-
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+
+    // OAuth2 授权服务实现 https://github.com/spring-projects/spring-security-oauth
+    implementation 'org.springframework.cloud:spring-cloud-starter-oauth2:2.2.1.RELEASE'
+
 
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
