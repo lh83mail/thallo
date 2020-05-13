@@ -1,0 +1,14 @@
+spring:
+  thymeleaf:
+    cache: false
+  devtools:
+    restart:
+      additional-paths: "/templates/**,classpath:/templates/**"
+
+logging:
+  level:
+    org.springframework.cloud: debug
+    com.springboot.cloud: debug
+    com.jalja.org.spring: debug
+    redis.clients: trace
+

@@ -1,0 +1,27 @@
+thallo:
+  authzserver:
+    oauth2:
+      clients:
+        jdbc-clients-enabled: true
+        ## 开启内存中存放oauth2 client信息，方便开发环境测试
+        memory-clients-enabled: true
+        client-details:
+          - client-id: acme
+            client-secret: '{noop}acmesecret'
+            redirect-uri:
+              - http://jyj.tjhx.gov.cn
+              - http://localhost:8080/thallo-starter/userinfo
+            authorizedGrantTypes:
+              - authorization_code
+              - refresh_token
+              - implicit
+              - client_credentials
+              - password
+            scopes:
+              - auth
+              - profile
+    security:
+      resources:
+        - /.well-known/jwks
+        - /custoken
+        - /logins

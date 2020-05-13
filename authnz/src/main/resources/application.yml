@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: thallo,dev
   rabbitmq:
     host: ${RABBIT_MQ_HOST:localhost}
     port: ${RABBIT_MQ_PORT:5672}
@@ -12,8 +14,8 @@ spring:
       pool:
         max-active: 300
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:3306}/th_gateway?serverTimezone=Asia/Shanghai&characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:3306}/identity_v2?serverTimezone=Asia/Shanghai&characterEncoding=UTF-8&useUnicode=true&useSSL=false
     username: ${DATASOURCE_USERNAME:root}
     password: ${DATASOURCE_PASSWORD:root}
 
@@ -22,12 +24,11 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-
 ## https://github.com/alibaba/jetcache
 jetcache:
   statIntervalMinutes: 15
   areaInCacheName: false
-  hidePackages: org.halo.thallo
+  hidePackages: io.github.lh83mail.thallo
   local:
     default:
       type: caffeine
@@ -45,13 +46,3 @@ jetcache:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD:}
-
-logging:
-  level:
-    org.springframework.cloud: debug
-    com.springboot.cloud: debug
-    com.jalja.org.spring: debug
-    redis.clients: trace
-  path: logs/
-  file:
-    max-size: 1GB
