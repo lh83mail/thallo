@@ -2,6 +2,7 @@ package io.github.lh83mail.thallo.authnz.config;
 
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
@@ -32,7 +33,6 @@ public class SecurityProperties {
      * 登陆失败时跳转路径
      */
     private String loginFailureUrl = "/login?error";
-
     /**
      * 注销地址
      */
@@ -62,4 +62,9 @@ public class SecurityProperties {
      * 表单登录视图地址
      */
     public String loginPage = "/oauth2/default/login";
+
+    /**
+     * 无权访问返回地址
+     */
+    private String accessDeniedUrl = "/login?authorization_error";
 }

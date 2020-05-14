@@ -26,6 +26,7 @@ import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static io.github.lh83mail.thallo.authnz.authen.SecurityConst.ROLE_ANYONE;
 
@@ -49,9 +50,10 @@ public class UserDetailServiceImpl extends JdbcDaoImpl {
         this.setUsersByUsernameQuery(USER_NAME_QUERY);
     }
 
+
     @Override
     protected List<UserDetails> loadUsersByUsername(String username) {
-        return getJdbcTemplate().query(this.getUsersByUsernameQuery(),
+        List<UserDetails> users =  getJdbcTemplate().query(this.getUsersByUsernameQuery(),
             new String[] { username }, (rs, i) -> {
                 String owner = rs.getString(1);
                 String password = rs.getString(2);
@@ -59,6 +61,7 @@ public class UserDetailServiceImpl extends JdbcDaoImpl {
                 return new User(owner, password, enabled, true, true, true,
                         AuthorityUtils.NO_AUTHORITIES);
         });
+        return users;
     }
 
     /**

@@ -1,79 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>登录页面</title>
-    <link type="text/css" rel="stylesheet"
-          href="webjars/bootstrap/3.0.3/css/bootstrap.min.css" />
-    <script type="text/javascript" src="webjars/jquery/1.9.0/jquery.min.js"></script>
-    <script type="text/javascript"
-            src="webjars/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <title>请登录</title>
 </head>
-<style>
-    body {
-        background-color: #707070;
-        }
-</style>
 <body>
+<h1>请登录</h1>
+<div th:if="${param.error}">用户名或密码错误.</div>
+<div th:if="${param.logout}">注销成功</div>
 
-<div class="container">
-    <h1>登录页面测试</h1>
-    Fuck Me f !!ff
-
-<!--    <div th:if="${not empty param.authentication_error}">-->
-<!--        <h1>Woops!</h1>-->
-<!--        <p class="error">Your login attempt was not successful.</p>-->
-<!--    </div>-->
-
-    param: #{param.authorization_error}
-    ${param.foo}
-    > ${#request.getParameter('foo')}
-    <p th:text="${param.foo}">Welcome to our grocery store!</p>
-
-    Dear [(${foo})],
-    <c:if test="${not empty param.authorization_error}">
-        <h1>Woops!</h1>
-        <p class="error">You are not permitted to access that resource.</p>
-    </c:if>
-
-    <div th:if="${param.error}">
-        用户名或密码错误，登录失败.
+<form th:action="@{/form-login}" method="post">
+    <div>
+        <input type="text" name="username" placeholder="Username"/>
     </div>
-
-    <div class="form-horizontal">
-        <p>We've got a grand total of 2 users: marissa and paul. Go ahead
-            and log in. Marissa's password is "koala" and Paul's password is
-            "emu".</p>
-        <form th:action="@{/form-login}"  method="post" role="form">
-        <fieldset>
-            <legend>
-                <h2>Login</h2>
-            </legend>
-            <div class="form-group">
-                <label for="username">Username:</label> <input id="username"
-                                                               class="form-control" type='text' name='username'
-                                                               value="marissa" />
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label> <input id="password"
-                                                               class="form-control" type='text' name='password' value="koala" />
-            </div>
-            <button class="btn btn-primary" type="submit">Login</button>
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        </fieldset>
-        </form>
-
+    <div>
+        <input type="password" name="password" placeholder="Password"/>
     </div>
-
-    <div class="footer">
-        Sample application for <a
-            href="https://github.com/spring-projects/spring-security-oauth"
-            target="_blank">Spring Security OAuth</a>
-    </div>
-
-</div>
-
-
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <input type="submit" value="登录" />
+</form>
 </body>
 </html>

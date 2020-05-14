@@ -15,14 +15,5 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     private SecurityProperties securityProperties;
 
     @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        // 登录页面
-        registry.addViewController(securityProperties.getLoginUrl())
-                .setViewName(securityProperties.getLoginPage());
-
-        // 登录成功页面
-        registry.addViewController(securityProperties.getLoginSuccessUrl())
-                    .setViewName(securityProperties.getLoginSuccessPage());
-        
-    }
+    public void addViewControllers(ViewControllerRegistry registry) { }
 }

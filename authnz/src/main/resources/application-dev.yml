@@ -11,4 +11,3 @@ logging:
     com.springboot.cloud: debug
     com.jalja.org.spring: debug
     redis.clients: trace
-

@@ -26,7 +26,7 @@ spring:
           enabled: true
 
   profiles:
-    active: gateway, security
+    active: gateway, security, thallo, dev
 
 
 management:

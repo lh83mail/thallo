@@ -117,21 +117,22 @@ public class Oauth2ServerConfiguration {
                         .filter(details -> !details.isEmpty())
                         .ifPresent(details -> {
                             try {
-                                final InMemoryClientDetailsServiceBuilder builder = clients.inMemory();
-                                details.forEach(i -> {
-                                    ClientDetailsServiceBuilder.ClientBuilder clientBuilder = builder.and()
+                                ClientDetailsServiceBuilder<InMemoryClientDetailsServiceBuilder> clientBuilder = clients.inMemory();
+                                for(OAuth2ServerProperties.MemoryClientDetails i: details) {
+                                    ClientDetailsServiceBuilder<InMemoryClientDetailsServiceBuilder>.ClientBuilder c =  clientBuilder
                                             .withClient(i.getClientId())
                                             .secret(i.getClientSecret())
                                             .redirectUris(i.getRedirectUri());
                                     if (i.getAuthorizedGrantTypes() != null && i.getAuthorizedGrantTypes().length > 0) {
-                                        clientBuilder.authorizedGrantTypes(i.getAuthorizedGrantTypes());
+                                        c.authorizedGrantTypes(i.getAuthorizedGrantTypes());
                                     }
                                     if (i.getScopes() != null && i.getScopes().length > 0) {
-                                        clientBuilder.scopes(i.getScopes());
+                                        c.scopes(i.getScopes());
                                     }
-                                    clientBuilder.autoApprove(true);
-                                });
-                                delegateClientDetailService.addClientDetailServices(builder.build());
+                                    c.autoApprove(false);
+                                    clientBuilder = c.and();
+                                }
+                                delegateClientDetailService.addClientDetailServices(clientBuilder.build());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

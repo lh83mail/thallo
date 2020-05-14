@@ -64,7 +64,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     securityProperties.getLoginPage(),
                     securityProperties.getLoginFailureUrl(),
                     securityProperties.getLoginUrl(),
-                    "/auth/login",
                     "/.well-known/jwks"
                 ).permitAll()
                 .anyRequest().authenticated()
@@ -73,7 +72,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                    .addFilterBefore(new VerifyXTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .and()
                     .exceptionHandling()
-                    .accessDeniedPage("/login.jsp?authorization_error=true")
+                    .accessDeniedPage(securityProperties.getAccessDeniedUrl())
                 .and()
                 .csrf()
                     .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth/authorize"))
