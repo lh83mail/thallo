@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -76,18 +77,6 @@ public class Oauth2ServerConfiguration {
         @Autowired
         private TokenStore tokenStore;
 
-
-//        @Autowired
-//        private UserApprovalHandler userApprovalHandler;
-//
-//        @Autowired
-//        @Qualifier("authenticationManagerBean")
-//        private AuthenticationManager authenticationManager;
-//
-//        @Value("${tonr.redirect:http://localhost:8080/tonr2/sparklr/redirect}")
-//        private String tonrRedirectUri;
-
-
         @Bean
         public TokenStore redisTokenStore(RedisConnectionFactory connectionFactory) {
             return new RedisTokenStore(connectionFactory);
@@ -139,27 +128,22 @@ public class Oauth2ServerConfiguration {
                         });
             }
 
-
             boolean jdbcClientsEnabled = Optional.ofNullable(configuredClients)
                     .map(OAuth2ServerProperties.Clients::getJdbcClientsEnabled)
                     .orElse(false);
             if (jdbcClientsEnabled) {
-                ClientDetailsService jdbcClientDetailService =  clients.jdbc(dataSource).build();
+                ClientDetailsService jdbcClientDetailService = clients.jdbc(dataSource).build();
                 delegateClientDetailService.addClientDetailServices(jdbcClientDetailService);
             }
 
         }
 
 
-//        @Override
-//        public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-//            endpoints.tokenStore(tokenStore).userApprovalHandler(userApprovalHandler)
-//                    .authenticationManager(authenticationManager);
-//        }
-
         @Override
-        public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-            oauthServer.realm("sparklr2/client");
+        public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+            super.configure(endpoints);
+//            endpoints.pathMapping("/oauth/confirm_access", "authz/default/confirm_access");
+//            endpoints.getFrameworkEndpointHandlerMapping()
         }
     }
 //

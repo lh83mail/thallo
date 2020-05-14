@@ -17,7 +17,7 @@ public class SecurityProperties {
     /**
      * 登录成功后的页面视图
      */
-    private String loginSuccessPage = "/oauth2/default/index";
+    private String loginSuccessPage = "/authz/default/index";
 
     /**
      * 授权成功时的跳转链接
@@ -27,7 +27,7 @@ public class SecurityProperties {
     /**
      * 授权失败时的跳转链接
      */
-    private String authenticationFailureUrl="/oauth2/default/login?authfail";
+    private String authenticationFailureUrl="/authz/default/login?authfail";
 
     /**
      * 登陆失败时跳转路径
@@ -61,7 +61,7 @@ public class SecurityProperties {
     /**
      * 表单登录视图地址
      */
-    public String loginPage = "/oauth2/default/login";
+    public String loginPage = "/authz/default/login";
 
     /**
      * 无权访问返回地址
