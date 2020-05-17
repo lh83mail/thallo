@@ -7,6 +7,7 @@ spring:
 
 logging:
   level:
+    com.springboot: debug
     org.springframework.cloud: debug
     com.springboot.cloud: debug
     com.jalja.org.spring: debug

@@ -49,3 +49,12 @@ security:
   oauth2:
     authorization:
       realm: thallo/client
+
+logging:
+  level:
+    com.springboot: debug
+    org.springframework: debug
+    org.springframework.cloud: debug
+    com.springboot.cloud: debug
+    com.jalja.org.spring: debug
+    redis.clients: trace

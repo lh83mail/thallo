@@ -2,19 +2,15 @@ package io.github.lh83mail.thallo.authnz.config;
 
 import io.github.lh83mail.thallo.authnz.authen.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
@@ -25,15 +21,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private SecurityProperties securityProperties;
-
-    /**
-     * OAuth2AccessToken 令牌存储库
-     */
-    @Bean
-    @ConditionalOnBean(RedisConnectionFactory.class)
-    public TokenStore redisTokenStore(RedisConnectionFactory connectionFactory) {
-        return new RedisTokenStore(connectionFactory);
-    }
 
 
     @Override
@@ -57,6 +44,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // session management
+        http.sessionManagement()
+                .maximumSessions(securityProperties.getMaximumSessions());
+
         // @formatter:off
         http
                 .authorizeRequests()

@@ -1,4 +1,3 @@
-debug: true
 thallo:
   authzserver:
     oauth2:

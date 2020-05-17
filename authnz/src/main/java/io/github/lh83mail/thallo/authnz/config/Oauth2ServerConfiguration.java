@@ -1,13 +1,15 @@
 package io.github.lh83mail.thallo.authnz.config;
 
+import io.github.lh83mail.thallo.authnz.oauth2.DelegateClientDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -19,15 +21,29 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler;
+import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
-import io.github.lh83mail.thallo.authnz.oauth2.DelegateClientDetailService;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.util.Optional;
 
+@Configuration
 public class Oauth2ServerConfiguration {
     private static final String SPARKLR_RESOURCE_ID = "sparklr";
+
+    /**
+     * OAuth2AccessToken 令牌存储库
+     */
+    @Bean
+//    @ConditionalOnBean(RedisConnectionFactory.class)
+    public TokenStore redisTokenStore(RedisConnectionFactory connectionFactory) {
+        return new RedisTokenStore(connectionFactory);
+    }
 
     @Configuration
     @EnableResourceServer
@@ -67,20 +83,16 @@ public class Oauth2ServerConfiguration {
 
     @Configuration
     @EnableAuthorizationServer
-    @EnableConfigurationProperties({ OAuth2ServerProperties.class })
+    @EnableConfigurationProperties({ OAuth2ServerProperties.class, AuthorizationServerProperties.class })
     protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
-
         @Autowired
         private OAuth2ServerProperties oauth2ServerProperties;
         @Autowired
         private DataSource dataSource;
         @Autowired
+        private AuthorizationServerProperties properties;
+        @Autowired
         private TokenStore tokenStore;
-
-        @Bean
-        public TokenStore redisTokenStore(RedisConnectionFactory connectionFactory) {
-            return new RedisTokenStore(connectionFactory);
-        }
 
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -140,38 +152,60 @@ public class Oauth2ServerConfiguration {
 
 
         @Override
+        public void configure(AuthorizationServerSecurityConfigurer security)
+                throws Exception {
+            security.passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
+            if (this.properties.getCheckTokenAccess() != null) {
+                security.checkTokenAccess(this.properties.getCheckTokenAccess());
+            }
+            if (this.properties.getTokenKeyAccess() != null) {
+                security.tokenKeyAccess(this.properties.getTokenKeyAccess());
+            }
+            if (this.properties.getRealm() != null) {
+                security.realm(this.properties.getRealm());
+            }
+        }
+
+        @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-            super.configure(endpoints);
-//            endpoints.pathMapping("/oauth/confirm_access", "authz/default/confirm_access");
-//            endpoints.getFrameworkEndpointHandlerMapping()
+            if (this.tokenStore != null) {
+                endpoints.tokenStore(this.tokenStore);
+            }
         }
     }
-//
-//    protected static class Stuff {
-//
-//        @Autowired
-//        private ClientDetailsService clientDetailsService;
-//
-//        @Autowired
-//        private TokenStore tokenStore;
-//
-//        @Bean
-//        public ApprovalStore approvalStore() throws Exception {
-//            TokenApprovalStore store = new TokenApprovalStore();
-//            store.setTokenStore(tokenStore);
-//            return store;
-//        }
-//
-//        @Bean
-//        @Lazy
-//        @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
-//        public SparklrUserApprovalHandler userApprovalHandler() throws Exception {
-//            SparklrUserApprovalHandler handler = new SparklrUserApprovalHandler();
-//            handler.setApprovalStore(approvalStore());
-//            handler.setRequestFactory(new DefaultOAuth2RequestFactory(clientDetailsService));
-//            handler.setClientDetailsService(clientDetailsService);
-//            handler.setUseApprovalStore(true);
-//            return handler;
-//        }
-//    }
+
+    @Configuration
+    protected static class OauthServerConfiguration implements WebMvcConfigurer {
+        @Autowired
+        private OAuth2ServerProperties oauth2ServerProperties;
+
+        @Override
+        public void addViewControllers(ViewControllerRegistry registry) {
+            registry.addViewController("/oauth/confirm_access")
+                    .setViewName(oauth2ServerProperties.getConfirm_accessPage());
+        }
+    }
+
+    protected static class UserApprovalHandlerConfiguration {
+
+        @Autowired
+        private ClientDetailsService clientDetailsService;
+
+        @Autowired
+        private TokenStore tokenStore;
+
+        @Bean
+        public ApprovalStore approvalStore() throws Exception {
+            TokenApprovalStore store = new TokenApprovalStore();
+            store.setTokenStore(tokenStore);
+            return store;
+        }
+
+        @Bean
+        @Lazy
+        @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
+        public ApprovalStoreUserApprovalHandler userApprovalHandler() throws Exception {
+            return new ApprovalStoreUserApprovalHandler();
+        }
+    }
 }

@@ -2,7 +2,6 @@ package io.github.lh83mail.thallo.authnz.config;
 
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
@@ -67,4 +66,10 @@ public class SecurityProperties {
      * 无权访问返回地址
      */
     private String accessDeniedUrl = "/login?authorization_error";
+
+    /**
+     * 同一用户最大session数, -1（默认) 不限制
+     * https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/html5/#session-mgmt
+     */
+    private int maximumSessions = -1;
 }

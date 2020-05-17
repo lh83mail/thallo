@@ -14,7 +14,7 @@ public class OAuth2Controller {
     }
 
 //    @GetMapping("/oauth/confirm_access")
-//    public String confirmAccess(ModelMap modelMap, @AuthenticationPrincipal Principal principal, HttpServletRequest request) {
+//    public String confirmAccess(ModelMap model, @AuthenticationPrincipal Principal principal) {
 //        return "/authz/default/confirm_access";
 //    }
 }

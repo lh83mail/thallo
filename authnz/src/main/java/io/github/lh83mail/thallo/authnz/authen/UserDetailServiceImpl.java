@@ -26,7 +26,6 @@ import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static io.github.lh83mail.thallo.authnz.authen.SecurityConst.ROLE_ANYONE;
 
