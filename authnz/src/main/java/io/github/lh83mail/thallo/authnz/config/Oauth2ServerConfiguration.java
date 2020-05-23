@@ -1,90 +1,93 @@
 package io.github.lh83mail.thallo.authnz.config;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
 import io.github.lh83mail.thallo.authnz.oauth2.DelegateClientDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
+import org.springframework.core.io.Resource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler;
 import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
+import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpoint;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
+import java.io.InputStream;
+import java.security.*;
+import java.util.Map;
 import java.util.Optional;
 
 @Configuration
 public class Oauth2ServerConfiguration {
-    private static final String SPARKLR_RESOURCE_ID = "sparklr";
 
+    public static final String WELL_KNOWN_JWKS_JSON_URI = "/.well-known/jwks.json";
     /**
      * OAuth2AccessToken 令牌存储库
      */
     @Bean
-//    @ConditionalOnBean(RedisConnectionFactory.class)
     public TokenStore redisTokenStore(RedisConnectionFactory connectionFactory) {
         return new RedisTokenStore(connectionFactory);
     }
 
-    @Configuration
-    @EnableResourceServer
-    protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+//    @Configuration
+//    @EnableResourceServer
+//    protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+//
+//        @Override
+//        public void configure(HttpSecurity http) throws Exception {
+//            // @formatter:off
+//            http
+//                    // Since we want the protected resources to be accessible in the UI as well we need
+//                    // session creation to be allowed (it's disabled by default in 2.0.6)
+//                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+//                    .and()
+//                    .requestMatchers().antMatchers("/photos/**", "/oauth/users/**", "/oauth/clients/**","/me")
+//                    .and()
+//                    .authorizeRequests()
+//                    .antMatchers("/me").access("#oauth2.hasScope('read')")
+//                    .antMatchers("/photos").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))")
+//                    .antMatchers("/photos/trusted/**").access("#oauth2.hasScope('trust')")
+//                    .antMatchers("/photos/user/**").access("#oauth2.hasScope('trust')")
+//                    .antMatchers("/photos/**").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))")
+//                    .regexMatchers(HttpMethod.DELETE, "/oauth/users/([^/].*?)/tokens/.*")
+//                    .access("#oauth2.clientHasRole('ROLE_CLIENT') and (hasRole('ROLE_USER') or #oauth2.isClient()) and #oauth2.hasScope('write')")
+//                    .regexMatchers(HttpMethod.GET, "/oauth/clients/([^/].*?)/users/.*")
+//                    .access("#oauth2.clientHasRole('ROLE_CLIENT') and (hasRole('ROLE_USER') or #oauth2.isClient()) and #oauth2.hasScope('read')")
+//                    .regexMatchers(HttpMethod.GET, "/oauth/clients/.*")
+//                    .access("#oauth2.clientHasRole('ROLE_CLIENT') and #oauth2.isClient() and #oauth2.hasScope('read')");
+//            // @formatter:on
+//        }
+//
+//    }
 
-        @Override
-        public void configure(ResourceServerSecurityConfigurer resources) {
-            resources.resourceId(SPARKLR_RESOURCE_ID).stateless(false);
-        }
-
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            // @formatter:off
-            http
-                    // Since we want the protected resources to be accessible in the UI as well we need
-                    // session creation to be allowed (it's disabled by default in 2.0.6)
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                    .and()
-                    .requestMatchers().antMatchers("/photos/**", "/oauth/users/**", "/oauth/clients/**","/me")
-                    .and()
-                    .authorizeRequests()
-                    .antMatchers("/me").access("#oauth2.hasScope('read')")
-                    .antMatchers("/photos").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))")
-                    .antMatchers("/photos/trusted/**").access("#oauth2.hasScope('trust')")
-                    .antMatchers("/photos/user/**").access("#oauth2.hasScope('trust')")
-                    .antMatchers("/photos/**").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))")
-                    .regexMatchers(HttpMethod.DELETE, "/oauth/users/([^/].*?)/tokens/.*")
-                    .access("#oauth2.clientHasRole('ROLE_CLIENT') and (hasRole('ROLE_USER') or #oauth2.isClient()) and #oauth2.hasScope('write')")
-                    .regexMatchers(HttpMethod.GET, "/oauth/clients/([^/].*?)/users/.*")
-                    .access("#oauth2.clientHasRole('ROLE_CLIENT') and (hasRole('ROLE_USER') or #oauth2.isClient()) and #oauth2.hasScope('read')")
-                    .regexMatchers(HttpMethod.GET, "/oauth/clients/.*")
-                    .access("#oauth2.clientHasRole('ROLE_CLIENT') and #oauth2.isClient() and #oauth2.hasScope('read')");
-            // @formatter:on
-        }
-
-    }
 
     @Configuration
     @EnableAuthorizationServer
     @EnableConfigurationProperties({ OAuth2ServerProperties.class, AuthorizationServerProperties.class })
     protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
+
         @Autowired
         private OAuth2ServerProperties oauth2ServerProperties;
         @Autowired
@@ -93,6 +96,8 @@ public class Oauth2ServerConfiguration {
         private AuthorizationServerProperties properties;
         @Autowired
         private TokenStore tokenStore;
+        @Autowired
+        private ApplicationContext context;
 
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -150,7 +155,6 @@ public class Oauth2ServerConfiguration {
 
         }
 
-
         @Override
         public void configure(AuthorizationServerSecurityConfigurer security)
                 throws Exception {
@@ -166,10 +170,65 @@ public class Oauth2ServerConfiguration {
             }
         }
 
+
+        @Bean
+        public KeyStore keystore() throws Exception {
+            Assert.notNull(this.properties.getJwt().getKeyStore(), "keyStore cannot be null");
+            Assert.notNull(this.properties.getJwt().getKeyStorePassword(), "keyStorePassword cannot be null");
+
+            Resource keyStore = this.context.getResource(this.properties.getJwt().getKeyStore());
+            char[] keyStorePassword = this.properties.getJwt().getKeyStorePassword().toCharArray();
+            try (InputStream in = keyStore.getInputStream()) {
+                KeyStore store = KeyStore.getInstance("PKCS12");
+                store.load(in, keyStorePassword);
+                return store;
+            }
+        }
+
+        @Bean
+        public JwtAccessTokenConverter accessTokenConverter(KeyStore keyStore) throws Exception {
+            Assert.notNull(this.properties.getJwt().getKeyAlias(), "keyAlias cannot be null");
+            Assert.notNull(this.properties.getJwt().getKeyStorePassword(), "keyStorePassword cannot be null");
+
+            JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+            //
+            char[] keyStorePassword = this.properties.getJwt().getKeyStorePassword().toCharArray();
+            String keyAlias = this.properties.getJwt().getKeyAlias();
+            char[] keyPassword = Optional.ofNullable(
+                    this.properties.getJwt().getKeyPassword())
+                    .map(String::toCharArray).orElse(keyStorePassword);
+
+            Key key = keyStore.getKey(keyAlias, keyPassword);
+            converter.setKeyPair(new KeyPair(keyStore.getCertificate(keyAlias).getPublicKey(), (PrivateKey) key));
+
+            return converter;
+        }
+
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
             if (this.tokenStore != null) {
                 endpoints.tokenStore(this.tokenStore);
+            }
+            endpoints
+                 .accessTokenConverter(accessTokenConverter(keystore()));
+        }
+
+        @FrameworkEndpoint
+        class JwkSetEndpoint {
+            private final KeyStore keyStore;
+            private final AuthorizationServerProperties properties;
+
+            JwkSetEndpoint(KeyStore keyStore, AuthorizationServerProperties properties) {
+                this.keyStore = keyStore;
+                this.properties = properties;
+            }
+
+            @GetMapping(WELL_KNOWN_JWKS_JSON_URI)
+            @ResponseBody
+            public Map<String, Object> getKey() throws KeyStoreException, JOSEException {
+                char[] keyStorePassword = this.properties.getJwt().getKeyStorePassword().toCharArray();
+                RSAKey rsaKey = RSAKey.load(this.keyStore, properties.getJwt().getKeyAlias(), keyStorePassword);
+                return new JWKSet(rsaKey).toJSONObject();
             }
         }
     }
@@ -208,4 +267,5 @@ public class Oauth2ServerConfiguration {
             return new ApprovalStoreUserApprovalHandler();
         }
     }
+
 }

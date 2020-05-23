@@ -15,6 +15,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
+import static io.github.lh83mail.thallo.authnz.config.Oauth2ServerConfiguration.WELL_KNOWN_JWKS_JSON_URI;
+
 @Configuration
 @EnableConfigurationProperties({SecurityProperties.class})
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -55,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     securityProperties.getLoginPage(),
                     securityProperties.getLoginFailureUrl(),
                     securityProperties.getLoginUrl(),
-                    "/.well-known/jwks"
+                    WELL_KNOWN_JWKS_JSON_URI
                 ).permitAll()
                 .anyRequest().authenticated()
                 // TODO Add Customize Filters

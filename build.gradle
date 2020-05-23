@@ -1,10 +1,12 @@
 buildscript {
 	ext {
-		springBootVersion = '2.1.13.RELEASE'
-		springCloudVersion = 'Greenwich.SR5'
-		springAlibabaBootVersion = "2.1.0.RELEASE"
-		jetcache_version="2.5.15"
-		mysql_driver_version="6.0.6"
+		springBootVersion = '2.2.5.RELEASE'
+		springCloudVersion = 'Hoxton.SR4'
+		springAlibabaBootVersion = '2.2.1.RELEASE'
+		jetcache_version='2.6.0'
+		mysql_driver_version='6.0.6'
+		swaggerVersion='2.9.2'
+		redisClientVersion='3.3.0'
 	}
 }
 plugins {

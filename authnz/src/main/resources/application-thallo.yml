@@ -10,7 +10,7 @@ thallo:
             client-secret: '{noop}acmesecret'
             redirect-uri:
               - http://jyj.tjhx.gov.cn
-              - http://localhost:8080/thallo-starter/userinfo
+              - http://127.0.0.1:51070
             authorizedGrantTypes:
               - authorization_code
               - refresh_token
@@ -25,3 +25,12 @@ thallo:
         - /.well-known/jwks
         - /custoken
         - /logins
+
+security:
+  oauth2:
+    authorization:
+      realm: thallo-oauth2
+      jwt:
+        key-store: classpath:/keystore.jks
+        key-store-password: password
+        key-alias: oauth2

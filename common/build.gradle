@@ -1,5 +1,5 @@
 dependencies {
-    implementation 'io.springfox:springfox-swagger2:2.9.2'
+    implementation "io.springfox:springfox-swagger2:${swaggerVersion}"
     implementation 'org.springframework:spring-webmvc'
     implementation 'org.springframework.data:spring-data-commons'
     implementation 'org.springframework.data:spring-data-jpa'

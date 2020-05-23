@@ -3,7 +3,9 @@ spring:
     cache: false
   devtools:
     restart:
-      additional-paths: "/templates/**,classpath:/templates/**"
+      additional-paths:
+        - /templates/**
+        - classpath*:/templates/**
 
 logging:
   level:
