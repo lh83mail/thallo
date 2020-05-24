@@ -22,10 +22,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableDiscoveryClient
 @EnableFeignClients
 @EnableCircuitBreaker
-@EnableMethodCache(basePackages = "org.halo.thallo")
+@EnableMethodCache(basePackages = "io.github.lh83mail.thallo")
 @EnableCreateCacheAnnotation
-@EntityScan(basePackages = {"org.halo.thallo.gateway.**.entity"})
-@EnableJpaRepositories(basePackages = "org.halo.thallo.gateway", repositoryBaseClass = CommonJpaRepository.class)
+@EntityScan(basePackages = {"io.github.lh83mail.thallo.gateway.**.entity"})
+@EnableJpaRepositories(basePackages = "io.github.lh83mail.thallo", basePackageClasses = {CommonJpaRepository.class})
 @EnableTransactionManagement
 //@EnableWebFluxSecurity
 public class GatewayApplication {

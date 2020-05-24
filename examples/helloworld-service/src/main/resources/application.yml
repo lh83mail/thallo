@@ -3,4 +3,10 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://127.0.0.1:8080/.well-known/jwks.json
+          jwk-set-uri: http://127.0.0.1:8081/.well-known/jwks.json
+
+
+
+feign:
+  hystrix:
+    enabled: false

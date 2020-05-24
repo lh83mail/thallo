@@ -5,7 +5,7 @@
 @clientsecret=acmesecret
 @scopes=profile auth
 @redirect_uri=http://127.0.0.1:51070
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAyNTI2NTcsInVzZXJfbmFtZSI6IjJjOWQwMDgxNjgyMTI3YjcwMTY4MjEzNzJjMDcwMDAwIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BTllPTkUiXSwianRpIjoiZDUzMTYwOWUtMzE5OC00ZTFkLWI5YmYtMWRjZmM2NzlkMjgwIiwiY2xpZW50X2lkIjoiYWNtZSIsInNjb3BlIjpbImF1dGgiLCJwcm9maWxlIl19.ei6HVG4D2hYIjw_gsitbbCeh4tvpCKkmLQmLI_-Huo8
+@token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNDY5OTQsInVzZXJfbmFtZSI6IjJjOWQwMDgxNjgyMTI3YjcwMTY4MjEzNzJjMDcwMDAwIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BTllPTkUiXSwianRpIjoiZGQ5ZWY1Y2ItYTA2Zi00YTZkLWE0MzMtYmExYjJmMDFkNWE5IiwiY2xpZW50X2lkIjoiYWNtZSIsInNjb3BlIjpbImF1dGgiLCJwcm9maWxlIl19.J8tOFBwU3b80qgYP1CmgFNrkaNXG0UAuhJZEwflGtjH_d429oBns-LXmjDho162z-WpeJnLNtLG6BaaKukH_y_GpU_F2Nl496X-Mja-C3ordJVe95KVTY3KXkysz0K8_I_X75aWH0GZOKNQUbI4nuLQa2x3-WnYibR76NeGYKtl7dTa6mSczBl2dH-WGr-32ftIZNQMlxpuIFOgbXhZq8nkS8L883oNY58N_RiMpf1-xVIx9LkAzaOXJnYt5_Bfk6o7077dErAGlfb84IkkNsLCWUAAvLzEkqX6TsbyeG_lsmU6VJpTA5_eLKuf4UCrWAGkMDESA94CMXc_tDGQo2w
 
 ## 登录
 GET http://{{host}}/login
@@ -175,3 +175,30 @@ http://localhost:8080/authz-server/oauth/authorize?response_type=token&client_id
 
 GET {{resource_server}}/hello
 Authorization: Bearer {{token}} 
+
+
+####
+http://127.0.0.1:8080/.well-known/jwks.json
+
+
+
+
+####
+
+@gateway_server=http://127.0.0.1:8080
+
+GET {{gateway_server}}/hello-servcie/hello
+Authorization: Bearer {{token}} 
+
+####
+GET {{gateway_server}}/hello-servcie/feign-hello
+Authorization: Bearer {{token}} 
+
+
+###
+GET {{gateway_server}}/hello-servcie/hello/feign-hello
+Authorization: Bearer {{token}} 
+
+
+###
+curl {{gateway_server}}/hello-servcie/l33333

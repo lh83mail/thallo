@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableDiscoveryClient
 @EnableFeignClients
 @EnableCircuitBreaker
-@EnableMethodCache(basePackages = "org.halo.thallo")
+@EnableMethodCache(basePackages = "io.github.lh83mail.thallo")
 @EnableCreateCacheAnnotation
-@EntityScan(basePackages = {"org.thallo.authnz.**.entity"})
-@EnableJpaRepositories(basePackages = "org.thallo.authnz", repositoryBaseClass = CommonJpaRepository.class)
+@EntityScan(basePackages = {"io.github.lh83mail.thallo.authnz.**.entity"})
+@EnableJpaRepositories(basePackages = "io.github.lh83mail.thallo.authnz", repositoryBaseClass = CommonJpaRepository.class)
 @EnableTransactionManagement
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableAuthorizationServer

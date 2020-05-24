@@ -1,3 +1,5 @@
+server:
+  port: 8080
 spring:
   application:
     name: gateway
@@ -32,8 +34,11 @@ spring:
           enabled: true
 
   profiles:
-    active: gateway, security
+    active: gateway, security, oauth2
 
+  sleuth:
+    reactor:
+      decorate-on-each: false
 
 management:
   endpoints:
@@ -43,3 +48,4 @@ management:
   endpoint:
     gateway:
       enabled: true
+

@@ -28,9 +28,11 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    implementation "com.alicp.jetcache:jetcache-starter-redis:${jetcache_version}"
-    implementation "mysql:mysql-connector-java:${mysql_driver_version}"
+    implementation ("com.alicp.jetcache:jetcache-starter-redis:${jetcache_version}")
+    // jedis 3.1.0 与 jetcache 2.x 有不兼容修改， jetcache 2.6.0 在依赖处理上有循环依赖bug
+    implementation "redis.clients:jedis:${redisClientVersion}"
 
+    implementation "mysql:mysql-connector-java:${mysql_driver_version}"
     implementation 'io.springfox:springfox-swagger2:2.9.2'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"

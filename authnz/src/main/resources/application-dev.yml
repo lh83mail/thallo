@@ -9,8 +9,8 @@ spring:
 
 logging:
   level:
-    com.springboot: debug
-    org.springframework.cloud: debug
-    com.springboot.cloud: debug
+    com.springboot: trace
+    org.springframework.cloud: trace
+    com.springboot.cloud: trace
     com.jalja.org.spring: debug
     redis.clients: trace

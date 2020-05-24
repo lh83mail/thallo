@@ -27,7 +27,7 @@ spring:
 jetcache:
   statIntervalMinutes: 15
   areaInCacheName: false
-  hidePackages: org.halo.thallo
+  hidePackages: io.github.lh83mail.thallo
   local:
     default:
       type: caffeine
@@ -44,7 +44,7 @@ jetcache:
         maxTotal: 50
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:}
+      password: ${REDIS_PASSWORD:password}
 
 logging:
   level:

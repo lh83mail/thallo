@@ -3,10 +3,10 @@ buildscript {
 		springBootVersion = '2.2.5.RELEASE'
 		springCloudVersion = 'Hoxton.SR4'
 		springAlibabaBootVersion = '2.2.1.RELEASE'
-		jetcache_version='2.6.0'
+		jetcache_version='2.5.16'
 		mysql_driver_version='6.0.6'
 		swaggerVersion='2.9.2'
-		redisClientVersion='3.3.0'
+		redisClientVersion='2.10.2'
 	}
 }
 plugins {
@@ -16,7 +16,7 @@ plugins {
 
 
 version = "1.0.0-SNAPSHOT"
-group = "org.halo.thallo"
+group = "io.github.lh83mail.thallo"
 
 
 allprojects {
