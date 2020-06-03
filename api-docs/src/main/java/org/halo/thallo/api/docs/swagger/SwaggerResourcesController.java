@@ -25,6 +25,7 @@ public class SwaggerResourcesController {
     private Client client;
     private Contract contract;
 
+    // See: https://cloud.spring.io/spring-cloud-static/Greenwich.SR3/single/spring-cloud.html#_creating_feign_clients_manually
     @Autowired
     public SwaggerResourcesController(Decoder decoder, Encoder encoder, Client client, Contract contract) {
         this.decoder = decoder;
