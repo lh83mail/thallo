@@ -91,7 +91,26 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/gateway/index'),
         name: '网关管理',
-        meta: { title: '网关管理', icon: 'dashboard', affix: true }
+        meta: { title: '网关管理', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/ext-links',
+    component: Layout,
+    meta: { title: '服务聚合', icon: 'link' },
+    children: [
+      {
+        path: 'http://localhost:8848/nacos',
+        meta: { title: '注册中心', icon: 'link' }
+      },
+      {
+        path: '#',
+        meta: { title: 'API文档', icon: 'link' }
+      },
+      {
+        path: 'http://localhost:9411/',
+        meta: { title: '服务追踪', icon: 'link' }
       }
     ]
   },
@@ -103,7 +122,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/documentation/index'),
         name: 'Documentation',
-        meta: { title: 'Documentation', icon: 'documentation', affix: true }
+        meta: { title: 'Documentation', icon: 'documentation' }
       }
     ]
   },

@@ -2,12 +2,13 @@
 //include 'thallo-registry-server'
 //include 'thallo-dashboard'
 //include 'thallo-auth-server'
-//include 'api-docs-server'
+
 //include 'thallo-service-starter'
 include 'commons:common-authz'
 include 'common'
 include 'gateway'
 include 'authnz'
+include 'api-docs'
 include 'examples:helloworld-service'
 
 

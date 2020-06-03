@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: api-docs
+  cloud:
+    nacos:
+      config:
+        prefix: thallo
+        server-addr: ${NACOS_HOST:127.0.0.1:8848}
+        file-extension: yaml
+      discovery:
+        server-addr: ${NACOS_HOST:127.0.0.1:8848}
+        file-extension: yaml
+      actuator:
+        verbose:
+          enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

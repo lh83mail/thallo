@@ -61,9 +61,15 @@ public class SecurityConfiguration {
 
     @Configuration
     public static class InnerWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests((requests) -> requests.anyRequest().authenticated());
+            http.authorizeRequests((requests) -> requests
+                        .antMatchers("/v2/api-docs").permitAll()
+                        .anyRequest()
+                        .authenticated()
+
+            );
             http.oauth2ResourceServer( oauth2 -> oauth2
                 .jwt(jwt -> {
                     JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
