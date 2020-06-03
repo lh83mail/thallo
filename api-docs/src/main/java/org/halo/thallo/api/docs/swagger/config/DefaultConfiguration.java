@@ -19,7 +19,7 @@ public class DefaultConfiguration {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("io.github.lh83mail.thallo"))
+                .apis(RequestHandlerSelectors.basePackage("org.halo.thallo.api.docs.swagger"))
                 .paths(PathSelectors.any())
                 .build();
     }

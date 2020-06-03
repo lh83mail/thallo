@@ -105,7 +105,7 @@ export const constantRoutes = [
         meta: { title: '注册中心', icon: 'link' }
       },
       {
-        path: '#',
+        path: 'http://localhost:8082/doc.html',
         meta: { title: 'API文档', icon: 'link' }
       },
       {

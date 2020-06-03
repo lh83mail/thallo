@@ -7,7 +7,7 @@ import springfox.documentation.spring.web.SpringfoxWebMvcConfiguration;
 
 
 @ConditionalOnClass(SpringfoxWebMvcConfiguration.class)
-public class SwaggerBootstrapUiDemoApplication  implements WebMvcConfigurer {
+public class SwaggerBootstrapUiConfiguration implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
