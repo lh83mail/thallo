@@ -1,6 +1,0 @@
-spring:
-  application:
-    name: auth_server
-  data:
-    mongodb:
-      port: 0
