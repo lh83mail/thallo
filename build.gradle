@@ -7,6 +7,7 @@ buildscript {
 		mysql_driver_version='6.0.6'
 		swaggerVersion='2.9.2'
 		redisClientVersion='2.10.2'
+		xxlJobVersion='2.2.0'
 	}
 }
 plugins {
@@ -38,6 +39,13 @@ subprojects {
 	apply plugin: 'io.spring.dependency-management'
 
     [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+	configurations {
+		developmentOnly
+		runtimeClasspath {
+			extendsFrom developmentOnly
+		}
+	}
 
 	dependencies {
 		compileOnly 'org.projectlombok:lombok:1.18.10'

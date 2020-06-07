@@ -10,5 +10,6 @@ include 'gateway'
 include 'authnz'
 include 'api-docs'
 include 'examples:helloworld-service'
-
+include 'examples:scheduled_tasks'
+include 'job-admin'
 

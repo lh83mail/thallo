@@ -1,0 +1,7 @@
+dependencies {
+    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
+    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+    implementation "com.xuxueli:xxl-job-core:${xxlJobVersion}"
+
+    implementation "mysql:mysql-connector-java:${mysql_driver_version}"
+}

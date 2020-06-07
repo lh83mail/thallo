@@ -1,6 +1,16 @@
 # thallo
 脚手架项目
 
+# 依赖服务(需要自行安装配置)
+| 名称 | 作用 | 官网 | 下载地址 |
+|-- |-- |-- |-- |
+| Nacos | 服务、配置中心  | https://nacos.io/zh-cn |  https://github.com/alibaba/nacos/releases/download/1.2.1/nacos-server-1.2.1.tar.gz |
+| Zookeeper | 任务调度注册中心 |  https://zookeeper.apache.org | https://www.apache.org/dyn/closer.lua/zookeeper/zookeeper-3.6.1/apache-zookeeper-3.6.1-bin.tar.gz |
+| Redis | 缓存 | https://redis.io/ | http://download.redis.io/releases/redis-6.0.4.tar.gz |
+| rabbitmq | 队列服务 | https://www.rabbitmq.com/ | https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.8.4/rabbitmq-server-generic-unix-3.8.4.tar.xz |
+| MySQL | 数据持久化 | https://www.mysql.com/ | |
+
+
 # 项目结构
 
 * common  基础抽象和共用代码

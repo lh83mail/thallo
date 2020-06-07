@@ -1,0 +1,33 @@
+server:
+  port: 51071
+spring:
+  application:
+    name: examples-scheduled-tasks
+  cloud:
+    nacos:
+      config:
+        prefix: thallo
+        server-addr: ${NACOS_HOST:127.0.0.1:8848}
+        file-extension: yaml
+      discovery:
+        server-addr: ${NACOS_HOST:127.0.0.1:8848}
+        file-extension: yaml
+      actuator:
+        verbose:
+          enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    gateway:
+      enabled: true
+
+logging:
+  level:
+    com.springboot: debug
+    org.springframework: debug
+#    com.dangdang: trace
+#    org.apache.curator: trace
