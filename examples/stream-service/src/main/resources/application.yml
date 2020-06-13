@@ -1,0 +1,18 @@
+spring:
+  rabbitmq:
+    host: ${RABBIT_MQ_HOST:localhost}
+    port: ${RABBIT_MQ_PORT:5672}
+    username: ${RABBIT_MQ_USERNAME:guest}
+    password: ${RABBIT_MQ_PASSWORD:guest}
+
+  cloud:
+    stream:
+      #see https://cloud.spring.io/spring-cloud-static/spring-cloud-stream-binder-rabbit/3.0.4.RELEASE/reference/html/spring-cloud-stream-binder-rabbit.html#_using_existing_queuesexchanges
+      bindings:
+        input:
+          destination: output
+        myinput:
+            destination: output
+
+
+

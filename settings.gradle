@@ -1,15 +1,10 @@
-//include 'thallo-config-server'
-//include 'thallo-registry-server'
-//include 'thallo-dashboard'
-//include 'thallo-auth-server'
-
-//include 'thallo-service-starter'
 include 'commons:common-authz'
 include 'common'
 include 'gateway'
 include 'authnz'
 include 'api-docs'
+include 'job-admin'
 include 'examples:helloworld-service'
 include 'examples:scheduled_tasks'
-include 'job-admin'
+include 'examples:stream-service'
 

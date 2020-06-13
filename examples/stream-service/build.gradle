@@ -2,5 +2,5 @@ dependencies {
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
 
-    implementation "com.xuxueli:xxl-job-core:${xxlJobVersion}"
+    implementation "org.springframework.cloud:spring-cloud-starter-stream-rabbit"
 }
