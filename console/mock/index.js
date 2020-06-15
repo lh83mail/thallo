@@ -5,12 +5,16 @@ import user from './user'
 import role from './role'
 import article from './article'
 import search from './remote-search'
+import viewconfig from './dynamic-view/view-config'
+import viewdata from './dynamic-view/view-data'
 
 const mocks = [
   ...user,
   ...role,
   ...article,
-  ...search
+  ...search,
+  ...viewconfig,
+  ...viewdata
 ]
 
 // for front mock

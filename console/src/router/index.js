@@ -115,6 +115,26 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/dynamic-view',
+    component: Layout,
+    meta: { title: '动态视图', icon: 'link' },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/dynamic-view/index'),
+        name: '动态视图',
+        meta: { title: '视图列表', icon: 'component' }
+      },
+      {
+        path: 'simple-list/:viewId',
+        component: () => import('@/views/dynamic-view/simple-list/index'),
+        name: '基本列表',
+        hidden: true,
+        meta: { title: '基本列表', icon: 'component' }
+      }
+    ]
+  },
+  {
     path: '/documentation',
     component: Layout,
     children: [
