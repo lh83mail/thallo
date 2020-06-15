@@ -122,12 +122,9 @@ export class DDataSource extends DDParser {
       return Promise.resolve(this.data)
     }
 
-    const promise = this.provider.load(params)
+    return this.provider.load(params)
       .then(data => { this.data = data })
       .then(_ => this.data)
-
-    /* eslint-disable-next-line */
-    return promise // eslint-disable-line
   }
 
   // getById(id) {}
