@@ -83,8 +83,8 @@ export default {
   data() {
     return {
       viewId: null,
-      version: 1,
-      device: 'pc',
+      version: '1.0',
+      device: 'PC',
 
       listLoading: false,
 
