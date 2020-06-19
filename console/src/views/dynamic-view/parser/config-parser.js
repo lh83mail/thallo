@@ -1,28 +1,9 @@
 import { deepClone } from '@/utils'
 import request from '@/utils/request'
+import { viewportRegistry, commandRegistry } from './registries'
 
-class TemplateRegistry {
-  templates = {}
-
-  regist(name, device, version, template) {
-    const key = this._wrapKey(name, device, version)
-    if (!this.templates[key]) {
-      this.templates[key] = template
-    }
-  }
-
-  getTemplate(name, device, version) {
-    return this.templates[this._wrapKey(name, device, version)]
-  }
-
-  _wrapKey(name, device, version) {
-    return `${name}-${device}-${version}`
-  }
-}
-
-export const templateRegistry = new TemplateRegistry()
 export const devices = {
-  PC: 'pc'
+  PC: 'PC'
 }
 
 export class DDParser {
@@ -59,6 +40,72 @@ export class DDParser {
     }
 
     return null
+  }
+}
+
+export class DProperty extends DDParser {
+  parse() {
+    super.parse()
+    const c = this.config
+
+    this.label = c.label || c.name
+    this.type = c.type || 'string'
+    this.primary = c.primary === true
+  }
+}
+
+export class DRelation extends DDParser {
+  parse() {
+    super.parse()
+    //
+    const c = this.config
+    this.left = c.left
+    this.right = c.right
+    this.join = c.join
+    this.conditions = (c.conditions || [])
+  }
+}
+
+export class DModel extends DDParser {
+  parse() {
+    super.parse()
+    const c = this.config
+    //
+    this.tableName = c.tableName
+    this.idProp = c.idProp
+    this.properties = (c.properties || []).map(item => new DProperty(item, this))
+    this.relations = (c.relations || []).map(item => new DRelation(item, this))
+  }
+
+  getProperty(id) {
+    return this.properties.find(p => p.id === id)
+  }
+}
+
+export class DDataSource extends DDParser {
+  parse() {
+    super.parse()
+
+    const c = this.config
+
+    this.type = c.type
+    this.model = this.parent.getModel(c.model)
+    const CommandCls = commandRegistry.getCommand(c.cmd)
+    if (CommandCls) {
+      this.cmd = new CommandCls(c, this)
+    }
+  }
+
+  getModel() {
+    return this.model
+  }
+
+  /**
+   * 加载数据
+   * @param {*} params
+   */
+  execute(params) {
+    return this.cmd.execute(params)
   }
 }
 
@@ -99,98 +146,18 @@ export class DDataProvider extends DDParser {
   }
 }
 
-export class DDataSource extends DDParser {
-  parse() {
-    super.parse()
-
-    const c = this.config
-    this.model = this.parent.getModel(c.model)
-    this.provider = new DDataProvider(c.provider, this)
-  }
-
-  getModel() {
-    return this.model
-  }
-
-  /**
-   * 加载数据
-   * @param {*} params
-   */
-  load(params) {
-    if (!this.provider) {
-      this.data = []
-      return Promise.resolve(this.data)
-    }
-
-    return this.provider.load(params)
-      .then(data => { this.data = data })
-      .then(_ => this.data)
-  }
-
-  // getById(id) {}
-
-  // deleteById(id) {}
-
-  // getByIds(ids) {
-
-  // }
-
-  // save() {
-
-  // }
-
-  // list() {}
-
-  // loadPage() {}
-}
-
-export class DProperty extends DDParser {
-  // constructor(config, parent) {
-  //   super(config, parent)
-  // }
-
-  parse() {
-    super.parse()
-    const c = this.config
-
-    this.label = c.label || c.name
-    this.type = c.type || 'string'
-  }
-}
-
-export class DModel extends DDParser {
-  // constructor(config, parent) {
-  //   super(config, parent)
-  // }
-
-  parse() {
-    super.parse()
-    const c = this.config
-    //
-    this.idProp = c.idProp
-    this.properties = (c.properties || []).map(item => new DProperty(item, this))
-  }
-
-  getProperty(id) {
-    return this.properties.find(p => p.id === id)
-  }
-}
-
-export class DTemplate extends DDParser {
-}
-
-export class DUI extends DDParser {
+export class Viewport extends DDParser {
   parse() {
     super.parse()
 
     const c = this.config
     this.version = c.version
     this.device = c.device
+    this.title = c.title
+    this.subTitle = c.subTitle
 
-    this.applyArgs(c.templateArgs)
+    this.params = (this.params || [])
   }
-
-  applyArgs(args) {}
 }
 
 /**
@@ -205,23 +172,19 @@ export class DView extends DDParser {
     super.parse()
 
     const c = this.config
-
     this.version = c.version || '1.0'
     this.models = (c.models || []).map(item => new DModel(item, this))
-    this.ds = (c.ds || []).map(item => new DDataSource(item, this))
-    this.ui = (c.ui || []).map(item => {
-      const TplClass = templateRegistry.getTemplate(item.id, item.device, item.version)
-      if (TplClass) {
-        return new TplClass(item, this)
-      } else {
-        throw new Error('未知的模板类型: ' + item.id)
-      }
-    })
+    this.ds = (c.dataSources || []).map(item => new DDataSource(item, this))
+    const ViewportClass = viewportRegistry.getViewport(c.viewport.id, c.viewport.device, c.viewport.version)
+    if (ViewportClass) {
+      this.viewport = new ViewportClass(c.viewport, this)
+    } else {
+      throw new Error('未知的模板类型: ' + c.viewport.id)
+    }
   }
 
-  getUI(device) {
-    console.log(device, this.ui)
-    return this.ui.find(u => u.device === device)
+  getViewport() {
+    return this.viewport
   }
 
   getModel(id) {

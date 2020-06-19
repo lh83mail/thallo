@@ -125,12 +125,12 @@ export default {
     sortChange() {},
 
     getList() {
-      if (!this.ui || !this.ui.getDataSource()) return
+      if (!this.viewport || !this.viewport.getDataSource()) return
 
-      this.ui
+      this.viewport
         .getDataSource()
-        .load(this.listQuery)
-        .then(data => (this.list = data))
+        .execute(this.listQuery)
+        .then(data => (this.list = data.content))
     },
 
     onRouteChanged() {
@@ -145,21 +145,24 @@ export default {
      * 渲染视图
      */
     renderView() {
-      const ui = this.dview.getUI(this.device) // SimpleListPC
-      if (!ui) {
-        console.error('ui is empty')
+      const viewport = this.dview.getViewport() // SimpleListPC
+      if (!viewport) {
+        console.error('viewport is empty')
         return
       }
 
-      this.columns = ui.columns.map(c => {
+      this.columns = viewport.columns.map(c => {
         return {
           index: c.index,
           title: c.title
         }
       })
 
-      if (ui.queryBar) {
-        this.queryBar.propEditors = ui.queryBar.propEditors.map(e => {
+      this.listQuery.page = viewport.page
+      this.listQuery.limit = viewport.limit
+
+      if (viewport.filterBar) {
+        this.queryBar.propEditors = viewport.filterBar.propEditors.map(e => {
           return {
             label: e.property.label,
             type: e.property.type,
@@ -169,8 +172,8 @@ export default {
         })
       }
 
-      this.ui = ui
-      console.log('UI', ui)
+      this.viewport = viewport
+      console.log('Viewport', viewport)
       this.getList()
     }
   }
